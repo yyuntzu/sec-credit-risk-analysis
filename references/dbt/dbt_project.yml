@@ -1,0 +1,123 @@
+# dbt_project.yml
+# SEC Credit Analysis dbt Project
+#
+# 動態 ticker 支援:
+#   dbt run --select +tag:marts \
+#     --vars '{"target_ticker": "AMZN"}' \
+#     --profiles-dir . --target prod
+#
+# 不指定 target_ticker 時（預設 null）→ 處理全部 tickers
+#
+# ⚠️ profile 必須與 profiles.yml 裡的頂層 key 一致（目前是 'sec_credit'）。
+#    這裡曾經寫成 'sec_financial'，導致 dbt 每次都以
+#    "ProfileNotFound" 失敗、pipeline 靜默 fallback 到 inline query，
+#    marts 從未真的落地成 BigQuery 表。詳見 references/troubleshooting.md。
+
+name: 'sec_credit_analysis'
+version: '1.2.0'
+config-version: 2
+
+profile: 'sec_credit'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# ── 全域變數 ──────────────────────────────────────────────────────────────────
+# 透過 --vars '{"target_ticker": "AMZN"}' 覆蓋
+vars:
+  # 若設定此值，所有 model 只處理指定 ticker（加速 incremental run）
+  # 不設定（null）則處理全部
+  target_ticker: null
+
+  # BQ dataset 設定（與 sources.yml 保持一致）
+  bq_project:  "focus-heuristic-438521-v4"
+  bq_dataset:  "sec_raw"
+
+# ── Model 設定 ────────────────────────────────────────────────────────────────
+# ⚠️ 實際檔案結構是 models/model/{staging,intermediate,marts,source}/，
+#    比一般 dbt 專案多一層 "model/" 資料夾，所以下面的 config path
+#    一定要從 `models.sec_credit_analysis.model...` 開始，
+#    少了這層 "model:" 的話，所有 +materialized / +tags 都不會生效
+#    （dbt 只會印一句不起眼的 warning："unused configuration paths"，
+#    看起來像沒事，實際上 tag 完全沒套用 —— `--select +tag:marts`
+#    會直接抓不到任何 model）。
+models:
+  sec_credit_analysis:
+    model:
+
+      # Staging：輕量 view，快速 iterate
+      staging:
+        +materialized: view
+        +tags: ["staging"]
+
+      # Intermediate：有些需要 table（TTM window function 需要物化）
+      intermediate:
+        +materialized: view
+        +tags: ["intermediate"]
+
+        # TTM 和 combined 需要 table + partition 才能高效查詢
+        int_financials_combined:
+          +materialized: table
+          +partition_by:
+            field: period_end
+            data_type: date
+          +cluster_by: ["ticker"]
+          +tags: ["intermediate", "heavy"]
+
+        int_ttm_metrics:
+          +materialized: table
+          +partition_by:
+            field: period_end
+            data_type: date
+          +cluster_by: ["ticker"]
+          +tags: ["intermediate", "heavy"]
+
+      # Marts：最終分析層，全部物化為 table
+      # 這些是要接 BigQuery 實體表、再給 Looker/Looker Studio 當 data source 的表
+      marts:
+        +materialized: table
+        +tags: ["marts"]
+
+        dim_company:
+          +tags: ["marts", "dimension"]
+
+        dim_filing:
+          +tags: ["marts", "dimension"]
+
+        fct_credit_kpis:
+          +partition_by:
+            field: period_end
+            data_type: date
+          +cluster_by: ["ticker"]
+          +tags: ["marts", "primary"]
+
+        fct_covenant_status:
+          +tags: ["marts", "covenant"]
+
+        fct_financial_statement_line_items:
+          +partition_by:
+            field: period_end
+            data_type: date
+          +cluster_by: ["ticker"]
+          +tags: ["marts", "drill_through"]
+
+# ── Seed 設定 ─────────────────────────────────────────────────────────────────
+seeds:
+  sec_credit_analysis:
+    covenant_terms:
+      +schema: sec_raw
+      +column_types:
+        threshold_value: float64
+
+# ── Test 設定 ─────────────────────────────────────────────────────────────────
+data_tests:
+  +severity: warn  # 測試失敗不中斷 pipeline，但記錄 warning

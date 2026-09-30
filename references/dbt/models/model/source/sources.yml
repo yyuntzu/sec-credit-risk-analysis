@@ -1,0 +1,64 @@
+# models/sources/sources.yml
+version: 2
+
+sources:
+  - name: sec_raw
+    database: focus-heuristic-438521-v4
+    schema: sec_raw       # 你的 BigQuery dataset 名稱
+
+    tables:
+      - name: raw_income_statement
+        description: "SEC EDGAR Income Statement facts via XBRL US-GAAP tags"
+        columns:
+          - name: ticker
+          - name: cik
+          - name: fiscal_period        # e.g. "2024-Q3"
+          - name: filed_date
+          - name: revenue
+          - name: gross_profit
+          - name: operating_income
+          - name: ebit
+          - name: interest_expense
+          - name: net_income
+          - name: depreciation_amortization
+
+      - name: raw_balance_sheet
+        columns:
+          - name: ticker
+          - name: fiscal_period
+          - name: filed_date
+          - name: cash_and_equivalents
+          - name: current_assets
+          - name: total_assets
+          - name: current_liabilities
+          - name: total_liabilities
+          - name: short_term_debt
+          - name: long_term_debt
+          - name: total_equity
+
+      - name: raw_cash_flow
+        columns:
+          - name: ticker
+          - name: fiscal_period
+          - name: filed_date
+          - name: operating_cash_flow
+          - name: capital_expenditure
+          - name: investing_cash_flow
+          - name: financing_cash_flow
+          - name: debt_repayment
+
+      - name: raw_company
+        columns:
+          - name: ticker
+          - name: cik
+          - name: company_name
+          - name: sic_code
+          - name: industry
+
+      - name: raw_covenant_terms
+        columns:
+          - name: ticker
+          - name: covenant_name
+          - name: threshold_value
+          - name: covenant_type        # "max" or "min"
+          - name: effective_date

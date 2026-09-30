@@ -1,0 +1,11 @@
+sec_credit:                        # 對應 dbt_project.yml 裡的 profile: 'sec_credit'
+  target: prod
+  outputs:
+    prod:
+      type: bigquery
+      method: oauth                # Mac 本地用 gcloud 認證，不需要 key 檔
+      project: focus-heuristic-438521-v4
+      dataset: sec_raw
+      location: US
+      threads: 4
+      timeout_seconds: 300
