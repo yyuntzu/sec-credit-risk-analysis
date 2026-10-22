@@ -33,11 +33,21 @@ except ImportError:
     _FLASK_AVAILABLE = False
 
 from sec_client import SECEdgarClient, preload_cik_cache
-from bq_loader import BigQueryLoader
+from bq_loader import BigQueryLoader, FINANCIAL_STATEMENT_SCHEMA
 from gcs_loader import GCSLoader
 from dashboard_generator import DashboardGenerator
 from credit_memo_writer import generate_credit_memo
 from mda_commentary import generate_commentary, ALL_METRICS
+if __package__:
+    from .loan_review_sources import (
+        load_json as load_source_json, parse_request, prepare_source_inputs,
+        validate_sec_rows, write_source_bundle, prepare_legacy_source_inputs, SourceError,
+    )
+else:
+    from loan_review_sources import (
+        load_json as load_source_json, parse_request, prepare_source_inputs,
+        validate_sec_rows, write_source_bundle, prepare_legacy_source_inputs, SourceError,
+    )
 
 logging.basicConfig(
     level=logging.INFO,
@@ -424,6 +434,15 @@ def ingest_ticker(
     stats["xbrl_row_counts"] = {k: len(v) for k, v in financial_facts.items()}
     logger.info(f"[{ticker}] XBRL rows: {stats['xbrl_row_counts']}")
 
+    # Preserve an immutable observation ledger independently of legacy pivots.
+    source_rows = [row for rows in financial_facts.values() for row in rows]
+    validate_sec_rows(source_rows, entity=ticker, cik=str(cik).zfill(10))
+    ledger = {"schema_version": 1, "entity": ticker, "cik": str(cik).zfill(10),
+              "financial_facts": financial_facts}
+    ledger_path = Path(OUTPUT_DIR) / f"{ticker}_source_facts.json"
+    ledger_path = write_source_bundle(ledger, ledger_path)
+    stats["source_ledger_path"] = str(ledger_path)
+
     # Step 4: XBRL JSON → GCS backup
     if gcs_loader:
         for stmt_type, rows in financial_facts.items():
@@ -732,6 +751,41 @@ def _enrich_rows(rows: list[dict]) -> list[dict]:
     return result
 
 
+def prepare_legacy_source_query(ticker: str, bq_loader: BigQueryLoader) -> tuple:
+    """Read/validate one snapshot; supply deduplicated query parameters, not raw SUMs."""
+    from google.cloud import bigquery
+    dataset = f"{PROJECT_ID}.{BQ_DATASET}"
+    statements = ("income_statement", "balance_sheet", "cash_flow")
+    sql = " UNION ALL ".join(
+        f"SELECT '{statement}' AS statement_type, * FROM `{dataset}.raw_{statement}` WHERE ticker = @ticker"
+        for statement in statements
+    )
+    config = bigquery.QueryJobConfig(query_parameters=[
+        bigquery.ScalarQueryParameter("ticker", "STRING", ticker)])
+    rows = [dict(row) for row in bq_loader.client.query(sql, job_config=config).result()]
+    bundle = prepare_legacy_source_inputs(rows, entity=ticker)
+    # Persist the exact adopted snapshot and all evidence before consuming its values.
+    path = write_source_bundle({"entity": ticker, "stage": "legacy_source_adoptions", **bundle},
+                              Path(OUTPUT_DIR) / f"{ticker}_legacy_sources.json")
+    if not isinstance(getattr(bq_loader, "loan_review_source_paths", None), list):
+        bq_loader.loan_review_source_paths = []
+    bq_loader.loan_review_source_paths.append(str(path))
+    parameters = []
+    relations = {}
+    for statement in statements:
+        parameter = f"loan_review_{statement}"
+        parameters.append(bigquery.ArrayQueryParameter(parameter, "STRING", [
+            json.dumps(row, default=str) for row in bundle["statements"][statement]]))
+        columns = ", ".join(
+            f"CAST(JSON_VALUE(record, '$.{field.name}') AS {field.field_type}) AS {field.name}"
+            for field in FINANCIAL_STATEMENT_SCHEMA
+        )
+        relations[statement] = (f"(SELECT {columns}, JSON_VALUE_ARRAY(record, '$.source_forms') AS source_forms, "
+                                f"JSON_VALUE_ARRAY(record, '$.evidence_ids') AS evidence_ids "
+                                f"FROM UNNEST(@{parameter}) AS record)")
+    return relations, bigquery.QueryJobConfig(query_parameters=parameters), bundle["collapsed"]
+
+
 def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
     """
     Layer 1: fct_credit_kpis mart（dbt 產出，完整欄位）
@@ -739,9 +793,12 @@ def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
 
     回傳最近 8 期，按 period_end DESC。
     """
+    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader)
     dataset = f"{PROJECT_ID}.{BQ_DATASET}"
 
     try:
+        if collapsed:
+            raise SourceError("Equivalent observations require the canonical source query")
         rows = list(bq_loader.client.query(f"""
             SELECT * FROM `{dataset}.fct_credit_kpis`
             WHERE ticker = '{ticker}'
@@ -759,15 +816,15 @@ def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
     try:
         rows = list(bq_loader.client.query(f"""
         WITH inc AS (
-            SELECT ticker, period_end, filed_date, filing_type,
+            SELECT ticker, period_end, MAX(filed_date) AS filed_date, MAX(filing_type) AS filing_type,
                 SUM(CASE WHEN field_name IN ('revenue','revenue_alt') THEN value END) / 1e6 AS revenue_m,
                 SUM(CASE WHEN field_name = 'operating_income' THEN value END) / 1e6 AS ebitda_m,
                 SUM(CASE WHEN field_name = 'net_income'       THEN value END) / 1e6 AS net_income_m
-            FROM `{dataset}.raw_income_statement`
+            FROM {source_relations['income_statement']}
             WHERE ticker = '{ticker}'
-              AND filing_type IN ('10-K','10-Q')
+              AND EXISTS (SELECT 1 FROM UNNEST(source_forms) form WHERE form IN ('10-K','10-Q'))
               AND period_days BETWEEN 70 AND 110
-            GROUP BY 1,2,3,4
+            GROUP BY ticker, period_end
         ),
         bal AS (
             SELECT ticker, period_end,
@@ -802,7 +859,7 @@ def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
                     MAX(CASE WHEN field_name IN ('long_term_debt_aggregate_alt','long_term_debt_aggregate_alt2','long_term_debt_aggregate_alt3') THEN value END),
                     MAX(CASE WHEN field_name='long_term_debt' THEN value END))
                 END/1e6 AS total_debt_m
-            FROM `{dataset}.raw_balance_sheet`
+            FROM {source_relations['balance_sheet']}
             WHERE ticker = '{ticker}'
             GROUP BY 1,2
         ),
@@ -810,9 +867,9 @@ def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
             SELECT ticker, period_end,
                 SUM(CASE WHEN field_name = 'cfo'   THEN value END)/1e6 AS cfo_m,
                 ABS(SUM(CASE WHEN field_name = 'capex' THEN value END))/1e6 AS capex_m
-            FROM `{dataset}.raw_cash_flow`
+            FROM {source_relations['cash_flow']}
             WHERE ticker = '{ticker}'
-              AND filing_type IN ('10-K','10-Q')
+              AND EXISTS (SELECT 1 FROM UNNEST(source_forms) form WHERE form IN ('10-K','10-Q'))
               AND period_days BETWEEN 70 AND 110
             GROUP BY 1,2
         )
@@ -831,12 +888,12 @@ def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
         LEFT JOIN bal b USING (ticker, period_end)
         LEFT JOIN cf  c USING (ticker, period_end)
         ORDER BY i.period_end DESC LIMIT 8
-        """).result())
+        """, job_config=source_config).result())
         logger.info(f"[{ticker}] {len(rows)} rows from inline fallback query")
         return [dict(r) for r in rows]
     except Exception as e:
         logger.error(f"[{ticker}] Inline KPI query failed: {e}")
-        return []
+        raise SourceError("Canonical legacy source query failed") from e
 
 
 def query_annual_financials(
@@ -859,6 +916,7 @@ def query_annual_financials(
       - kpis: 季度資料，計算 TTM 和比率
       - annual: 年度原始數據，用來做 YOY 報表
     """
+    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader)
     dataset = f"{PROJECT_ID}.{BQ_DATASET}"
 
     # Build year filter from periods list
@@ -883,6 +941,8 @@ def query_annual_financials(
     # DESC, same business logic as fct_credit_kpis. This is the mart-first
     # path the architecture is supposed to use.
     try:
+        if collapsed:
+            raise SourceError("Equivalent observations require the canonical source query")
         rows = list(bq_loader.client.query(f"""
         SELECT
             EXTRACT(YEAR FROM inc.period_end) AS fiscal_year,
@@ -927,17 +987,15 @@ def query_annual_financials(
     except Exception as e:
         logger.info(f"[{ticker}] dbt staging unavailable for annual financials ({e}), falling back to raw inline query")
 
-    # Layer 2: inline fallback directly on raw_* tables (dbt not run yet /
-    # staging views missing). QUALIFY dedup mirrors the dbt staging logic —
-    # without it, a period_end reported across multiple accession_numbers
-    # (restatements, or duplicate rows from repeat ingestion) would get
-    # summed together instead of taking the latest filed value.
+    # Layer 2: existing financial SQL over the accepted source snapshot. Filing
+    # versions have already been checked and equivalent observations collapsed;
+    # the legacy period-selection windows below are not a version policy.
     try:
         rows = list(bq_loader.client.query(f"""
         WITH inc_dedup AS (
-            SELECT * FROM `{dataset}.raw_income_statement`
+            SELECT * FROM {source_relations['income_statement']}
             WHERE ticker = '{ticker}'
-              AND filing_type = '10-K'
+              AND '10-K' IN UNNEST(source_forms)
               AND period_days BETWEEN 340 AND 380
               {year_filter}
             QUALIFY ROW_NUMBER() OVER (
@@ -965,9 +1023,9 @@ def query_annual_financials(
             GROUP BY 1,2,3
         ),
         cf_dedup AS (
-            SELECT * FROM `{dataset}.raw_cash_flow`
+            SELECT * FROM {source_relations['cash_flow']}
             WHERE ticker = '{ticker}'
-              AND filing_type = '10-K'
+              AND '10-K' IN UNNEST(source_forms)
               AND period_days BETWEEN 340 AND 380
               {year_filter}
             QUALIFY ROW_NUMBER() OVER (
@@ -985,7 +1043,7 @@ def query_annual_financials(
             GROUP BY 1,2
         ),
         bal_dedup AS (
-            SELECT * FROM `{dataset}.raw_balance_sheet`
+            SELECT * FROM {source_relations['balance_sheet']}
             WHERE ticker = '{ticker}'
             QUALIFY ROW_NUMBER() OVER (
                 PARTITION BY ticker, period_end, field_name
@@ -1041,12 +1099,12 @@ def query_annual_financials(
         WHERE i.revenue_m IS NOT NULL
         ORDER BY i.period_end ASC
         {limit_clause}
-        """).result())
+        """, job_config=source_config).result())
         logger.info(f"[{ticker}] {len(rows)} annual rows from raw inline fallback")
         return [dict(r) for r in rows]
     except Exception as e:
         logger.warning(f"[{ticker}] Annual financials query failed: {e}")
-        return []
+        raise SourceError("Canonical legacy source query failed") from e
 
 
 def query_quarterly_financials(
@@ -1072,6 +1130,7 @@ def query_quarterly_financials(
         加上 quarter_label 欄位標明是哪一季。
         按 period_end ASC 排序。
     """
+    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader)
     dataset = f"{PROJECT_ID}.{BQ_DATASET}"
 
     # Parse quarter labels into (year, quarter) tuples
@@ -1145,6 +1204,8 @@ def query_quarterly_financials(
     # Layer 1: dbt staging views — see query_annual_financials() for why
     # this must come before the raw-table fallback.
     try:
+        if collapsed:
+            raise SourceError("Equivalent observations require the canonical source query")
         rows = list(bq_loader.client.query(f"""
         SELECT
             EXTRACT(YEAR  FROM inc.period_end) AS fiscal_year,
@@ -1191,14 +1252,13 @@ def query_quarterly_financials(
     except Exception as e:
         logger.info(f"[{ticker}] dbt staging unavailable for quarterly financials ({e}), falling back to raw inline query")
 
-    # Layer 2: inline fallback directly on raw_* tables (see
-    # query_annual_financials() for why the QUALIFY dedup is needed here).
+    # Layer 2: accepted source snapshot; see query_annual_financials().
     try:
         rows = list(bq_loader.client.query(f"""
         WITH inc_dedup AS (
-            SELECT * FROM `{dataset}.raw_income_statement`
+            SELECT * FROM {source_relations['income_statement']}
             WHERE ticker = '{ticker}'
-              AND filing_type = '10-Q'
+              AND '10-Q' IN UNNEST(source_forms)
               {where_clause}
             QUALIFY ROW_NUMBER() OVER (
                 PARTITION BY ticker, period_end, field_name
@@ -1226,9 +1286,9 @@ def query_quarterly_financials(
             GROUP BY 1,2,3,4
         ),
         cf_dedup AS (
-            SELECT * FROM `{dataset}.raw_cash_flow`
+            SELECT * FROM {source_relations['cash_flow']}
             WHERE ticker = '{ticker}'
-              AND filing_type = '10-Q'
+              AND '10-Q' IN UNNEST(source_forms)
               {where_clause}
             QUALIFY ROW_NUMBER() OVER (
                 PARTITION BY ticker, period_end, field_name
@@ -1245,7 +1305,7 @@ def query_quarterly_financials(
             GROUP BY 1,2
         ),
         bal_dedup AS (
-            SELECT * FROM `{dataset}.raw_balance_sheet`
+            SELECT * FROM {source_relations['balance_sheet']}
             WHERE ticker = '{ticker}'
             QUALIFY ROW_NUMBER() OVER (
                 PARTITION BY ticker, period_end, field_name
@@ -1301,7 +1361,7 @@ def query_quarterly_financials(
         WHERE i.revenue_m IS NOT NULL
         ORDER BY i.period_end ASC
         LIMIT {limit_clause}
-        """).result())
+        """, job_config=source_config).result())
 
         result = _with_quarter_labels(rows)
         logger.info(f"[{ticker}] {len(result)} quarterly rows from raw inline fallback")
@@ -1309,18 +1369,69 @@ def query_quarterly_financials(
 
     except Exception as e:
         logger.warning(f"[{ticker}] Quarterly financials query failed: {e}")
-        return []
+        raise SourceError("Canonical legacy source query failed") from e
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Main analysis pipeline
 # ══════════════════════════════════════════════════════════════════════════════
 
+def query_loan_review_source_rows(ticker: str, cik: str, bq_loader) -> list[dict]:
+    """Read lossless candidates only; never use legacy KPI/pivot fallbacks.
+
+    Query parameters isolate entity; validate_sec_rows independently rejects mixed
+    identities or old rows without lineage. Missing staging is an explicit error.
+    """
+    from google.cloud import bigquery
+    config = bigquery.QueryJobConfig(query_parameters=[
+        bigquery.ScalarQueryParameter("ticker", "STRING", ticker),
+        bigquery.ScalarQueryParameter("cik", "STRING", cik),
+    ])
+    sql = f"""
+        SELECT * FROM `{bq_loader.dataset_ref}.stg_loan_review_sources`
+        WHERE ticker = @ticker AND (cik = @cik OR cik IS NULL)
+    """
+    rows = [dict(r) for r in bq_loader.client.query(sql, job_config=config).result()]
+    validate_sec_rows(rows, entity=ticker, cik=cik)
+    return rows
+
+
+def prepare_loan_review_source_stage(ticker: str, request_payload: dict,
+                                     supplements=(), *, snapshot=None,
+                                     bq_loader=None, sec_client=None) -> dict:
+    """Block 2 entrypoint; no dbt calculations, LLM, legacy enrich or writer."""
+    if sum(backend is not None for backend in (snapshot, bq_loader, sec_client)) > 1:
+        raise SourceError("Choose one source backend explicitly")
+    report, cik, _ = parse_request(request_payload)
+    if report.entity != ticker.strip().upper():
+        raise SourceError("Requested ticker differs from source request entity")
+    if snapshot is not None:
+        if (not isinstance(snapshot, dict) or snapshot.get("schema_version") != 1
+                or snapshot.get("entity") != report.entity or snapshot.get("cik") != cik):
+            raise SourceError("Source snapshot entity/CIK/schema mismatch")
+        financial = snapshot.get("financial_facts")
+        if not isinstance(financial, dict) or set(financial) != {"income_statement", "balance_sheet", "cash_flow"}:
+            raise SourceError("Source snapshot must contain the three statement lists")
+        if not all(isinstance(records, list) for records in financial.values()):
+            raise SourceError("Source snapshot statement values must be lists")
+        rows = [row for records in financial.values() for row in records]
+    elif bq_loader is not None:
+        rows = query_loan_review_source_rows(report.entity, cik, bq_loader)
+    else:
+        client = sec_client or SECEdgarClient()
+        financial = client.extract_financial_facts(report.entity)
+        rows = [row for records in financial.values() for row in records]
+    return prepare_source_inputs(request_payload, rows, supplements)
+
+
 def analyze_ticker(
     ticker: str,
     periods: Optional[list[str]] = None,
     quarter_labels: Optional[list[str]] = None,
     generate_html: bool = True,
+    source_request: Optional[dict] = None,
+    supplemental_evidence: tuple = (),
+    source_snapshot: Optional[dict] = None,
 ) -> dict:
     """
     完整分析一支股票。
@@ -1347,9 +1458,20 @@ def analyze_ticker(
       12   generate_credit_memo()     8 sections credit memo
       13   DashboardGenerator()       HTML dashboard
     """
-    ticker  = ticker.strip().upper()
+    ticker = ticker.strip().upper()
+    if source_request is None and (supplemental_evidence or source_snapshot is not None):
+        raise SourceError("Supplement/snapshot requires an explicit source request")
+    if source_request is not None:
+        bundle = prepare_loan_review_source_stage(
+            ticker, source_request, supplemental_evidence, snapshot=source_snapshot)
+        path = Path(OUTPUT_DIR) / f"{ticker}_loan_review_sources.json"
+        path = write_source_bundle(bundle, path)
+        return {"ticker": ticker, "status": "source_inputs_prepared", "mode": bundle["mode"],
+                "source_inputs_path": str(path), "conflict_count": bundle["conflict_count"],
+                "final_report_accepted": False}
     periods = _parse_periods(periods)  # normalise + validate
-    output: dict = {"ticker": ticker, "periods": periods, "status": "running"}
+    output: dict = {"ticker": ticker, "periods": periods, "status": "running",
+                    "final_report_accepted": False, "report_path_type": "legacy_unvalidated"}
 
     # Initialize clients
     sec_client = SECEdgarClient(rate_limit_seconds=0.15)
@@ -1379,22 +1501,28 @@ def analyze_ticker(
     output["dbt"] = run_dbt(ticker)
     output["dbt_marts"] = verify_marts_in_bq(ticker, bq_loader)
 
-    # Step 9: Quarterly KPIs
-    kpis = query_kpis_from_bq(ticker, bq_loader)
-    output["kpi_rows"] = len(kpis)
+    try:
+        # Step 9: Quarterly KPIs
+        kpis = query_kpis_from_bq(ticker, bq_loader)
+        output["kpi_rows"] = len(kpis)
 
-    # Step 10a: Annual financials (for YOY tables, filtered by periods)
-    annual = _enrich_rows(query_annual_financials(ticker, bq_loader, periods=periods))
-    output["annual_rows"] = len(annual)
+        # Step 10a: Annual financials (for YOY tables, filtered by periods)
+        annual = _enrich_rows(query_annual_financials(ticker, bq_loader, periods=periods))
+        output["annual_rows"] = len(annual)
 
-    # Step 10b: Quarterly financials (optional — only when quarter_labels specified)
-    quarterly: list[dict] = []
-    if quarter_labels:
-        quarterly = _enrich_rows(query_quarterly_financials(
-            ticker, bq_loader, quarter_labels=quarter_labels
-        ))
-        output["quarterly_rows"] = len(quarterly)
-        logger.info(f"[{ticker}] Quarterly cols: {[r.get('quarter_label') for r in quarterly]}")
+        # Step 10b: Quarterly financials (optional — only when quarter_labels specified)
+        quarterly: list[dict] = []
+        if quarter_labels:
+            quarterly = _enrich_rows(query_quarterly_financials(
+                ticker, bq_loader, quarter_labels=quarter_labels
+            ))
+            output["quarterly_rows"] = len(quarterly)
+            logger.info(f"[{ticker}] Quarterly cols: {[r.get('quarter_label') for r in quarterly]}")
+
+    except Exception as exc:
+        output.update(status="error", error=f"Legacy source validation/query failed: {exc}")
+        return output
+    output["source_adoption_paths"] = bq_loader.loan_review_source_paths
 
     # Step 11: Match narrative to the review basis. Quarterly Loan Reviews
     # need current YTD MD&A and guidance from the latest 10-Q.
@@ -1529,7 +1657,38 @@ if _FLASK_AVAILABLE and app is not None:
                         "dataset": BQ_DATASET, "gcs": bool(GCS_BUCKET)}), 200
 
 
+def run_source_cli(argv: list[str]) -> Optional[int]:
+    """Parse source options before dispatch, including argparse's --option=value."""
+    import argparse
+    probe = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+    probe.add_argument("--source-request")
+    probe.add_argument("--source-snapshot")
+    probe.add_argument("--supplement", action="append", default=[])
+    options, _ = probe.parse_known_args(argv)
+    if not any(v is not None for v in (options.source_request, options.source_snapshot)) and not options.supplement:
+        return None
+    parser = argparse.ArgumentParser(description="Loan Review Block 2: prepare auditable source inputs only", allow_abbrev=False)
+    parser.add_argument("ticker")
+    parser.add_argument("--source-request", required=True)
+    parser.add_argument("--source-snapshot", help="Offline extracted ledger; omit to read SEC")
+    parser.add_argument("--supplement", action="append", default=[])
+    opts = parser.parse_args(argv)
+    try:
+        result = analyze_ticker(
+            opts.ticker, source_request=load_source_json(opts.source_request),
+            source_snapshot=load_source_json(opts.source_snapshot) if opts.source_snapshot else None,
+            supplemental_evidence=tuple(load_source_json(p) for p in opts.supplement))
+    except (ValueError, OSError) as exc:
+        print(json.dumps({"status": "error", "error": str(exc)}, ensure_ascii=False), file=sys.stderr)
+        return 1
+    print(json.dumps(result, indent=2))
+    return 0
+
+
 if __name__ == "__main__":
+    source_exit = run_source_cli(sys.argv[1:])
+    if source_exit is not None:
+        sys.exit(source_exit)
     if len(sys.argv) > 1:
         # CLI usage:
         #   python agent_runner.py WMT --periods FY2022 FY2023 FY2024 FY2025

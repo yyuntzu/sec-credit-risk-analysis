@@ -29,6 +29,13 @@ FINANCIAL_STATEMENT_SCHEMA = [
     bigquery.SchemaField("accession_number",  "STRING"),
     bigquery.SchemaField("filed_date",        "DATE"),
     bigquery.SchemaField("ingested_at",       "TIMESTAMP"),
+    # Additive audit columns. Existing rows remain NULL; new observations do not backfill them. Do not
+    # fabricate provenance for historical raw data.
+    *[bigquery.SchemaField(name, "STRING") for name in (
+        "fact_id", "cik", "scope", "namespace", "original_value", "period_kind",
+        "source_version", "source_url", "document_url", "source_locator", "filing_fiscal_period"
+    )],
+    bigquery.SchemaField("filing_fiscal_year", "INTEGER"),
 ]
 
 RAW_COMPANY_SCHEMA = [
@@ -70,7 +77,13 @@ class BigQueryLoader:
         """建立 table 若不存在（partition by filed_date）"""
         table_ref = f"{self.dataset_ref}.{table_name}"
         try:
-            self.client.get_table(table_ref)
+            table = self.client.get_table(table_ref)
+            expected = TABLE_SCHEMAS.get(table_name, FINANCIAL_STATEMENT_SCHEMA)
+            existing = {f.name for f in table.schema}
+            additions = [f for f in expected if f.name not in existing]
+            if additions:
+                table.schema = list(table.schema) + additions
+                self.client.update_table(table, ["schema"])
         except NotFound:
             schema = TABLE_SCHEMAS.get(table_name, FINANCIAL_STATEMENT_SCHEMA)
             table = bigquery.Table(table_ref, schema=schema)
@@ -112,18 +125,30 @@ class BigQueryLoader:
         all_fields = [f.name for f in schema]
 
         # 唯一鍵：raw_company 每個 ticker 只保留最新一筆 metadata；
-        # 財務事實表需包含 period_start：同一份 10-Q、同一 period_end
-        # 可能同時包含 discrete-quarter 與 YTD duration facts；兩者不可互相覆蓋。
+        # Financial fact_id covers borrower/CIK, scope, tag, unit, interval,
+        # accession, filing date and original value. Versions never overwrite one another.
         merge_keys = (
             ["ticker"] if table_name == "raw_company"
-            else ["ticker", "field_name", "accession_number", "period_start", "period_end"]
+            else ["fact_id"]
         )
-        update_fields = [f for f in all_fields if f not in merge_keys]
+        update_fields = ([f for f in all_fields if f not in merge_keys]
+                         if table_name == "raw_company" else ["ingested_at"])
 
         clean_rows = []
+        seen = {}
         for row in rows:
             clean = dict(row)
             clean.setdefault("ingested_at", datetime.utcnow().isoformat())
+            if table_name != "raw_company":
+                if not clean.get("fact_id"):
+                    raise ValueError("Financial rows need immutable fact_id; re-extract legacy rows")
+                identity = clean["fact_id"]
+                comparable = {k: v for k, v in clean.items() if k != "ingested_at"}
+                if identity in seen:
+                    if seen[identity] != comparable:
+                        raise ValueError("Conflicting rows share a fact_id")
+                    continue
+                seen[identity] = comparable
             clean_rows.append(clean)
 
         staging_ref = f"{self.dataset_ref}.{table_name}_staging_{uuid.uuid4().hex[:8]}"
@@ -182,6 +207,11 @@ class BigQueryLoader:
             "cash_flow":        "raw_cash_flow",
         }
 
+        # Validate the whole batch before the first write.
+        for data_type in table_map:
+            for row in financial_facts.get(data_type, []):
+                if row.get("ticker") != ticker:
+                    raise ValueError("Financial batch contains a different borrower")
         stats = {}
         for data_type, table_name in table_map.items():
             rows = financial_facts.get(data_type, [])

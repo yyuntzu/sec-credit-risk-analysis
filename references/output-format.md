@@ -1,300 +1,248 @@
-# Output Format Reference — Credit Memo Standard
+# Loan Review Output and Data Contract — v1.0
 
-按需載入 — Agent 生成報告時必須對照此文件，確保格式符合公司 credit memo 標準可直接交付主管審閱。
+This reference implements Block 1 of the
+[acceptance specification](loan-review-acceptance-spec-v1.0.md).
+The **new user format controls structure**; historical Loan Reviews control prose
+style only. Latest approved formulas control calculations; current borrower sources
+control facts. No historical workbook layout or example figure overrides these rules.
 
----
+This is a boundary specification, not a replacement pipeline or a finished writer.
+`scripts/loan_review_contract.py` is independent of the existing runner/writer.
+Their integration and final-output validation belong to later blocks.
 
-## 報告結構總覽
+## Mode and layout
 
-```
-Section 1  — Cover / Header
-Section 2  — YOY Income Statement  +  Commentary
-Section 3  — Cash Flows
-Section 4  — Ratios YOY            +  Commentary
-Section 5  — Leverage YOY          +  Commentary
-Section 6  — Enterprise Value Analysis
-Section 7  — Financial Covenants
-Section 8  — Summary
-Appendix   — Data Quality Notes
-```
+An explicit user choice selects `annual` or `quarterly`. Keep that choice independently
+of data availability and pass it as `expected_mode` to validation. Never select mode
+by checking whether a query returned quarterly rows. If unspecified, ask.
 
----
+“Long” means the complete agreed analytical coverage, not extra sections or filler.
+The report contains exactly one of the following structures (AUTH-01, FMT-01–07).
+The names in angle brackets below describe period roles, not printable placeholders.
+Actual headers use verified fiscal labels or dates. Missing facts retain their slots.
 
-## Section 1 — Cover Header
+### Annual
 
-```
-# Credit Memo: {Company Name} ({TICKER})
-**Prepared by:** AI Credit Analysis Agent  
-**Report Date:** {generated_date}  
-**Analysis Period:** FY{n-3} – FY{n} (as of {period_end})  
-**Overall Risk Flag:** 🔴 CRITICAL / 🟡 WARNING / 🟢 OK / 🔵 INCOMPLETE
-```
-
----
-
-## Section 2 — YOY Income Statement
-
-### Quarterly Loan Review period basis
-
-季度 Loan Review 的損益表與現金流一律採 YTD basis：Q1 = 1/1–3/31、Q2 = 1/1–6/30、Q3 = 1/1–9/30。Q2 與 Q3 必須分別使用 6 個月及 9 個月 XBRL duration facts，不得使用單一三個月季度數字。比較欄必須採去年同期相同累計期間。
-
-Q2／Q3 的表格標題分別標示 `6M YTD`／`9M YTD`，commentary 除既有項目外必須包含：
-
-- 本年度累計營運表現；
-- 相較去年同期的 revenue、profitability 與 cash-flow 變化；
-- YTD revenue／EBITDA 相對全年 management guidance 的達成率。Guidance 為區間時列示下限／中點／上限達成率；未揭露則標示 `Not disclosed`。
-
-### Table format
-
-| Account | FY{n-3} | FY{n-2} | FY{n-1} | % | FY{n} | % |
-|---------|---------|---------|---------|---|-------|---|
-| Revenues | | | | 100% | | 100% |
-| Cost of revenues | | | | XX.XX% | | XX.XX% |
-| Gross profit | | | | XX.XX% | | XX.XX% |
-| Operating expense | | | | XX.XX% | | XX.XX% |
-| Operating income | | | | XX.XX% | | XX.XX% |
-| Interest expense | | | | XX.XX% | | XX.XX% |
-| Income before taxes | | | | XX.XX% | | XX.XX% |
-| Income tax expense | | | | XX.XX% | | XX.XX% |
-| Net income | | | | XX.XX% | | XX.XX% |
-
-**表格規則：**
-- `%` 欄 = 該行項目 ÷ 當年 Revenue（common-size）
-- `%` 欄**只出現在最近兩個會計年度**（FY{n-1} 和 FY{n}）
-- 負數用括號表示：`(1,234)` ，% 顯示為負值
-- 所有金額單位：USD millions，不顯示單位符號（標題列說明即可）
-
-### Commentary block（≥5 bullets，緊接表格下方）
-
-```
-- Revenues: [YoY % change and primary driver]
-- Gross margin: [direction and primary driver]
-- Operating margin: [direction, key drivers — separate recurring vs non-recurring items]
-- Interest expense: [direction and driver]
-- Pre-tax margin / Net income: [direction and key driver]
+```markdown
+## A. Annual Review
+### YOY (Annual) Income
+### Annual Cash Flows
+### Ratios YOY
+### Leverage YOY
 ```
 
-**Agent 規則：**
-- 若某行項目數據為 NO_DATA，bullet 需說明「not separately reported in XBRL filings」
-- 非經常性項目（商譽減損、重組費用等）必須在 Operating margin bullet 中單獨標出
+| Table | Columns, including Metric | Ordered metric keys |
+|---|---|---|
+| YOY (Annual) Income | Metric; FY t−3; FY t−2; FY t−1; % of revenue; FY t; % of revenue | revenue, cost_of_revenue, gross_profit, operating_expense, operating_income, interest_expense, pretax_profit, income_tax, net_income |
+| Annual Cash Flows | Metric; FY t−3; FY t−2; FY t−1; FY t | beginning_cash, cfo, cfi, cff, ending_cash, cash_change |
+| Ratios YOY | Metric; year-end t−3; year-end t−2; year-end t−1; year-end t | current_ratio, quick_ratio, cash_flow_ratio, debt_ratio, interest_coverage |
+| Leverage YOY | Metric; year-end t−3; year-end t−2; year-end t−1; year-end t | total_debt, debt_service, interest_expense, ltm_ebitda, ebitda_basis, total_leverage, ebitda_interest, dscr |
 
----
+Income has seven columns; other tables have five. The contract always retains the
+EBITDA basis row. A later renderer may collapse identical, available annual basis
+values to one full-width note immediately after the EBITDA row. This optional
+presentation does not remove the per-period basis data.
 
-## Section 3 — Annual Cash Flows
+### Quarterly
 
-| Item | FY{n-3} | FY{n-2} | FY{n-1} | FY{n} |
-|------|---------|---------|---------|-------|
-| Beginning balance | | | | |
-| Operating activities | | | | |
-| Investing activities | | | | |
-| Financing activities | | | | |
-| Ending balance | | | | |
-| Change | | | | |
-
-**Agent 規則：**
-- Change = Ending balance − Beginning balance（驗算用，應與三項活動之和一致）
-- Investing activities 通常為負值，用括號表示
-
----
-
-## Section 4 — Ratios YOY
-
-| Ratio | 12/31/FY{n-3} | 12/31/FY{n-2} | 12/31/FY{n-1} | 12/31/FY{n} |
-|-------|---------------|---------------|---------------|-------------|
-| Current ratio | XX.XXx | XX.XXx | XX.XXx | XX.XXx |
-| Quick ratio | XX.XXx | XX.XXx | XX.XXx | XX.XXx |
-| Cash flow ratio | XX.XXx | XX.XXx | XX.XXx | XX.XXx |
-| Debt ratio | XX.XX% | XX.XX% | XX.XX% | XX.XX% |
-| Interest coverage ratio | X.XXx | X.XXx | X.XXx | X.XXx |
-
-**Ratio 定義：**
-- Current ratio = Current Assets / Current Liabilities
-- Quick ratio = (Current Assets − Inventory) / Current Liabilities  
-  ⚠️ SEC XBRL 常缺 Inventory → 用 Current Assets / Current Liabilities 近似，標記 `(approx)`
-- Cash flow ratio = TTM CFO / Current Liabilities
-- Debt ratio = Total Liabilities / Total Assets（顯示為 %）
-- Interest coverage ratio = LTM EBITDA / Interest Expense  
-  ⚠️ Interest Expense 缺失時：顯示 `N/A`，在 commentary 說明
-
-### Commentary block（4 bullets）
-
-```
-- Current/Quick ratio: [direction, level vs prior year, liquidity assessment]
-- Cash flow ratio: [direction and driver]
-- Debt ratio: [direction and driver — distinguish liability increase vs equity change]
-- Interest coverage ratio: [direction; if negative or N/A, explain basis]
+```markdown
+## B. Quarterly Review
+### Financial Analysis
+#### YTD (Quarterly) Income
+#### Ratios YTD
+#### Leverage Analysis YTD
 ```
 
-> ⚠️ **Special rule — non-cash impairment：**
-> 若 interest coverage ratio 因非現金商譽減損而為負，Agent 必須補充：
-> "Excluding the non-cash goodwill impairment, adjusted interest coverage remains healthy
-> at [X.XXx] based on LTM EBITDA per Compliance Certificate."
+| Table | Columns, including Metric | Ordered metric keys |
+|---|---|---|
+| YTD (Quarterly) Income | Metric; prior comparable YTD; % of revenue; current YTD; % of revenue | Same nine income rows as Annual |
+| Ratios YTD | Metric; earlier FY-end; prior comparable interim; latest FY-end; current interim | current_ratio, quick_ratio, debt_ratio |
+| Leverage Analysis YTD | Metric; earlier FY-end; prior comparable interim; latest FY-end; current interim | total_debt, ltm_ebitda, ebitda_basis, total_leverage |
 
----
+All tables have five columns. Retain each quarterly EBITDA basis cell. Do not append
+Annual Cash Flows, debt service, interest coverage, or DSCR to Quarterly.
 
-## Section 5 — Leverage YOY
+Do not add cover/Part headings, Summary, guidance progress, covenant tables, EV,
+ratings, stock/news, signatures or a Data Quality Appendix. Necessary limitations
+and definition notes belong beside the relevant table. A source passage is not
+permission to add a new section.
 
-| Item | 12/31/FY{n-3} | 12/31/FY{n-2} | 12/31/FY{n-1} | 12/31/FY{n} |
-|------|---------------|---------------|---------------|-------------|
-| Total debt | | | | |
-| Debt service | | | | |
-| Interest expense | | | | |
-| LTM EBITDA* | | | | |
-| *From Compliance Certificate | | | | |
-| Total leverage ratio | X.XXx | X.XXx | X.XXx | X.XXx |
-| LTM EBITDA / Interest expense | X.XXx | X.XXx | X.XXx | X.XXx |
-| Debt service coverage ratio | X.XXx | X.XXx | X.XXx | X.XXx |
+## Metric requirements and presentation
 
-**Leverage Calculation Definitions：**
-- **Total debt** = Short-term loans + Current portion of LT debt + Long-term bank loans
-- XBRL implementation：Short-Term Loans（含 Short-Term Notes Payable）+ Long-Term Liabilities Maturing Within One Year + Long-Term Liabilities。`DebtCurrent` 與 aggregate `LongTermDebt` 只能作 fallback，不得與其已包含的明細重複加總。
-- **Debt service** = Interest expense + Scheduled principal payments (current year)
-- **Total leverage ratio** = Total Debt / LTM EBITDA
-- **LTM EBITDA / Interest** = LTM EBITDA / Interest Expense
-- **Debt service coverage ratio** = LTM EBITDA / Debt Service
-- **LTM EBITDA source priority：** ① Compliance Certificate Adjusted EBITDA → ② dbt `int_ttm_metrics` 計算值 → ③ Operating Income（標記 approx）
+`METRICS` in the executable contract supplies every row's label, normalized unit,
+period kind, definition, rule ID, applicable formula/input order and unresolved
+decisions. This table specifies the source requirements. Formula numbers refer to
+section 4 of the acceptance specification; no alternate equations are authorized.
 
-**Agent 規則：**
-- 若使用 Compliance Certificate 數字，在 `*` 欄位說明來源
-- 若 interest expense = null（SEC XBRL 缺失），相關比率顯示 `N/A`，在 commentary 說明替代指標（cfo_to_debt_ratio）
+| Keys / display labels | Source and definition requirement | Temporal requirement | Unit / rule |
+|---|---|---|---|
+| revenue / Revenues or Net sales | Verified source revenue line; select the actual applicable label | Full FY or comparable YTD | money; FMT-A1/Q1 |
+| cost_of_revenue / Cost of revenues, sales or services | Verified source cost line; do not print slash-separated alternatives | Same income period | money; FMT-A1/Q1 |
+| gross_profit / Gross profit | Source value or verified complete revenue/cost identity | Same income period | money; CALC-14 |
+| operating_expense / Operating expense | Verified expense excluding cost of revenue; no double counting | Same income period | money; CALC-14 |
+| operating_income / Operating income | Source operating profit | Same income period | money |
+| interest_expense / Interest expense | Verified gross/net interest mapping; DEC-05 | FY/YTD income; full FY in Annual Leverage | money |
+| pretax_profit / Income before taxes | Source pre-tax profit or verified accounting identity | Same income period | money; CALC-14 |
+| income_tax / Income tax expense | Source signed tax expense/benefit, no automatic absolute value | Same income period | money; CALC-14 |
+| net_income / Net income | Source value with consolidation scope | Same income period | money |
+| beginning_cash / Beginning balance | Source opening cash with verified cash definition | Instant immediately before FY start | money; CALC-15 |
+| cfo, cfi, cff / Operating, Investing, Financing activities | Source signed cash flows, including outflows | Full FY | money |
+| ending_cash / Ending balance | Source closing cash on same basis as opening | FY-end instant | money; CALC-15 |
+| cash_change / Change | Ending minus beginning; verify full bridge incl. FX/restricted cash/other items | Full FY | money; CASH-CHANGE-v1 |
+| current_ratio / Current ratio | Current Assets / Current Liabilities | Same balance date | percent; CF-01 |
+| quick_ratio / Quick ratio | Quick Assets / Current Liabilities; eligible assets pending DEC-01 | Same balance date | percent; CF-02 |
+| cash_flow_ratio / Cash flow ratio | Full-FY CFO / year-end Current Liabilities | Mixed duration/instant, same endpoint | percent; CF-03 |
+| debt_ratio / Debt ratio | Total Liabilities / Net Worth; DEC-02 scope | Same balance date | percent; CF-06 |
+| interest_coverage / Interest coverage ratio | (Pre-tax Profit + Interest Expense) / (Interest Expense + Capitalized Interest) | Same full FY for all inputs | multiple; CF-04, DEC-05 |
+| total_debt / Total debt | Verified debt components and lease treatment; never total liabilities by default | Column balance date | money; DEC-02 |
+| debt_service / Debt service | Complete approved definition pending; no CapEx or missing principal proxy | Full FY | money; CALC-10, DEC-03 |
+| ltm_ebitda / LTM EBITDA | Verified EBITDA definition/source and complete applicable LTM; missing D&A is not zero | Full fiscal-year duration ending exactly at column date | money; CALC-11/12, DEC-06 |
+| ebitda_basis / EBITDA basis | Actual source/definition/adjustments; must agree with the EBITDA fact | Same LTM | text; FMT-A4/Q3 |
+| total_leverage / Total leverage ratio | Total debt / applicable LTM EBITDA; compatible scope and basis | Balance-date debt with LTM ending on that date | multiple; LEVERAGE-v1, DEC-02/06 |
+| ebitda_interest / EBITDA / Interest expense | (Pre-tax Profit + Interest Expense + D&A) / (Interest Expense + Capitalized Interest); not arbitrary adjusted EBITDA | Same full FY for all inputs | multiple; CF-05, DEC-05 |
+| dscr / Debt service coverage ratio | Complete approved numerator and denominator pending | Full FY | multiple; CALC-10, DEC-03 |
+| Each income common-size cell | Row amount / revenue for the same period; even revenue/revenue requires a nonzero, available denominator | FY t−1 and FY t, or prior/current YTD | percent; COMMON-SIZE-v1 |
 
-### Commentary block（5 bullets）
+Money is normalized to an explicitly supplied report currency and scale. Numeric
+values use finite `Decimal`, never bool, NaN, infinity or a coerced null. Percent
+values are fractions (0.25 means 25%); multiples are unscaled and display `x`.
+Source numeric value and source scale are retained independently. Display rounding
+occurs later, never in the input facts or financial calculations. Currency conversion
+is not implemented or implicitly authorized by this contract.
 
+Narrative supporting metrics also have catalog definitions: `revenue_growth`
+(CF-09, current/prior revenue), `gross_margin` (CF-10, gross profit/revenue),
+`operating_margin` (CF-11, operating income/revenue), `pretax_margin` (CF-12,
+pre-tax profit/revenue), and `operating_margin_change` (CF-16, current minus prior
+margin). Growth/change retain both comparable period inputs. Percentage-point
+changes are stored as differences of fractions (0.01 renders as 1 percentage point).
+These facts support the narrative; they do not add rows to the prescribed tables.
+
+Source-dependent revenue/cost labels must be verified at rendering against the
+source evidence and fact definition; `MetricSpec.label` is the canonical label,
+not proof that a borrower uses that label. File type, display precision, monetary
+scale choice and negative-number formatting remain DEC-09, not new defaults.
+
+## Period contract
+
+`Period` records are provided independently of retrieved facts. Exactly four slots
+are required in the documented order, even when a whole year has no financial data.
+
+| Mode | Slot IDs | Required relationships |
+|---|---|---|
+| Annual | fy_t_minus_3, fy_t_minus_2, fy_t_minus_1, fy_t | Consecutive fiscal years; contiguous verified fiscal intervals |
+| Quarterly | earlier_fy_end, prior_interim, latest_fy_end, current_interim | Prior/current comparable fiscal quarter; chronological endpoints; YTD starts immediately after the relevant prior FY-end |
+
+Each slot records `role`, `label`, `fiscal_year`, `start`, `end`, `ltm_start`,
+`evidence_ids`, optional `quarter`, and a missing-date `reason`. `start` is the actual
+fiscal-year start, including in interim slots. No calendar-month-derived quarters.
+Use Q1–Q3 for interim review; Q4/full-year behavior requires a separate specification.
+Known calendar dates need evidence. Unknown dates stay `None` with a reason and
+prevent dependent values from being marked available.
+
+Facts retain their actual start/end, not just the column's date label. Instant facts
+have no start. Opening cash uses the date before fiscal start. Income uses FY/YTD;
+LTM uses the independent `ltm_start`. The same metric and end date do not establish
+the same fact. Full fiscal-year intervals support 364/365/366/371 inclusive days
+(52 weeks, calendar/leap year, 53 weeks); source calendar verification is still
+required. Transition/short fiscal years need a separately approved extension.
+LTM window length alone does not prove component completeness or non-overlap:
+component construction and verification belong to Block 3.
+
+## Narrative contract and placement
+
+All ordinary analytical coverage follows its table as bullets. Coverage entries
+are not bullet-count quotas: a renderer may combine related topics while preserving
+order. Missing coverage retains a reason and must not be replaced by filler.
+
+| Table | Ordered topic IDs | Evidence requirement / rule |
+|---|---|---|
+| Annual/Quarterly Income | revenue, gross_margin, operating_margin, interest_expense, pretax_margin | Both periods' figures for comparison; relevant source passage for each cause; NAR-01 |
+| Annual Cash Flows | No mandatory long narrative | Applicable cash-definition/FX/reconciliation notes; NAR-02 |
+| Annual Ratios | liquidity, cash_flow_ratio, debt_ratio, interest_coverage | Applicable dated ratios and source inputs; NAR-03 |
+| Annual Leverage | ltm_ebitda, debt_service, dscr, total_debt, total_leverage | Compatible definitions, dates and basis; NAR-04 |
+| Quarterly Ratios | liquidity, debt_ratio | Normally compare against latest FY-end; optional separate quick-ratio bullet within liquidity; NAR-05 |
+| Quarterly Leverage | total_debt, ltm_ebitda, total_leverage | Normally compare against latest FY-end, consistent basis; NAR-06 |
+
+`Narrative` records topic, status (`supported`, `missing`, `not_applicable`), text,
+claim type, fact IDs, evidence IDs, period roles, reason and management attribution.
+Supported comparisons require facts for both periods; causes/management explanations
+require a passage; judgments require data and an applicable evaluation basis;
+limitations require the reviewed-material scope. Unavailable analysis carries a
+reason, not completed borrower prose. Confirmed inapplicability needs evidence.
+
+Each table can carry nearby definition, missing-data, basis or reconciliation notes.
+Income may also carry a supported, material exceptional-item note (NAR-07). These
+notes do not authorize extra sections. Historical style: formal third person,
+specific comparison first, normally one or two sentences per bullet; explain causes
+only when supported, attribute management statements, use percentage points for
+margin movements, and avoid unsupported credit-health thresholds (STYLE-01–10).
+
+## Python boundary API and records
+
+Import from `scripts.loan_review_contract` from the project root. Standard library
+only; no BigQuery, SEC, Anthropic or network call occurs on import or validation.
+
+- `report_layout(mode)` returns fixed `TableSpec` records for the requested mode.
+  Each includes heading level, ordered column roles, ordered metric keys, narrative
+  coverage and rule IDs. The first displayed column is always `Metric` (implicit
+  in the contract); `pct:<role>` identifies common-size cells.
+- `report_headings(mode)` returns the exact heading hierarchy.
+- `empty_report(mode, entity=..., scope=..., currency=..., scale=Decimal(...),
+  periods=..., evidence=...)` builds all required cells in explicit missing states.
+  It neither fills values nor validates/approves the supplied calendar.
+- `validate_report(report, expected_mode=requested_mode)` raises `ContractError`
+  with rule/context at the first violation; returns `None` on structural success.
+
+| Record | Required responsibility |
+|---|---|
+| Report | Explicit mode, entity/scope, currency/scale, four periods, exact headings and tables, fact/evidence registries, approved-decision evidence mapping |
+| Table | Exact immutable TableSpec; ordered rows of fact IDs with fixed column count; ordered narrative coverage; nearby notes |
+| Fact | Unique ID, metric, period role, instant/duration kind, status/value, unit, definition, start/end, entity/scope; source evidence IDs; original value/scale and currency for sourced amounts; formula ID/version and input IDs for calculations; missing reason; EBITDA basis |
+| Evidence | ID, current entity/scope, source ID, version, document date, locator, kind, applicable period roles, original content/review scope; purpose must be borrower |
+| Narrative | As described above; references facts/evidence rather than embedding untraceable support |
+
+`Status` distinguishes `sourced`, `calculated`, `missing`, `not_applicable`,
+`conflict`, `not_calculable`. Unavailable states require `value=None` and a reason;
+zero is rejected in those states. Direct zero requires a source numeric zero.
+Derived values require available input facts and acyclic lineage. Unresolved
+conflicts retain at least two source/version references. Not-applicable requires
+confirmation; not-extracted does not mean not-disclosed.
+
+Supporting input facts may retain different actual intervals under the same target
+period role (for example, standalone-quarter components of an LTM calculation).
+They have separate IDs and are not deduplicated by end date. A table-bound fact must
+match the exact requested interval; known formulas also check their input intervals.
+LTM component aggregation remains Block 3. Source-reported ratios must declare the
+approved metric definition, even when they are not calculated locally.
+
+Available values that depend on unresolved definitions require the corresponding
+`DEC-*` entry, pointing to definition evidence recording explicit approval. Presence
+of that record is a structural check, not proof the user approved its contents.
+Unapproved definitions stay unavailable. Do not invent a DEC-03 rule just to fill
+Annual debt service/DSCR. DEC-08 missing display and delivery rules remain pending;
+internal status identifiers are not approved final display text.
+
+## Validation scope and acceptance mapping
+
+Run from the project root:
+
+```bash
+python3 -m unittest discover -s tests -p 'test_loan_review_*.py' -v
 ```
-- LTM EBITDA: [direction and driver]
-- Debt service: [direction and driver]
-- Debt service coverage ratio: [direction and key driver]
-- Total debt: [direction and driver]
-- Total leverage ratio: [direction; compare to covenant threshold if applicable]
-```
 
----
+| Rules / cases | Block 1 check | Later acceptance still required |
+|---|---|---|
+| FMT-01–03; AT-01–05 | Explicit mode, exact layout, every slot retained, actual date roles, comparable YTD vs FY/LTM | Runner preserves mode and extracts correct facts; rendered layout matches |
+| FMT-05–07; AT-01/02/20 | Units, exact row/column binding, hierarchy, no extra sections/topics | Visual formatting, source-specific labels, placeholder-free output, permitted shared basis note |
+| DATA-01/03; MISS-01–07; AT-06/08/19/22 | Distinct unavailable states; no null-to-zero, source identity/version/locator, current entity/scope, conflict and inapplicability records | Authenticity, approved version policy, completeness of extraction |
+| CALC-02/03; AT-07–14/21 | Formula/input IDs and units, date compatibility, explicit unresolved definitions, basis and cycle checks | Arithmetic, denominator handling, sign rules, cash bridge, LTM components, dbt/SQL/Python parity |
+| NAR/EVD; AT-15–18/23 | Required topic slots, fact/evidence references, claim type and attribution metadata | Semantic support, genuine comparability/materiality, no invented cause, historical writing quality |
 
-## Section 6 — Enterprise Value Analysis
-
-One paragraph. Must include all four elements:
-
-1. 公司性質說明（private / public）
-2. 估值方法（industry benchmark EV/EBITDA multiple 或 market cap）
-3. Implied EV 計算
-4. Senior Secured Coverage Ratio = Implied EV / Senior Secured Debt
-
-**Template（private company）：**
-
-```
-As a private company, [Company] does not have publicly traded equity, so its enterprise
-value (EV) cannot be directly determined from market data. However, using the industry
-benchmark multiple of [X.XXx], the borrower's implied EV is approximately $[X.X] billion.
-The Senior Secured Coverage Ratio stands at [X.XXx], indicating [strong/adequate/weak]
-asset coverage for the [facility type]. (Please refer to the attachment)
-```
-
-**Template（public company）：**
-
-```
-[Company] is publicly traded on [Exchange] under ticker [{TICKER}]. As of [date],
-the market capitalization is approximately $[X.X] billion, implying an EV of $[X.X] billion
-(inclusive of net debt of $[X.X] billion). This represents [X.XXx] EV/LTM EBITDA,
-[in line with / at a premium to / at a discount to] the sector median of [X.XXx].
-The Senior Secured Coverage Ratio stands at [X.XXx].
-```
-
----
-
-## Section 7 — Financial Covenants
-
-| Requirement | Equation | Threshold | Actual | Pass/Fail |
-|-------------|----------|-----------|--------|-----------|
-| [Covenant name] | [Formula] | [≤ or ≥ X.XXx] | [X.XXx] | ✅ Pass / ❌ Fail |
-
-若無財務維持條款：寫 `N/A — No financial maintenance covenants in credit agreement.`
-
-**Agent 規則：**
-- 必須說明 measurement date 及數字來源
-- 常見 covenants：Consolidated Net Leverage Ratio、Interest Coverage Ratio、Fixed Charge Coverage Ratio
-- Actual 值來自 `fct_covenant_status.actual_value`；若為 null 標記 `NO_DATA — see Appendix`
-
----
-
-## Section 8 — Summary
-
-Numbered list，最少 5 points，使用 bank-appropriate 語言，避免主觀評語。
-
-```
-1. No default or event of default has occurred. [OR: describe any default/waiver/amendment]
-2. The credit risk is [acceptable/elevated/etc.]; the Branch concluded the Company
-   is [capable/not capable] of servicing its debt obligations.
-3. [Forward-looking: management's FY+1 revenue and EBITDA guidance, if available]
-4. [Non-recurring item explanation — e.g., goodwill impairment, restructuring charge;
-   required if any non-cash item distorted GAAP metrics in this period]
-5. [Overall credit narrative: core operating performance, ratings agencies' view if public,
-   branch monitoring commitment]
-6. [Optional: strategic or operational update relevant to credit quality]
-```
-
-**Point-by-point rules：**
-- Point 1：永遠先處理 covenant compliance / default status
-- Point 2：永遠包含 branch credit conclusion
-- Point 3：有 earnings release 就必須納入 forward guidance
-- Point 4：有非現金或非經常性項目扭曲 GAAP 時必填
-- Point 5：整體信用品質定性描述
-
----
-
-## Appendix — Data Quality Notes
-
-每份報告結尾必須附上此區塊（即使所有欄位都有數據）。
-
-```
-> ⚠️ Data Quality Notes
-> 
-> | Field | Status | Reason | Impact |
-> |-------|--------|--------|--------|
-> | interest_expense | NO_DATA | Not separately tagged in XBRL filing | Interest coverage ratio = N/A; replaced by CFO/Debt ratio |
-> | D&A | NO_DATA | Reported in footnotes only | EBITDA = Operating Income (approx); overstated by D&A amount |
-> | short_term_debt | APPROX | Using long_term_debt as proxy | Total debt may be understated |
-> | inventory | NO_DATA | Not tagged | Quick ratio = Current ratio (approx) |
->
-> All figures sourced from SEC EDGAR XBRL filings via data.sec.gov.
-> Compliance Certificate figures, where used, sourced from [document name / date].
-```
-
-只列出實際缺失或近似的欄位；全部正常時寫：`All key fields available. No data quality issues noted.`
-
----
-
-## 數值格式規則
-
-| 數值類型 | 格式 | 範例 |
-|----------|------|------|
-| 金額（報表用，millions） | `1,234.5` | `48,234.5` |
-| 金額摘要（B 級） | `$X.XB` | `$2.1B` |
-| 金額摘要（M 級） | `$XXX.XM` | `$482.3M` |
-| 比率（coverage/leverage） | `X.XXx` | `3.24x` |
-| 百分比（margin / debt ratio） | `XX.XX%` | `21.43%` |
-| 負數（報表行項目） | `(1,234.5)` | `(482.3)` |
-| 缺失值 | `N/A` | — |
-| 近似值 | `X.XXx (approx)` | `3.24x (approx)` |
-
----
-
-## HTML Dashboard Layout（快速參考視圖，非正式交付）
-
-```
-┌─────────────────────────────────────────────────────┐
-│ CREDIT FINANCIAL ANALYSIS    [Company ▼]  [Date ▼]  │
-├─────────────────────────────────────────────────────┤
-│  Net Sales  │ Gross Margin │ Op Margin │ Net Income  │
-│  LTM EBITDA │ Tot Leverage │ Int Cover │    DSCR     │
-├──────────────────────┬──────────────────────────────┤
-│  Liquidity Ratios    │  Cash Flow Summary            │
-│  (horizontal bar)    │  (horizontal bar waterfall)   │
-├─────────────────────────────────────────────────────┤
-│  Revenue & EBITDA Trend  (grouped bar, chronological)│
-├─────────────────────────────────────────────────────┤
-│  Covenant Status                                     │
-│  covenant_name │ requirement │ actual │ headroom │ 🟢 │
-└─────────────────────────────────────────────────────┘
-```
-
-> HTML dashboard 為輔助工具，**正式交付主管的是 Markdown/Word 格式的 credit memo**（Sections 1–8 + Appendix）。
+A valid empty/missing-state report is an intentionally representable **incomplete
+payload**, not a completed credit assessment. This validator does not recalculate
+financial formulas, authenticate source text, detect every unsupported meaning in
+prose, or authorize final delivery. Numeric golden tests belong to Block 3; prose
+checks to Block 4; writer checks to Block 5; end-to-end acceptance to Block 6.
+Passing this block must not be reported as passing those later gates (OBJ-02,
+CHANGE-04/05). Existing runtime outputs remain legacy until connected and tested.
