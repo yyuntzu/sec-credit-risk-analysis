@@ -151,7 +151,7 @@ class ExecutedLegacyQueryTests(unittest.TestCase):
     def test_all_three_readers_consume_once_and_save_all_evidence(self):
         for reader in (runner.query_kpis_from_bq, runner.query_annual_financials, runner.query_quarterly_financials):
             annual = reader is runner.query_annual_financials
-            start, end, form = ('2025-01-01', '2025-12-31', '10-K') if annual else ('2025-07-01', '2025-09-30', '10-Q')
+            start, end, form = ('2025-01-01', '2025-12-31', '10-K') if annual else ('2025-04-01', '2025-06-30', '10-Q')
             if reader is runner.query_quarterly_financials:
                 start = '2025-01-01'  # Comparable YTD, not the discrete third quarter.
             def pair(value, instant=False):
@@ -178,13 +178,18 @@ class ExecutedLegacyQueryTests(unittest.TestCase):
                 return job
             loader.client.query.side_effect = query
             with self.subTest(reader=reader.__name__), tempfile.TemporaryDirectory() as tmp, patch.object(runner, 'OUTPUT_DIR', tmp):
-                kwargs = {'quarter_labels': ['Q3 2025']} if reader is runner.query_quarterly_financials else {}
+                kwargs = {} if reader is runner.query_kpis_from_bq else {'period_request': request_fixture('annual' if annual else 'quarterly')}
                 result = reader('SYNTHETIC-ONLY', loader, **kwargs)
+                self.assertEqual(len(result), 1 if reader is runner.query_kpis_from_bq else 4 if annual else 2)
+                result = [r for r in result if r.get('revenue_m') is not None]
                 self.assertEqual(len(result), 1)
                 self.assertEqual(result[0]['revenue_m'], 1)
                 self.assertEqual(result[0]['cash_m'], 2)
                 self.assertEqual(result[0]['cfo_m'], 3)
-                self.assertEqual(result[0]['ebitda_m' if reader is runner.query_kpis_from_bq else 'operating_income_m'], 4)
+                if reader is runner.query_kpis_from_bq:
+                    self.assertIsNone(result[0]['ebitda_m'])
+                else:
+                    self.assertEqual(result[0]['operating_income_m'], 4)
                 self.assertEqual(loader.client.query.call_count, 2)
                 saved = load_json(loader.loan_review_source_paths[0])
                 self.assertEqual(len(saved['evidence']), 8)

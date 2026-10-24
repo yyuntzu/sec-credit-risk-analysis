@@ -1,6 +1,7 @@
 # Loan Review Modification and Acceptance Specification v1.0
 
 - Date: 2026-10-06.
+- Calculation addendum: 2026-10-23. Incorporates the SEC-to-account mapping, conditional derivations, period conversions, and reconciliation findings reviewed with the user. This is a specification update only; it does not establish that code, Excel examples, or tests implement these rules.
 - Purpose: A shared baseline for subsequent changes by implementation block, testing, and final acceptance.
 - Basis: The user-provided new format, Revised Phases 2 and 3, the Phase 4 proposal, and the latest calculation formulas supplied by the user.
 - Status: The user authorized saving this document as the acceptance criteria. It does not indicate that implementation or testing has been completed, and it does not authorize changes to other files.
@@ -173,7 +174,7 @@ These are topic-coverage requirements, **not unconditional narrative-count quota
 | CALC-07 | dbt, SQL fallback, Python, and reported values must be consistent. Different paths must not use different formulas for the same metric. |
 | CALC-08 | Example values in the user's formula tables are not facts for a new borrower and are not test expectations without the corresponding inputs. |
 
-For percentage metrics below, multiply the formula result by 100 and display `%`. Do not multiply multiples or days by 100.
+Store percentage metrics as fractions (0.25 means 25%). When rendering plain numeric text, multiply once by 100 and append `%`; when applying an Excel percentage format, retain the fraction and let formatting perform the display conversion. Never scale twice. Do not multiply multiples or days by 100.
 
 ### 4.2 Confirmed Formulas
 
@@ -223,6 +224,88 @@ Metrics absent from the new format remain calculation rules; they do not require
 | CALC-15 | Beginning cash, ending cash, and change must use a consistent cash definition. Do not infer missing values from the three activity categories when FX, restricted-cash, or other reconciliation information is incomplete. |
 
 Previous coverage formulas omitting Capitalized Interest, and conclusions treating the two coverage measures as the same metric, no longer apply.
+
+### 4.4 SEC 原始科目、統一科目與最終報表的計算邊界
+
+本節補充既有 CF、CALC、DATA 規則，不更改第 2 節的 Annual／Quarterly 最終報表結構，也不核准第 9 節仍待確認的定義。工作底稿可以比最終報表有更多科目與對照欄；不得將底稿的所有欄位、比率或差異表自動加入最終報表。
+
+查找參考：[AI 財務資料擷取參考準則](loan-review-extraction-reference.md)及[逐科目索引](loan-review-account-reference.md)重用本規格與現有代碼，保留原Excel出現紀錄、候選tags及待確認事項；此連結不將候選定義／映射升格為已核准，也不代表已接入程式。
+
+| ID | 規則 |
+|---|---|
+| CALC-16 | 採兩步驟資料映射：先將 SEC 原始科目對應至統一會計科目，再由統一科目及核准計算結果填入最終報表。AI 可提出科目與附註對應，但金額計算、期間轉換及勾稽由確定性程式執行。 |
+| CALC-17 | 原始揭露值、統一科目值與推導值必須可分辨。原文名稱、tag／namespace、原始數值、單位、期間、合併範圍、申報版本及來源位置不得被標準化結果覆蓋；計算值保留公式版本與輸入 fact IDs。 |
+| CALC-18 | 逐公司、逐期間、逐科目判斷取值方式；不得永久指定某家公司「一律推算毛利」，也不得只依英文名稱或 Excel 行號對應。缺少 API tag 只代表目前未取得，須記錄是否已查閱申報主表、附註、自訂標籤或其他適用申報，不能直接宣稱財報未揭露。 |
+| CALC-19 | 同一科目已有適用的直接揭露值時，保留該值及其證據；可另計算恆等式作勾稽。若兩者不符，並列來源值、推導值及差額，不得靜默覆寫、選最大值或用調整數湊平。衝突處理仍依 DATA-03／DEC-07。 |
+| CALC-20 | 總額、小計及明細應形成可核對的科目層級。相同來源的替代 tag、同義名稱、含商譽無形資產合計與其組成項目、應收／應付小計與其明細，不得重複加總。只有確認互不重疊且完整的明細才能產生小計或合計。 |
+
+建議檢查底稿至少能回答：最終報表欄位 → 統一科目 → 原始科目或計算公式 → 輸入事實 → SEC 文件與儲存格／表格／附註位置。這是邏輯要求，不指定新增資料庫或重寫現有 pipeline。
+
+### 4.5 直接取值與條件式推導公式
+
+以下是 CALC-14 的具體推導方法，**只有列示的適用條件成立時才可使用**。任一必要輸入缺失、定義未確認、合併範圍不同或來源衝突時，不得產生看似完整的數字。不得為了完成另一個公式而循環反推輸入。
+
+| ID | 項目 | 公式／方法 | 適用條件與限制 |
+|---|---|---|---|
+| DER-01 | Gross Profit／毛利金額 | Revenues − Cost of Revenue | 優先保留適用的直接揭露毛利；推導時營收與成本必須同期間、同範圍，且成本為對應營收成本，不是包含其他營業費用的總費用。若主表另有影響毛利的項目，須先確認完整恆等式。 |
+| DER-02 | Cost of Revenue／營收成本 | Revenues − Gross Profit | 僅在直接成本未取得、毛利有獨立來源且 DER-01 的會計結構成立時使用。不得同時以未知成本推毛利，再以該毛利反推成本。 |
+| DER-03 | Operating Expense／不含營收成本的營業費用 | Gross Profit − Operating Income | 僅適用於兩者之間完全由該類營業費用構成的列報。若另有營業收益、重組、減損或其他獨立調整，須確認其歸屬及符號後使用完整橋接式。不得不加核對地將 `CostsAndExpenses` 當成不含 COGS 的費用。 |
+| DER-04 | Operating Income／營業利益 | Gross Profit − Operating Expense | 與 DER-03 相同的完整橋接條件；不得重複扣除已含在成本中的折舊、攤銷或其他費用。 |
+| DER-05 | Pre-tax Profit／稅前利益 | Net Income + signed Income Tax Expense | 只限淨利與所得稅對應同一稅前損益範圍，且沒有未處理的停業單位、非控制權益或其他橋接項。所得稅費用為正、利益為負；不得使用 `abs(tax)`。若有橋接項，須有來源及經確認的完整公式。 |
+| DER-06 | Net Income／稅後淨利 | Pre-tax Profit − signed Income Tax Expense | 與 DER-05 相同的適用條件；不得把 continuing operations、歸屬母公司淨利與合併淨利直接互換。 |
+| DER-07 | 小計與合計 | Σ 已確認、不重疊的組成項目（依來源符號處理減項） | 資產、負債、權益、收入、費用及三類現金流的小計須有來源支持的組成關係。未揭露明細不能一律當0，已披露總額也不能因明細未齊而被不完整加總覆蓋。 |
+| DER-08 | Working-paper cash bridge／現金勾稽 | Ending Cash − Beginning Cash = CFO + CFI + CFF + FX + 其他經核實的調節項 | 期初、期末及變動均須採相同現金定義；核對受限制現金、匯率、停業單位及其他來源列示項目的涵蓋範圍，避免重複計入。缺少必要橋接項時，只能記錄未勾稽，不得反推未知項或宣稱計算的期末現金為已確認來源值。 |
+
+「Gross Profit」是金額，「Gross Profit Margin」是比率；不得以含糊的 `Margin Profit` 作為兩者共用科目。毛利率、營業利益率及稅前淨利率依 CF-10–12 計算；是否取得直接毛利、是否使用 DER-01，必須在每一期資料的狀態與證據中標示。
+
+補充顯示／計算規則（不新增最終報表列）：
+
+| ID | 項目 | 公式與條件 |
+|---|---|---|
+| DER-09 | Common-size／營收占比 | 同期科目金額 ÷ 同期 Revenues。營收自身的占比也須先確認營收可用且非0；占比不是成長率。 |
+| DER-10 | Annual cash change／年度現金變動 | 同口徑 Ending Cash − Beginning Cash。另以 DER-08 核對橋接；不可直接將 CFO＋CFI＋CFF 視為所有情況下的完整變動。 |
+| DER-11 | Net Profit Margin／淨利率（若另外納入分析範圍） | 同期、同範圍 Net Income ÷ Revenues。此處記錄定義，不自動增加第 2、3 節的表格列或敘述要求。 |
+
+### 4.6 FY、QTD、YTD 與 LTM 期間轉換
+
+| ID | 期間／方法 | 計算規則與條件 |
+|---|---|---|
+| PER-01 | FY | 使用經核實的完整會計年度起訖日；不得將 10-K 文件中的所有期間都視為當年度，也不得強制套用曆年。 |
+| PER-02 | QTD 與 YTD | QTD 是單季流量，YTD 是會計年度開始至本期末的累計流量。10-Q 可同時含不同期間；須以每個事實的實際 start／end、單位及範圍判斷，不只依文件類型、`fy/fp` 或截止日。 |
+| PER-03 | 由累計推單季 | Q2 QTD = Q2 YTD − Q1 YTD；Q3 QTD = Q3 YTD − Q2 YTD；Q4 QTD = FY − Q3 YTD。輸入須為同一會計年度、相容版本及相同範圍／單位的累計值，並確定差額對應完整單季。 |
+| PER-04 | 由單季形成累計 | YTD = 從該會計年度開始至指定季末的完整、連續、不重疊 QTD 加總。不得再加已含在 YTD 中的季度。 |
+| PER-05 | LTM 橋接 | LTM = 前一完整 FY + 本期 YTD − 前一年可比較 YTD。三項定義、範圍、單位及版本須相容，且組合後精確涵蓋指定截止日往前一個完整會計年度；52／53週或期間變更須另行核對。亦可使用完整、連續、不重疊的四個季度。 |
+| PER-06 | 年化不等於 LTM | CF-13–14、CF-17–21 的流量年化依已核實的 Months 與適用規則處理；不得以 YTD×2、QTD×4 或任何年化近似值代替實際 LTM EBITDA。Months 與平均餘額取樣仍受 DEC-04 約束，不將示範檔的月份或平均方式升格為核准定義。 |
+| PER-07 | 時點餘額 | 資產負債表使用指定日期的餘額；不得以相鄰季度餘額相減來建立「單季資產負債表」，也不得將年度或季度餘額相加形成 YTD。 |
+| PER-08 | 前期比較及成長 | CF-09 比較完整年度對完整年度，或本期 YTD 對前一年可比較 YTD；QTD 比較僅適用於明確要求的單季分析。缺少前期值時補查適用歷史申報，不以另一期間替代，也不從公布比率倒推基期。 |
+
+上述轉換只適用於具有加總性的流量金額。百分比、比率、EPS、加權平均股數及平均餘額不得直接依上述加減法轉換；必須使用各自經確認的計算方法。由 QTD 或 YTD 衍生的資料須明確標示為計算值。
+
+### 4.7 勾稽、差異與示範檔修正
+
+| ID | 規則 |
+|---|---|
+| REC-01 | 同一日期、同一合併範圍及單位下核對 Assets = Liabilities + Equity；先查核是否包含非控制權益及其他來源列示的權益項目。不得把差額補進 Other Assets／Other Liabilities。 |
+| REC-02 | 同一定義下核對本期期初現金與前期末現金，以及 DER-08 的本期現金橋接。前期 BS 現金與 CF 現金若定義不同，須先以附註建立橋接，不能直接判定為錯誤。 |
+| REC-03 | 每項差異保留來源原值、計算結果、差額方向、幣別／單位、期間、來源位置、使用公式及調查狀態。差額採「計算值－來源值」；百分比差額採百分點，不當成相對成長率。 |
+| REC-04 | 差異原因分成公式錯誤、映射／重複加總、期間、單位、範圍／定義、版本、缺少組成資料、顯示精度或尚待查明。沒有證據時不得選定原因；不能只看到 Excel 不一致就宣稱 SEC 財報錯誤。 |
+| REC-05 | 計算精度與顯示精度分開驗證；保留未捨入中間值。容許差須依實際來源精度與核准顯示規則設定，不以擴大容許差消除公式錯誤。差異清單屬內部核對材料；最終報表僅在適用表格旁呈現必要註記，依 FMT-07 不自動新增附錄。 |
+
+**本對話示範檔的更正記錄：**
+
+- 固定資產對長期資金比率必須採 CF-08，分子包括 **Funds & Investments**。先前示範公式只用 Fixed Assets，對 Nexstar 各期產生的該項差異是示範公式的誤報，不能當成原始財報有誤的證據。
+- 例：Nexstar 工作底稿 2025 年數據，金額單位為千美元，`(1,158,000 + 396,000) / (2,062,000 + 6,222,000) = 0.1875905359729599`，顯示為 **18.76%**，與原檔相符。來源為 `Year/E-loan YYYY_Nexstar 2025.xls`，`Report1!R26`、`R24`、`R70`、`R54`；來源比率為 `R205`。此為使用者工作底稿核對例，尚非 SEC 原始申報核驗，也不核准其金額移用到其他公司／期間。
+- CF-04／05 的分母不能漏掉 Capitalized Interest；資本化利息、D&A、呆帳備抵及存貨跌價備抵的未取得值不能當0。CF-17／19 也不能在未確認組成項目及符號時，直接以淨應收款或淨存貨替代已核准的分母。
+- 先前示範對原檔空白暫填0、速動資產組成、平均餘額取樣及現金橋接的假設，均不是正式規格或實作驗收依據。正式計算須重新核對本文件規則及適用 SEC 來源。
+- Nexstar e-loan 底稿中曾出現現金橋接差異、跨期現金差異，以及同一金額的債務清償／投資減損／匯兌名稱不同。這些是待調查線索；須查核 SEC 原始主表、現金及受限制現金調節、匯率、停業單位與附註，不直接以調節數消除，也不宣稱已確定原因。
+
+### 4.8 補查資料與正式交付完整性
+
+| ID | 規則 |
+|---|---|
+| SRC-01 | 缺少必要輸入時，先列出「公司、科目、期間、定義、已查材料、尚需來源」的補查清單；同公司適用申報中的比較欄、較早的10-K／10-Q、主表與附註可作候選證據，仍須符合實體、期間、單位、版本及範圍要求。 |
+| SRC-02 | 所有必要輸入有來源、經核准推導或有證據確認不適用，且必要勾稽已完成解釋，才可主張該數值已完成核驗。找到 tag、填滿 Excel、程式執行成功或來源層完成，不等於最終報表已驗收。 |
+| SRC-03 | 使用者要求「最終報表不要有數字缺失」是資料補查與核驗目標，不授權補0、估計、從比率反推或使用未核准代理值。確實未揭露、仍有衝突或定義未決時，保留狀態與原因；正式交付及不適用項目的呈現仍依第6節與 DEC-08，不在此自行建立豁免清單。 |
 
 ## 5. Data and Evidence Contract
 
@@ -324,6 +407,16 @@ Expected results must not be generated by the same calculation logic under test.
 | AT-21 | Different calculation paths | dbt, SQL fallback, and Python produce consistent results and statuses for the same inputs |
 | AT-22 | Source conflicts / restatements | Apply the approved policy; disclose unresolved matters rather than silently selecting values |
 | AT-23 | Writing quality | Manually check professional tone, specific comparisons, terminology, and analytical depth; keyword matching alone is insufficient |
+| AT-24 | SEC → 統一科目 → 最終報表映射 | 逐公司、逐期間追溯來源；自訂標籤或 API 缺項不能直接判為未揭露，同義 tag 與小計／明細不得重複加總（CALC-16–20） |
+| AT-25 | 毛利、成本與營業費用推導 | 以完整且定義相容的獨立輸入驗證 DER-01–04；測試包含 COGS 的總費用、其他營業收益及循環反推被拒絕的案例 |
+| AT-26 | 稅前／稅後損益橋接 | DER-05／06 保留稅益符號；停業單位、非控制權益或其他未處理橋接項使簡式不適用時，不輸出錯誤推導值 |
+| AT-27 | QTD／YTD／FY 轉換 | 依 PER-01–04、07–08 驗證同季截止日的不同期間、完整差分與加總、非加總性指標及基期缺失；不得改變最終 Quarterly 的YTD欄位 |
+| AT-28 | LTM 與年化的區別 | PER-05／06 使用完整相容 FY＋YTD－同期YTD，或四個連續季度；不接受 YTD×2、QTD×4、重疊或不完整期間作 LTM |
+| AT-29 | 固定資產對長期資金比率漏項回歸 | CF-08 分子包含 Funds & Investments；以有非零投資的獨立 fixture 驗證，防止再以 Fixed Assets 單獨作分子。上述 Nexstar 底稿例僅在來源 fixture 一併提供時使用 |
+| AT-30 | 占比與百分比顯示 | DER-09 驗證同期間分母、營收缺失／零值與負值；0.25以Excel百分比顯示為25%，不得變成2500%；百分點與成長率分開驗證 |
+| AT-31 | 完整現金橋接與跨期現金 | DER-08／10、REC-01–04 驗證受限制現金、匯率、停業單位、期初與前期末定義、資產負債及現金勾稽；不以差額補進其他科目 |
+| AT-32 | 來源值與計算值不符 | 依 CALC-19、REC-03–05 同時保留兩者與差額；未知原因保持待查，不把錯誤公式造成的差異誤報為來源錯誤 |
+| AT-33 | 補查與數字完整性 | SRC-01–03 保留補查範圍及證據；缺歷史基期、不適用、未揭露、衝突及示範填0各自分辨，不宣稱已核驗或以示範值通過正式驗收 |
 
 Numerical tests must use unrounded expected values. Display tests must validate formatting separately. Specify calculation tolerances and display precision explicitly; do not conceal formula errors with overly broad tolerances.
 

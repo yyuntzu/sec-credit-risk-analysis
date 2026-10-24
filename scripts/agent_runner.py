@@ -16,6 +16,7 @@ import json
 import logging
 import subprocess
 import time
+import math
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
@@ -639,119 +640,78 @@ def verify_marts_in_bq(ticker: str, bq_loader: "BigQueryLoader") -> dict:
 
 def _sf(v) -> Optional[float]:
     if v is None: return None
-    try: return float(v)
-    except: return None
+    try:
+        value = float(v)
+        return value if math.isfinite(value) else None
+    except (ValueError, TypeError, OverflowError):
+        return None
 
 
 def _enrich_rows(rows: list[dict]) -> list[dict]:
-    """
-    Add derived fields to BQ financial rows so credit_memo_writer
-    can render both Quarterly and Annual formats without extra queries.
+    """Legacy adapter: direct values and unambiguous arithmetic only.
 
-    Adds:
-      cost_of_sales_m, operating_expense_m, income_before_tax_m (if missing),
-      ebitda_m, total_debt_m (LTD+STD), current_ratio_pct, quick_ratio_pct,
-      cash_flow_ratio_pct, debt_ratio_pct, interest_coverage_x,
-      debt_service_m, debt_service_coverage_x, ebitda_interest_x, leverage_x,
-      beginning_cash_m, net_cash_change_m
+    Legacy rows carry no approval/identity evidence. Pending definitions and
+    conditional identities must be calculated through the Fact contract instead.
     """
     result = []
     for row in rows:
         r = dict(row)
-        rev  = _sf(r.get("revenue_m"))
-        gp   = _sf(r.get("gross_profit_m"))
-        oi   = _sf(r.get("operating_income_m"))
-        ie   = _sf(r.get("interest_expense_m"))
-        da   = _sf(r.get("da_m")) or 0.0
-        cfo  = _sf(r.get("cfo_m"))
-        cfi  = _sf(r.get("cfi_m"))
-        cff  = _sf(r.get("cff_m"))
-        cap  = _sf(r.get("capex_m")) or 0.0
-        ca   = _sf(r.get("current_assets_m"))
-        cl   = _sf(r.get("current_liabilities_m"))
-        ta   = _sf(r.get("total_assets_m"))
-        tl   = _sf(r.get("total_liabilities_m"))
-        inv  = _sf(r.get("inventory_m")) or 0.0
-        total_debt = _sf(r.get("total_debt_m"))
-        std  = _sf(r.get("short_term_debt_m")) or 0.0
-        cash = _sf(r.get("cash_m"))
-        cor  = _sf(r.get("cost_of_revenue_m"))
-        ibt  = _sf(r.get("income_before_tax_m"))
-        itx  = _sf(r.get("income_tax_m"))
-        ni   = _sf(r.get("net_income_m"))
-
-        # Gross profit: direct XBRL → fallback to revenue − cost of sales.
-        # Some filers (e.g. AMZN) stopped tagging GrossProfit outright, so
-        # this identity is the only way to get a value for them at all.
-        if gp is None and rev is not None and cor is not None:
-            gp = rev - cor
-        r["gross_profit_m"] = gp
-
-        # Cost of sales: direct XBRL → fallback to revenue − gross_profit
-        r["cost_of_sales_m"] = cor if cor is not None else (
-            (rev - gp) if rev is not None and gp is not None else None
-        )
-        # Operating expense: direct XBRL (us-gaap:OperatingExpenses) →
-        # fallback to gross_profit − operating_income.
-        # Filers with no COGS/GrossProfit line (e.g. Coinbase) report a
-        # single "Total operating expenses" figure directly under the
-        # OperatingExpenses tag — for them gp is None so the identity
-        # below would otherwise leave this blank even though the filing
-        # states the number outright. Filers that do have a COGS split
-        # don't tag OperatingExpenses at all, so this falls through to the
-        # identity, which holds no matter how a filer breaks opex down
-        # (R&D+S&M+G&A vs SG&A+amortization vs anything else) and needs no
-        # per-filer tag mapping.
-        opex_direct = _sf(r.get("operating_expense_direct_m"))
-        r["operating_expense_m"] = opex_direct if opex_direct is not None else (
-            (gp - oi) if gp is not None and oi is not None else None
-        )
-        # Income before tax: direct → infer from net + tax
-        if ibt is None and ni is not None and itx is not None:
-            r["income_before_tax_m"] = ni + abs(itx)
-
-        # EBITDA (operating income + D&A)
-        ebitda = (oi + da) if oi is not None else None
-        r["ebitda_m"] = ebitda
-
-        # total_debt_m is calculated upstream from the three required debt
-        # components. Do not add short_term_debt_m again: it is already part
-        # of total_debt_m and doing so would double count current debt.
-        r["total_debt_m"] = total_debt
-
-        # Ratios as %
-        if ca is not None and cl and cl != 0:
-            r["current_ratio_pct"] = ca / cl * 100
-            r["quick_ratio_pct"]   = (ca - inv) / cl * 100
-        else:
-            r["current_ratio_pct"] = (_sf(r.get("current_ratio")) or 0) * 100 or None
-            r["quick_ratio_pct"]   = r["current_ratio_pct"]
-
-        r["cash_flow_ratio_pct"] = (cfo / cl * 100) if (cfo is not None and cl and cl != 0) else None
-        r["debt_ratio_pct"]      = (tl / ta * 100)  if (ta and tl)                          else None
-
-        # Leverage / coverage
-        ie_abs = abs(ie) if ie is not None else None
-        r["interest_coverage_x"]    = (ebitda / ie_abs) if (ebitda and ie_abs and ie_abs != 0) else None
-        r["ebitda_interest_x"]      = r["interest_coverage_x"]
-
-        debt_svc = (ie_abs + cap) if ie_abs is not None else None
-        r["debt_service_m"]          = debt_svc
-        r["debt_service_coverage_x"] = (ebitda / debt_svc) if (ebitda and debt_svc and debt_svc > 0) else None
-
-        total_debt = r.get("total_debt_m")
-        r["leverage_x"] = (total_debt / ebitda) if (total_debt and ebitda and ebitda != 0) else None
-
-        # Cash flow: beginning balance = ending − (CFO+CFI+CFF)
-        change = (cfo or 0) + (cfi or 0) + (cff or 0)
-        r["beginning_cash_m"]  = (cash - change) if cash is not None else None
-        r["net_cash_change_m"] = change if (cfo is not None or cfi is not None or cff is not None) else None
-
+        ca, cl = _sf(r.get("current_assets_m")), _sf(r.get("current_liabilities_m"))
+        r["cost_of_sales_m"] = _sf(r.get("cost_of_revenue_m"))
+        # OperatingExpenses may include COGS; no automatic semantic adoption.
+        r["operating_expense_m"] = None
+        # Do not infer gross profit, pre-tax income, EBITDA, debt or opening cash
+        # without scope/bridge/definition evidence. Preserve direct source facts.
+        for key in ("gross_profit_m", "income_before_tax_m", "beginning_cash_m"):
+            r[key] = _sf(r.get(key))
+        r["current_ratio_pct"] = ca / cl * 100 if ca is not None and cl not in (None, 0) else None
+        r["net_cash_change_m"] = None  # A same-basis cash bridge is not available.
+        for key in ("ebitda_m", "total_debt_m", "quick_ratio_pct", "debt_ratio_pct",
+                    "interest_coverage_x", "ebitda_interest_x", "debt_service_m",
+                    "debt_service_coverage_x", "leverage_x"):
+            r[key] = None
+        cfo = _sf(r.get("cfo_m"))
+        r["cash_flow_ratio_pct"] = (cfo / cl * 100 if cfo is not None and cl not in (None, 0)
+                                    and r.get("period_role", "").startswith("fy_") else None)
         result.append(r)
     return result
 
 
-def prepare_legacy_source_query(ticker: str, bq_loader: BigQueryLoader) -> tuple:
+def _requested_financial_periods(payload, ticker, mode):
+    """Reuse the existing request/calendar contract; labels cannot prove dates."""
+    if payload is None:
+        raise SourceError("Verified fiscal calendar required: supply the existing source request; FY/Q labels alone cannot establish dates")
+    report, cik, as_of = parse_request(payload)
+    if report.entity != ticker or (report.mode.value != mode and not (mode == "annual" and report.mode.value == "quarterly")):
+        raise SourceError("Fiscal request entity/mode does not match financial query")
+    if report.scope != "entity-wide" or report.currency != "USD" or report.scale != 1000000:
+        raise SourceError("Legacy financial rows support entity-wide USD millions only; use the source-only path for other presentations")
+    periods = tuple(p for p in report.periods if (mode == "annual" and (report.mode.value == "annual" or p.role in ("earlier_fy_end", "latest_fy_end")))
+                    or (mode == "quarterly" and p.role in ("prior_interim", "current_interim")))
+    if any(p.start is None or p.end is None for p in periods):
+        raise SourceError("Verified fiscal start/end dates required; no date inference")
+    return periods, as_of
+
+
+def _period_sql(periods, prefix=""):
+    # Dates have already been parsed/validated as date objects by parse_request.
+    return "AND (" + " OR ".join(
+        f"({prefix}period_start = DATE '{p.start.isoformat()}' AND {prefix}period_end = DATE '{p.end.isoformat()}')"
+        for p in periods) + ")"
+
+
+def _attach_periods(rows, periods):
+    indexed = {str(r.get("period_end"))[:10]: dict(r) for r in rows}
+    result = []
+    for p in periods:
+        r = indexed.get(p.end.isoformat(), {})
+        r.update(period_start=p.start, period_end=p.end, fiscal_year=p.fiscal_year,
+                 period_role=p.role, quarter_label=p.label, fiscal_month=None)
+        result.append(r)
+    return result
+
+
+def prepare_legacy_source_query(ticker: str, bq_loader: BigQueryLoader, *, as_of=None, expected_cik=None) -> tuple:
     """Read/validate one snapshot; supply deduplicated query parameters, not raw SUMs."""
     from google.cloud import bigquery
     dataset = f"{PROJECT_ID}.{BQ_DATASET}"
@@ -763,7 +723,13 @@ def prepare_legacy_source_query(ticker: str, bq_loader: BigQueryLoader) -> tuple
     config = bigquery.QueryJobConfig(query_parameters=[
         bigquery.ScalarQueryParameter("ticker", "STRING", ticker)])
     rows = [dict(row) for row in bq_loader.client.query(sql, job_config=config).result()]
+    all_evidence = validate_sec_rows(rows, entity=ticker, cik=expected_cik or rows[0].get("cik")) if rows else {}
+    if as_of is not None:
+        rows = [r for r in rows if str(r.get("filed_date", ""))[:10] <= as_of.isoformat()]
     bundle = prepare_legacy_source_inputs(rows, entity=ticker)
+    if as_of is not None:
+        bundle.update(as_of=as_of.isoformat(), excluded={fid: "Later than explicit as_of" for fid, e in all_evidence.items() if e["document_date"] > as_of.isoformat()})
+        bundle["evidence"] = all_evidence
     # Persist the exact adopted snapshot and all evidence before consuming its values.
     path = write_source_bundle({"entity": ticker, "stage": "legacy_source_adoptions", **bundle},
                               Path(OUTPUT_DIR) / f"{ticker}_legacy_sources.json")
@@ -786,45 +752,35 @@ def prepare_legacy_source_query(ticker: str, bq_loader: BigQueryLoader) -> tuple
     return relations, bigquery.QueryJobConfig(query_parameters=parameters), bundle["collapsed"]
 
 
-def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
+def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader, *, period_request: Optional[dict] = None) -> list[dict]:
     """
     Layer 1: fct_credit_kpis mart（dbt 產出，完整欄位）
     Layer 2: inline raw query（缺 TTM / YoY / covenant，partial）
 
     回傳最近 8 期，按 period_end DESC。
     """
-    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader)
+    as_of = expected_cik = None
+    if period_request is not None:
+        report, expected_cik, as_of = parse_request(period_request)
+        _requested_financial_periods(period_request, ticker, report.mode.value)
+    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader, as_of=as_of, expected_cik=expected_cik)
     dataset = f"{PROJECT_ID}.{BQ_DATASET}"
 
-    try:
-        if collapsed:
-            raise SourceError("Equivalent observations require the canonical source query")
-        rows = list(bq_loader.client.query(f"""
-            SELECT * FROM `{dataset}.fct_credit_kpis`
-            WHERE ticker = '{ticker}'
-            ORDER BY period_end DESC LIMIT 8
-        """).result())
-        if rows:
-            logger.info(f"[{ticker}] {len(rows)} rows from fct_credit_kpis")
-            return [dict(r) for r in rows]
-    except Exception as e:
-        logger.info(f"[{ticker}] fct_credit_kpis unavailable ({e}), using inline query")
-
-    # Inline fallback — covers: revenue, ebitda(approx), net income,
+    # Adopted-source query: revenue, net income and explicit unavailable EBITDA.
     # balance sheet ratios, cfo, fcf.
     # Missing vs mart: TTM rolling, YoY growth flags, covenant status.
     try:
         rows = list(bq_loader.client.query(f"""
         WITH inc AS (
-            SELECT ticker, period_end, MAX(filed_date) AS filed_date, MAX(filing_type) AS filing_type,
+            SELECT ticker, period_start, period_end, MAX(filed_date) AS filed_date, MAX(filing_type) AS filing_type,
                 SUM(CASE WHEN field_name IN ('revenue','revenue_alt') THEN value END) / 1e6 AS revenue_m,
-                SUM(CASE WHEN field_name = 'operating_income' THEN value END) / 1e6 AS ebitda_m,
+                CAST(NULL AS FLOAT64) AS ebitda_m,
                 SUM(CASE WHEN field_name = 'net_income'       THEN value END) / 1e6 AS net_income_m
             FROM {source_relations['income_statement']}
             WHERE ticker = '{ticker}'
               AND EXISTS (SELECT 1 FROM UNNEST(source_forms) form WHERE form IN ('10-K','10-Q'))
               AND period_days BETWEEN 70 AND 110
-            GROUP BY ticker, period_end
+            GROUP BY ticker, period_start, period_end
         ),
         bal AS (
             SELECT ticker, period_end,
@@ -833,60 +789,35 @@ def query_kpis_from_bq(ticker: str, bq_loader: BigQueryLoader) -> list[dict]:
                 SUM(CASE WHEN field_name = 'current_liabilities' THEN value END)/1e6 AS current_liabilities_m,
                 SUM(CASE WHEN field_name = 'total_assets'        THEN value END)/1e6 AS total_assets_m,
                 SUM(CASE WHEN field_name = 'total_liabilities'   THEN value END)/1e6 AS total_liabilities_m,
-                CASE
-                  WHEN COALESCE(
-                    MAX(CASE WHEN field_name='long_term_liabilities' THEN value END),
-                    MAX(CASE WHEN field_name IN ('long_term_liabilities_alt','long_term_liabilities_alt2') THEN value END)
-                  ) IS NOT NULL THEN (
-                    COALESCE(MAX(CASE WHEN field_name='short_term_loans' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END),0)
-                    + COALESCE(
-                        MAX(CASE WHEN field_name='current_maturities_ltd' THEN value END),
-                        MAX(CASE WHEN field_name IN ('current_maturities_ltd_alt','current_maturities_ltd_alt2') THEN value END),
-                        CASE WHEN MAX(CASE WHEN field_name='short_term_loans' THEN value END) IS NULL
-                                  AND MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END) IS NULL
-                             THEN COALESCE(
-                               MAX(CASE WHEN field_name='debt_current_fallback' THEN value END),
-                               MAX(CASE WHEN field_name IN ('short_term_debt','short_term_debt_alt') THEN value END)
-                             ) ELSE 0 END,
-                        0)
-                    + COALESCE(
-                        MAX(CASE WHEN field_name='long_term_liabilities' THEN value END),
-                        MAX(CASE WHEN field_name IN ('long_term_liabilities_alt','long_term_liabilities_alt2') THEN value END))
-                  )
-                  ELSE COALESCE(
-                    MAX(CASE WHEN field_name='long_term_debt_aggregate' THEN value END),
-                    MAX(CASE WHEN field_name IN ('long_term_debt_aggregate_alt','long_term_debt_aggregate_alt2','long_term_debt_aggregate_alt3') THEN value END),
-                    MAX(CASE WHEN field_name='long_term_debt' THEN value END))
-                END/1e6 AS total_debt_m
+                CAST(NULL AS FLOAT64) AS total_debt_m
             FROM {source_relations['balance_sheet']}
             WHERE ticker = '{ticker}'
             GROUP BY 1,2
         ),
         cf AS (
-            SELECT ticker, period_end,
+            SELECT ticker, period_start, period_end,
                 SUM(CASE WHEN field_name = 'cfo'   THEN value END)/1e6 AS cfo_m,
                 ABS(SUM(CASE WHEN field_name = 'capex' THEN value END))/1e6 AS capex_m
             FROM {source_relations['cash_flow']}
             WHERE ticker = '{ticker}'
               AND EXISTS (SELECT 1 FROM UNNEST(source_forms) form WHERE form IN ('10-K','10-Q'))
               AND period_days BETWEEN 70 AND 110
-            GROUP BY 1,2
+            GROUP BY ticker, period_start, period_end
         )
-        SELECT i.ticker, i.period_end, i.filed_date, i.filing_type,
+        SELECT i.ticker, i.period_start, i.period_end, i.filed_date, i.filing_type,
             i.revenue_m, i.ebitda_m, i.net_income_m,
             b.cash_m, b.current_assets_m, b.current_liabilities_m,
             b.total_assets_m, b.total_liabilities_m, b.total_debt_m,
             c.cfo_m, c.capex_m,
             c.cfo_m - c.capex_m                                       AS fcf_m,
             SAFE_DIVIDE(b.current_assets_m, b.current_liabilities_m)  AS current_ratio,
-            SAFE_DIVIDE(b.total_liabilities_m, b.total_assets_m)      AS debt_ratio,
+            CAST(NULL AS FLOAT64) AS debt_ratio,
             SAFE_DIVIDE(b.total_debt_m, i.ebitda_m)                   AS total_leverage_ratio,
             SAFE_DIVIDE(i.ebitda_m,    i.revenue_m)                   AS ebitda_margin,
             SAFE_DIVIDE(i.net_income_m, i.revenue_m)                  AS net_margin
         FROM inc i
         LEFT JOIN bal b USING (ticker, period_end)
-        LEFT JOIN cf  c USING (ticker, period_end)
+        LEFT JOIN cf c ON i.ticker=c.ticker AND i.period_start=c.period_start AND i.period_end=c.period_end
         ORDER BY i.period_end DESC LIMIT 8
         """, job_config=source_config).result())
         logger.info(f"[{ticker}] {len(rows)} rows from inline fallback query")
@@ -900,92 +831,16 @@ def query_annual_financials(
     ticker: str,
     bq_loader: BigQueryLoader,
     periods: Optional[list[str]] = None,
+    *, period_request: Optional[dict] = None,
 ) -> list[dict]:
-    """
-    為 credit memo S2 (Income Statement) / S3 (Cash Flow) 拉完整的年度數據。
-    按 periods 參數 filter，回傳 4 個會計年度，按 period_end ASC。
-
-    Args:
-        ticker:  股票代號
-        bq_loader: BigQueryLoader instance
-        periods: ["FY2022","FY2023","FY2024","FY2025"]
-                 轉成 EXTRACT(YEAR FROM period_end) IN (2022,2023,2024,2025) filter
-                 None = 取最近 4 個有數據的年份
-
-    這和 query_kpis_from_bq() 不同：
-      - kpis: 季度資料，計算 TTM 和比率
-      - annual: 年度原始數據，用來做 YOY 報表
-    """
-    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader)
-    dataset = f"{PROJECT_ID}.{BQ_DATASET}"
-
-    # Build year filter from periods list
-    # periods = ["FY2022","FY2023","FY2024","FY2025"] → year_filter = "AND EXTRACT(YEAR FROM period_end) IN (2022,2023,2024,2025)"
-    # Two variants: the mart-first query (Layer 1) joins 3 tables that each
-    # have a period_end column, so a bare "period_end" there raises
-    # "Column name period_end is ambiguous" — needs the inc. prefix. The
-    # raw-table fallback (Layer 2) queries one unaliased table per CTE, so
-    # the bare column name is what's needed there instead.
-    year_filter = ""
-    year_filter_mart = ""
-    if periods:
-        years = [str(_period_to_year(p)) for p in periods if _period_to_year(p)]
-        if years:
-            year_filter = f"AND EXTRACT(YEAR FROM period_end) IN ({','.join(years)})"
-            year_filter_mart = f"AND EXTRACT(YEAR FROM inc.period_end) IN ({','.join(years)})"
-
-    limit_clause = f"LIMIT {len(periods)}" if periods else "LIMIT 4"
-
-    # Layer 1: dbt staging views (stg_income_statement / stg_balance_sheet /
-    # stg_cash_flow) — already deduped per (ticker, period_end) by filed_date
-    # DESC, same business logic as fct_credit_kpis. This is the mart-first
-    # path the architecture is supposed to use.
-    try:
-        if collapsed:
-            raise SourceError("Equivalent observations require the canonical source query")
-        rows = list(bq_loader.client.query(f"""
-        SELECT
-            EXTRACT(YEAR FROM inc.period_end) AS fiscal_year,
-            inc.period_end,
-            inc.revenue_m, inc.gross_profit_m, inc.operating_income_m,
-            inc.net_income_m, inc.interest_expense_m, inc.da_m,
-            inc.income_before_tax_m, inc.income_tax_m, inc.cost_of_revenue_m,
-            inc.operating_expense_direct_m,
-            cf.cfo_m, cf.cfi_m, cf.cff_m, cf.capex_m,
-            bal.cash_m, bal.total_assets_m,
-            bal.total_debt_m,
-            bal.current_assets_m, bal.current_liabilities_m,
-            bal.total_liabilities_m,
-            bal.total_equity_m AS equity_m,
-            bal.inventory_m, bal.short_term_debt_m,
-            cf.cfo_m - cf.capex_m AS fcf_m,
-            SAFE_DIVIDE(bal.current_assets_m, bal.current_liabilities_m)  AS current_ratio,
-            SAFE_DIVIDE(bal.total_liabilities_m, bal.total_assets_m)      AS debt_ratio,
-            SAFE_DIVIDE(inc.operating_income_m, inc.interest_expense_m)   AS interest_coverage,
-            SAFE_DIVIDE(bal.total_debt_m,
-                COALESCE(inc.operating_income_m + inc.da_m, inc.operating_income_m)) AS leverage_ratio
-        FROM `{dataset}.stg_income_statement` inc
-        LEFT JOIN `{dataset}.stg_cash_flow` cf
-            ON inc.ticker = cf.ticker
-           AND inc.period_end = cf.period_end
-           AND inc.period_start = cf.period_start
-           AND inc.period_days = cf.period_days
-        LEFT JOIN `{dataset}.stg_balance_sheet` bal
-            ON inc.ticker = bal.ticker AND inc.period_end = bal.period_end
-        WHERE inc.ticker = '{ticker}'
-          AND inc.filing_type = '10-K'
-          AND inc.period_days BETWEEN 340 AND 380
-          AND inc.revenue_m IS NOT NULL
-          {year_filter_mart}
-        ORDER BY inc.period_end ASC
-        {limit_clause}
-        """).result())
-        if rows:
-            logger.info(f"[{ticker}] {len(rows)} annual rows from dbt staging (mart-first)")
-            return [dict(r) for r in rows]
-        logger.info(f"[{ticker}] dbt staging returned no annual rows, falling back to raw inline query")
-    except Exception as e:
-        logger.info(f"[{ticker}] dbt staging unavailable for annual financials ({e}), falling back to raw inline query")
+    """Annual reads require the existing verified annual source request. Text FY labels alone do not establish fiscal dates."""
+    requested, as_of = _requested_financial_periods(period_request, ticker, "annual")
+    if periods and tuple(_period_to_year(p) for p in periods) != tuple(p.fiscal_year for p in requested):
+        raise SourceError("FY labels conflict with explicit fiscal request")
+    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader, as_of=as_of, expected_cik=period_request["cik"])
+    year_filter = _period_sql(requested)
+    requested_sql = " UNION ALL ".join(f"SELECT DATE '{p.start}' AS period_start, DATE '{p.end}' AS period_end" for p in requested)
+    limit_clause = ""
 
     # Layer 2: existing financial SQL over the accepted source snapshot. Filing
     # versions have already been checked and equivalent observations collapsed;
@@ -995,16 +850,14 @@ def query_annual_financials(
         WITH inc_dedup AS (
             SELECT * FROM {source_relations['income_statement']}
             WHERE ticker = '{ticker}'
-              AND '10-K' IN UNNEST(source_forms)
-              AND period_days BETWEEN 340 AND 380
               {year_filter}
             QUALIFY ROW_NUMBER() OVER (
-                PARTITION BY ticker, period_end, field_name
+                PARTITION BY ticker, period_start, period_end, field_name
                 ORDER BY filed_date DESC
             ) = 1
         ),
         inc AS (
-            SELECT ticker, period_end,
+            SELECT ticker, period_start, period_end,
                 EXTRACT(YEAR FROM period_end) AS fiscal_year,
                 SUM(CASE WHEN field_name IN ('revenue','revenue_alt') THEN value END)/1e6 AS revenue_m,
                 SUM(CASE WHEN field_name = 'gross_profit'    THEN value END)/1e6 AS gross_profit_m,
@@ -1015,38 +868,37 @@ def query_annual_financials(
                     SUM(CASE WHEN field_name = 'interest_expense_alt' THEN value END)
                 )/1e6 AS interest_expense_m,
                 SUM(CASE WHEN field_name = 'da'                   THEN value END)/1e6 AS da_m,
+                SUM(CASE WHEN field_name = 'capitalized_interest' THEN value END)/1e6 AS capitalized_interest_m,
                 SUM(CASE WHEN field_name = 'income_before_tax'    THEN value END)/1e6 AS income_before_tax_m,
                 SUM(CASE WHEN field_name = 'income_tax_expense'   THEN value END)/1e6 AS income_tax_m,
                 SUM(CASE WHEN field_name IN ('cost_of_revenue','cost_of_revenue_alt') THEN value END)/1e6 AS cost_of_revenue_m,
                 SUM(CASE WHEN field_name = 'operating_expense_direct' THEN value END)/1e6 AS operating_expense_direct_m
             FROM inc_dedup
-            GROUP BY 1,2,3
+            GROUP BY ticker, period_start, period_end, fiscal_year
         ),
         cf_dedup AS (
             SELECT * FROM {source_relations['cash_flow']}
             WHERE ticker = '{ticker}'
-              AND '10-K' IN UNNEST(source_forms)
-              AND period_days BETWEEN 340 AND 380
               {year_filter}
             QUALIFY ROW_NUMBER() OVER (
-                PARTITION BY ticker, period_end, field_name
+                PARTITION BY ticker, period_start, period_end, field_name
                 ORDER BY filed_date DESC
             ) = 1
         ),
         cf AS (
-            SELECT ticker, period_end,
+            SELECT ticker, period_start, period_end,
                 SUM(CASE WHEN field_name = 'cfo'   THEN value END)/1e6 AS cfo_m,
                 SUM(CASE WHEN field_name = 'cfi'   THEN value END)/1e6 AS cfi_m,
                 SUM(CASE WHEN field_name = 'cff'   THEN value END)/1e6 AS cff_m,
                 ABS(SUM(CASE WHEN field_name = 'capex' THEN value END))/1e6 AS capex_m
             FROM cf_dedup
-            GROUP BY 1,2
+            GROUP BY ticker, period_start, period_end
         ),
         bal_dedup AS (
             SELECT * FROM {source_relations['balance_sheet']}
             WHERE ticker = '{ticker}'
             QUALIFY ROW_NUMBER() OVER (
-                PARTITION BY ticker, period_end, field_name
+                PARTITION BY ticker, period_start, period_end, field_name
                 ORDER BY filed_date DESC
             ) = 1
         ),
@@ -1054,33 +906,20 @@ def query_annual_financials(
             SELECT ticker, period_end,
                 SUM(CASE WHEN field_name = 'cash'                THEN value END)/1e6 AS cash_m,
                 SUM(CASE WHEN field_name = 'total_assets'        THEN value END)/1e6 AS total_assets_m,
-                CASE
-                  WHEN COALESCE(MAX(CASE WHEN field_name='long_term_liabilities' THEN value END), MAX(CASE WHEN field_name IN ('long_term_liabilities_alt','long_term_liabilities_alt2') THEN value END)) IS NOT NULL
-                  THEN (
-                    COALESCE(MAX(CASE WHEN field_name='short_term_loans' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='current_maturities_ltd' THEN value END), MAX(CASE WHEN field_name IN ('current_maturities_ltd_alt','current_maturities_ltd_alt2') THEN value END), CASE WHEN MAX(CASE WHEN field_name='short_term_loans' THEN value END) IS NULL AND MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END) IS NULL THEN COALESCE(MAX(CASE WHEN field_name='debt_current_fallback' THEN value END), MAX(CASE WHEN field_name IN ('short_term_debt','short_term_debt_alt') THEN value END)) ELSE 0 END, 0)
-                    + COALESCE(MAX(CASE WHEN field_name='long_term_liabilities' THEN value END), MAX(CASE WHEN field_name IN ('long_term_liabilities_alt','long_term_liabilities_alt2') THEN value END))
-                  )
-                  ELSE COALESCE(MAX(CASE WHEN field_name='long_term_debt_aggregate' THEN value END), MAX(CASE WHEN field_name IN ('long_term_debt_aggregate_alt','long_term_debt_aggregate_alt2','long_term_debt_aggregate_alt3') THEN value END), MAX(CASE WHEN field_name='long_term_debt' THEN value END))
-                END/1e6 AS total_debt_m,
+                CAST(NULL AS FLOAT64) AS total_debt_m,
                 SUM(CASE WHEN field_name = 'current_assets'      THEN value END)/1e6 AS current_assets_m,
                 SUM(CASE WHEN field_name = 'current_liabilities' THEN value END)/1e6 AS current_liabilities_m,
                 SUM(CASE WHEN field_name = 'total_liabilities'   THEN value END)/1e6 AS total_liabilities_m,
                 SUM(CASE WHEN field_name = 'stockholders_equity' THEN value END)/1e6 AS equity_m,
                 SUM(CASE WHEN field_name = 'inventory'           THEN value END)/1e6 AS inventory_m,
-                (
-                    COALESCE(MAX(CASE WHEN field_name='short_term_loans' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='current_maturities_ltd' THEN value END), MAX(CASE WHEN field_name IN ('current_maturities_ltd_alt','current_maturities_ltd_alt2') THEN value END), 0)
-                )/1e6 AS short_term_debt_m
+CAST(NULL AS FLOAT64) AS short_term_debt_m
             FROM bal_dedup
             GROUP BY 1,2
         )
         SELECT
-            i.fiscal_year, i.period_end,
+            i.fiscal_year, requested.period_start, requested.period_end,
             i.revenue_m, i.gross_profit_m, i.operating_income_m,
-            i.net_income_m, i.interest_expense_m, i.da_m,
+            i.net_income_m, i.interest_expense_m, i.da_m, i.capitalized_interest_m,
             i.income_before_tax_m, i.income_tax_m, i.cost_of_revenue_m,
             i.operating_expense_direct_m,
             cf.cfo_m, cf.cfi_m, cf.cff_m, cf.capex_m,
@@ -1089,19 +928,18 @@ def query_annual_financials(
             b.total_liabilities_m, b.equity_m, b.inventory_m, b.short_term_debt_m,
             cf.cfo_m - cf.capex_m AS fcf_m,
             SAFE_DIVIDE(b.current_assets_m, b.current_liabilities_m)  AS current_ratio,
-            SAFE_DIVIDE(b.total_liabilities_m, b.total_assets_m)      AS debt_ratio,
-            SAFE_DIVIDE(i.operating_income_m, i.interest_expense_m)   AS interest_coverage,
-            SAFE_DIVIDE(b.total_debt_m,
-                COALESCE(i.operating_income_m + i.da_m, i.operating_income_m)) AS leverage_ratio
-        FROM inc i
-        LEFT JOIN cf  ON i.ticker = cf.ticker AND i.period_end = cf.period_end
+            CAST(NULL AS FLOAT64) AS debt_ratio,
+            CAST(NULL AS FLOAT64) AS interest_coverage,
+            CAST(NULL AS FLOAT64) AS leverage_ratio
+        FROM ({requested_sql}) requested
+        LEFT JOIN inc i ON requested.period_start = i.period_start AND requested.period_end = i.period_end
+        LEFT JOIN cf  ON requested.period_end = cf.period_end AND requested.period_start = cf.period_start
         LEFT JOIN bal b ON i.ticker = b.ticker  AND i.period_end = b.period_end
-        WHERE i.revenue_m IS NOT NULL
-        ORDER BY i.period_end ASC
+        ORDER BY requested.period_end ASC
         {limit_clause}
         """, job_config=source_config).result())
         logger.info(f"[{ticker}] {len(rows)} annual rows from raw inline fallback")
-        return [dict(r) for r in rows]
+        return _attach_periods(rows, requested)
     except Exception as e:
         logger.warning(f"[{ticker}] Annual financials query failed: {e}")
         raise SourceError("Canonical legacy source query failed") from e
@@ -1111,146 +949,26 @@ def query_quarterly_financials(
     ticker: str,
     bq_loader: BigQueryLoader,
     quarter_labels: Optional[list[str]] = None,
+    *, period_request: Optional[dict] = None,
 ) -> list[dict]:
-    """
-    拉指定季度的 YTD 財務數據，供 credit memo 混合欄位使用。
-
-    Duration basis is deterministic: Q1=3M YTD, Q2=6M YTD, Q3=9M YTD.
-    Q4 must be requested as a fiscal year because the year-end filing is 10-K.
-
-    Args:
-        quarter_labels: e.g. ["Q2 2025", "Q2 2026"]
-                        格式支援：
-                          "Q1 2025" → quarter=1, year=2025
-                          "2025Q1"  → 同上
-                          None      → 取最近 2 個 10-Q 季度
-
-    Returns:
-        list[dict]，欄位與 query_annual_financials() 相同，
-        加上 quarter_label 欄位標明是哪一季。
-        按 period_end ASC 排序。
-    """
-    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader)
-    dataset = f"{PROJECT_ID}.{BQ_DATASET}"
-
-    # Parse quarter labels into (year, quarter) tuples
-    quarter_filters: list[str] = []
-    quarter_filters_mart: list[str] = []
-    parsed_labels: dict[str, str] = {}  # period_end prefix → display label
-
+    """Comparable YTD reads use the existing quarterly request and exact start/end. No calendar-quarter or duration-window inference."""
+    requested, as_of = _requested_financial_periods(period_request, ticker, "quarterly")
     if quarter_labels:
-        for ql in quarter_labels:
-            ql_clean = ql.strip().upper().replace(" ", "")
-            # Match: Q1 2025, 2025Q1, Q12025
-            m = re.match(r"Q(\d)(\d{4})|(\d{4})Q(\d)", ql_clean)
-            if m:
-                if m.group(1):
-                    q, yr = int(m.group(1)), int(m.group(2))
-                else:
-                    yr, q = int(m.group(3)), int(m.group(4))
-                # Map quarter to month range for period_end
-                # Q1 ends ~Jan-Mar, Q2 ~Apr-Jun, Q3 ~Jul-Sep, Q4 ~Oct-Dec
-                q_month_end = {1: (1, 3), 2: (4, 6), 3: (7, 9), 4: (10, 12)}
-                m_start, m_end = q_month_end.get(q, (1, 3))
-                # Duration facts must be year-to-date. Q2 and Q3 therefore
-                # use six- and nine-month facts, never a discrete quarter.
-                day_ranges = {1: (70, 110), 2: (160, 200), 3: (250, 290)}
-                if q not in day_ranges:
-                    raise ValueError("Quarterly Loan Review supports Q1-Q3; use FY for Q4/year-end")
-                d_start, d_end = day_ranges[q]
-                quarter_filters.append(
-                    f"(EXTRACT(YEAR FROM period_end) = {yr} "
-                    f"AND EXTRACT(MONTH FROM period_end) BETWEEN {m_start} AND {m_end} "
-                    f"AND period_days BETWEEN {d_start} AND {d_end})"
-                )
-                quarter_filters_mart.append(
-                    f"(EXTRACT(YEAR FROM inc.period_end) = {yr} "
-                    f"AND EXTRACT(MONTH FROM inc.period_end) BETWEEN {m_start} AND {m_end} "
-                    f"AND inc.period_days BETWEEN {d_start} AND {d_end})"
-                )
-                # Store display label keyed on year-month pattern
-                for mo in range(m_start, m_end + 1):
-                    parsed_labels[f"{yr}-{mo:02d}"] = f"Q{q} {yr}"
+        labels = []
+        for label in quarter_labels:
+            match = re.fullmatch(r"Q([1-3])(\d{4})|(\d{4})Q([1-3])", label.upper().replace(" ", ""))
+            if match is None:
+                raise SourceError("Quarter labels cannot be matched to verified fiscal request")
+            labels.append((int(match[2]), int(match[1])) if match[1] else (int(match[3]), int(match[4])))
+        if tuple(labels) != tuple((p.fiscal_year, p.quarter) for p in requested):
+            raise SourceError("Quarter labels conflict with explicit fiscal request")
+    source_relations, source_config, collapsed = prepare_legacy_source_query(ticker, bq_loader, as_of=as_of, expected_cik=period_request["cik"])
+    where_clause = _period_sql(requested)
+    requested_sql = " UNION ALL ".join(f"SELECT DATE '{p.start}' AS period_start, DATE '{p.end}' AS period_end" for p in requested)
+    limit_clause = len(requested)
 
-    # Two variants — see query_annual_financials() for why: bare "period_end"
-    # is ambiguous once Layer 1 joins 3 tables that each have that column.
-    where_clause = (
-        f"AND ({' OR '.join(quarter_filters)})"
-        if quarter_filters else ""
-    )
-    where_clause_mart = (
-        f"AND ({' OR '.join(quarter_filters_mart)})"
-        if quarter_filters_mart else ""
-    )
-    limit_clause = len(quarter_labels) if quarter_labels else 2
-
-    def _with_quarter_labels(rows: list) -> list[dict]:
-        result = []
-        for r in rows:
-            d = dict(r)
-            # Add display label: try parsed_labels lookup first, then auto-generate
-            pe = str(d.get("period_end", ""))
-            ym = pe[:7]  # "YYYY-MM"
-            if ym in parsed_labels:
-                d["quarter_label"] = parsed_labels[ym]
-            else:
-                yr  = int(d.get("fiscal_year", 0))
-                mo  = int(d.get("fiscal_month", 0))
-                q   = (mo - 1) // 3 + 1
-                d["quarter_label"] = f"Q{q} {yr}"
-            result.append(d)
-        return result
-
-    # Layer 1: dbt staging views — see query_annual_financials() for why
-    # this must come before the raw-table fallback.
-    try:
-        if collapsed:
-            raise SourceError("Equivalent observations require the canonical source query")
-        rows = list(bq_loader.client.query(f"""
-        SELECT
-            EXTRACT(YEAR  FROM inc.period_end) AS fiscal_year,
-            EXTRACT(MONTH FROM inc.period_end) AS fiscal_month,
-            inc.period_end,
-            inc.revenue_m, inc.gross_profit_m, inc.operating_income_m,
-            inc.net_income_m, inc.interest_expense_m, inc.da_m,
-            inc.income_before_tax_m, inc.income_tax_m, inc.cost_of_revenue_m,
-            inc.operating_expense_direct_m,
-            cf.cfo_m, cf.cfi_m, cf.cff_m, cf.capex_m,
-            bal.cash_m, bal.total_assets_m,
-            bal.total_debt_m,
-            bal.current_assets_m, bal.current_liabilities_m,
-            bal.total_liabilities_m,
-            bal.total_equity_m AS equity_m,
-            bal.inventory_m, bal.short_term_debt_m,
-            cf.cfo_m - cf.capex_m AS fcf_m,
-            SAFE_DIVIDE(bal.current_assets_m, bal.current_liabilities_m)  AS current_ratio,
-            SAFE_DIVIDE(bal.total_liabilities_m, bal.total_assets_m)      AS debt_ratio,
-            SAFE_DIVIDE(inc.operating_income_m, inc.interest_expense_m)   AS interest_coverage,
-            SAFE_DIVIDE(bal.total_debt_m,
-                COALESCE(inc.operating_income_m + inc.da_m, inc.operating_income_m)) AS leverage_ratio
-        FROM `{dataset}.stg_income_statement` inc
-        LEFT JOIN `{dataset}.stg_cash_flow` cf
-            ON inc.ticker = cf.ticker AND inc.period_end = cf.period_end
-        LEFT JOIN `{dataset}.stg_balance_sheet` bal
-            ON inc.ticker = bal.ticker AND inc.period_end = bal.period_end
-        WHERE inc.ticker = '{ticker}'
-          AND inc.filing_type = '10-Q'
-          AND inc.revenue_m IS NOT NULL
-          {where_clause_mart}
-        ORDER BY inc.period_end ASC
-        LIMIT {limit_clause}
-        """).result())
-        expected_rows = len(quarter_labels) if quarter_labels else 2
-        if rows and len(rows) >= expected_rows:
-            result = _with_quarter_labels(rows)
-            logger.info(f"[{ticker}] {len(result)} quarterly rows from dbt staging (mart-first)")
-            return result
-        logger.info(
-            f"[{ticker}] dbt staging returned {len(rows)} of {expected_rows} requested "
-            "quarterly rows, falling back to raw inline query"
-        )
-    except Exception as e:
-        logger.info(f"[{ticker}] dbt staging unavailable for quarterly financials ({e}), falling back to raw inline query")
+    def _with_quarter_labels(rows):
+        return _attach_periods(rows, requested)
 
     # Layer 2: accepted source snapshot; see query_annual_financials().
     try:
@@ -1258,15 +976,14 @@ def query_quarterly_financials(
         WITH inc_dedup AS (
             SELECT * FROM {source_relations['income_statement']}
             WHERE ticker = '{ticker}'
-              AND '10-Q' IN UNNEST(source_forms)
               {where_clause}
             QUALIFY ROW_NUMBER() OVER (
-                PARTITION BY ticker, period_end, field_name
+                PARTITION BY ticker, period_start, period_end, field_name
                 ORDER BY filed_date DESC
             ) = 1
         ),
         inc AS (
-            SELECT ticker, period_end,
+            SELECT ticker, period_start, period_end,
                 EXTRACT(YEAR  FROM period_end) AS fiscal_year,
                 EXTRACT(MONTH FROM period_end) AS fiscal_month,
                 SUM(CASE WHEN field_name IN ('revenue','revenue_alt') THEN value END)/1e6 AS revenue_m,
@@ -1278,37 +995,37 @@ def query_quarterly_financials(
                     SUM(CASE WHEN field_name = 'interest_expense_alt' THEN value END)
                 )/1e6 AS interest_expense_m,
                 SUM(CASE WHEN field_name = 'da'                   THEN value END)/1e6 AS da_m,
+                SUM(CASE WHEN field_name = 'capitalized_interest' THEN value END)/1e6 AS capitalized_interest_m,
                 SUM(CASE WHEN field_name = 'income_before_tax'    THEN value END)/1e6 AS income_before_tax_m,
                 SUM(CASE WHEN field_name = 'income_tax_expense'   THEN value END)/1e6 AS income_tax_m,
                 SUM(CASE WHEN field_name IN ('cost_of_revenue','cost_of_revenue_alt') THEN value END)/1e6 AS cost_of_revenue_m,
                 SUM(CASE WHEN field_name = 'operating_expense_direct' THEN value END)/1e6 AS operating_expense_direct_m
             FROM inc_dedup
-            GROUP BY 1,2,3,4
+            GROUP BY ticker, period_start, period_end, fiscal_year, fiscal_month
         ),
         cf_dedup AS (
             SELECT * FROM {source_relations['cash_flow']}
             WHERE ticker = '{ticker}'
-              AND '10-Q' IN UNNEST(source_forms)
               {where_clause}
             QUALIFY ROW_NUMBER() OVER (
-                PARTITION BY ticker, period_end, field_name
+                PARTITION BY ticker, period_start, period_end, field_name
                 ORDER BY filed_date DESC
             ) = 1
         ),
         cf AS (
-            SELECT ticker, period_end,
+            SELECT ticker, period_start, period_end,
                 SUM(CASE WHEN field_name = 'cfo'   THEN value END)/1e6 AS cfo_m,
                 SUM(CASE WHEN field_name = 'cfi'   THEN value END)/1e6 AS cfi_m,
                 SUM(CASE WHEN field_name = 'cff'   THEN value END)/1e6 AS cff_m,
                 ABS(SUM(CASE WHEN field_name = 'capex' THEN value END))/1e6 AS capex_m
             FROM cf_dedup
-            GROUP BY 1,2
+            GROUP BY ticker, period_start, period_end
         ),
         bal_dedup AS (
             SELECT * FROM {source_relations['balance_sheet']}
             WHERE ticker = '{ticker}'
             QUALIFY ROW_NUMBER() OVER (
-                PARTITION BY ticker, period_end, field_name
+                PARTITION BY ticker, period_start, period_end, field_name
                 ORDER BY filed_date DESC
             ) = 1
         ),
@@ -1316,33 +1033,20 @@ def query_quarterly_financials(
             SELECT ticker, period_end,
                 SUM(CASE WHEN field_name = 'cash'                THEN value END)/1e6 AS cash_m,
                 SUM(CASE WHEN field_name = 'total_assets'        THEN value END)/1e6 AS total_assets_m,
-                CASE
-                  WHEN COALESCE(MAX(CASE WHEN field_name='long_term_liabilities' THEN value END), MAX(CASE WHEN field_name IN ('long_term_liabilities_alt','long_term_liabilities_alt2') THEN value END)) IS NOT NULL
-                  THEN (
-                    COALESCE(MAX(CASE WHEN field_name='short_term_loans' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='current_maturities_ltd' THEN value END), MAX(CASE WHEN field_name IN ('current_maturities_ltd_alt','current_maturities_ltd_alt2') THEN value END), CASE WHEN MAX(CASE WHEN field_name='short_term_loans' THEN value END) IS NULL AND MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END) IS NULL THEN COALESCE(MAX(CASE WHEN field_name='debt_current_fallback' THEN value END), MAX(CASE WHEN field_name IN ('short_term_debt','short_term_debt_alt') THEN value END)) ELSE 0 END, 0)
-                    + COALESCE(MAX(CASE WHEN field_name='long_term_liabilities' THEN value END), MAX(CASE WHEN field_name IN ('long_term_liabilities_alt','long_term_liabilities_alt2') THEN value END))
-                  )
-                  ELSE COALESCE(MAX(CASE WHEN field_name='long_term_debt_aggregate' THEN value END), MAX(CASE WHEN field_name IN ('long_term_debt_aggregate_alt','long_term_debt_aggregate_alt2','long_term_debt_aggregate_alt3') THEN value END), MAX(CASE WHEN field_name='long_term_debt' THEN value END))
-                END/1e6 AS total_debt_m,
+                CAST(NULL AS FLOAT64) AS total_debt_m,
                 SUM(CASE WHEN field_name = 'current_assets'      THEN value END)/1e6 AS current_assets_m,
                 SUM(CASE WHEN field_name = 'current_liabilities' THEN value END)/1e6 AS current_liabilities_m,
                 SUM(CASE WHEN field_name = 'total_liabilities'   THEN value END)/1e6 AS total_liabilities_m,
                 SUM(CASE WHEN field_name = 'stockholders_equity' THEN value END)/1e6 AS equity_m,
                 SUM(CASE WHEN field_name = 'inventory'           THEN value END)/1e6 AS inventory_m,
-                (
-                    COALESCE(MAX(CASE WHEN field_name='short_term_loans' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='short_term_notes_payable' THEN value END),0)
-                    + COALESCE(MAX(CASE WHEN field_name='current_maturities_ltd' THEN value END), MAX(CASE WHEN field_name IN ('current_maturities_ltd_alt','current_maturities_ltd_alt2') THEN value END), 0)
-                )/1e6 AS short_term_debt_m
+CAST(NULL AS FLOAT64) AS short_term_debt_m
             FROM bal_dedup
             GROUP BY 1,2
         )
         SELECT
-            i.fiscal_year, i.fiscal_month, i.period_end,
+            i.fiscal_year, i.fiscal_month, requested.period_start, requested.period_end,
             i.revenue_m, i.gross_profit_m, i.operating_income_m,
-            i.net_income_m, i.interest_expense_m, i.da_m,
+            i.net_income_m, i.interest_expense_m, i.da_m, i.capitalized_interest_m,
             i.income_before_tax_m, i.income_tax_m, i.cost_of_revenue_m,
             i.operating_expense_direct_m,
             cf.cfo_m, cf.cfi_m, cf.cff_m, cf.capex_m,
@@ -1351,15 +1055,14 @@ def query_quarterly_financials(
             b.total_liabilities_m, b.equity_m, b.inventory_m, b.short_term_debt_m,
             cf.cfo_m - cf.capex_m AS fcf_m,
             SAFE_DIVIDE(b.current_assets_m, b.current_liabilities_m)  AS current_ratio,
-            SAFE_DIVIDE(b.total_liabilities_m, b.total_assets_m)      AS debt_ratio,
-            SAFE_DIVIDE(i.operating_income_m, i.interest_expense_m)   AS interest_coverage,
-            SAFE_DIVIDE(b.total_debt_m,
-                COALESCE(i.operating_income_m + i.da_m, i.operating_income_m)) AS leverage_ratio
-        FROM inc i
-        LEFT JOIN cf  ON i.ticker = cf.ticker AND i.period_end = cf.period_end
-        LEFT JOIN bal b ON i.ticker = b.ticker AND i.period_end = b.period_end
-        WHERE i.revenue_m IS NOT NULL
-        ORDER BY i.period_end ASC
+            CAST(NULL AS FLOAT64) AS debt_ratio,
+            CAST(NULL AS FLOAT64) AS interest_coverage,
+            CAST(NULL AS FLOAT64) AS leverage_ratio
+        FROM ({requested_sql}) requested
+        LEFT JOIN inc i ON requested.period_start = i.period_start AND requested.period_end = i.period_end
+        LEFT JOIN cf  ON requested.period_end = cf.period_end AND requested.period_start = cf.period_start
+        LEFT JOIN bal b ON requested.period_end = b.period_end
+        ORDER BY requested.period_end ASC
         LIMIT {limit_clause}
         """, job_config=source_config).result())
 
@@ -1432,6 +1135,9 @@ def analyze_ticker(
     source_request: Optional[dict] = None,
     supplemental_evidence: tuple = (),
     source_snapshot: Optional[dict] = None,
+    period_request: Optional[dict] = None,
+    formal_report: bool = False,
+    report_output_dir: Optional[str] = None,
 ) -> dict:
     """
     完整分析一支股票。
@@ -1459,6 +1165,8 @@ def analyze_ticker(
       13   DashboardGenerator()       HTML dashboard
     """
     ticker = ticker.strip().upper()
+    if formal_report and source_request is None:
+        raise SourceError("Formal report requires the existing explicit source request")
     if source_request is None and (supplemental_evidence or source_snapshot is not None):
         raise SourceError("Supplement/snapshot requires an explicit source request")
     if source_request is not None:
@@ -1466,9 +1174,26 @@ def analyze_ticker(
             ticker, source_request, supplemental_evidence, snapshot=source_snapshot)
         path = Path(OUTPUT_DIR) / f"{ticker}_loan_review_sources.json"
         path = write_source_bundle(bundle, path)
+        if formal_report:
+            if __package__:
+                from .loan_review_pipeline import report_from_source_bundle, write_report_artifacts
+            else:
+                from loan_review_pipeline import report_from_source_bundle, write_report_artifacts
+            report, acceptance = report_from_source_bundle(bundle)
+            directory = report_output_dir or str(Path(OUTPUT_DIR) / (ticker + "_" + bundle["mode"] + "_review"))
+            artifacts = write_report_artifacts(report, acceptance, directory, source_bundle=bundle)
+            return {"ticker": ticker, "status": "report_review_prepared", "mode": bundle["mode"],
+                    "source_inputs_path": str(path), "acceptance_blockers": acceptance['acceptance_blockers'], **artifacts}
         return {"ticker": ticker, "status": "source_inputs_prepared", "mode": bundle["mode"],
                 "source_inputs_path": str(path), "conflict_count": bundle["conflict_count"],
                 "final_report_accepted": False}
+    try:
+        requested_mode = period_request.get("mode") if isinstance(period_request, dict) else None
+        _requested_financial_periods(period_request, ticker, requested_mode or "annual")
+        if quarter_labels and requested_mode != "quarterly":
+            raise SourceError("Quarter labels conflict with explicit annual mode")
+    except (ValueError, TypeError) as exc:
+        return {"ticker": ticker, "status": "error", "error": str(exc), "final_report_accepted": False}
     periods = _parse_periods(periods)  # normalise + validate
     output: dict = {"ticker": ticker, "periods": periods, "status": "running",
                     "final_report_accepted": False, "report_path_type": "legacy_unvalidated"}
@@ -1503,18 +1228,18 @@ def analyze_ticker(
 
     try:
         # Step 9: Quarterly KPIs
-        kpis = query_kpis_from_bq(ticker, bq_loader)
+        kpis = query_kpis_from_bq(ticker, bq_loader, period_request=period_request)
         output["kpi_rows"] = len(kpis)
 
         # Step 10a: Annual financials (for YOY tables, filtered by periods)
-        annual = _enrich_rows(query_annual_financials(ticker, bq_loader, periods=periods))
+        annual = _enrich_rows(query_annual_financials(ticker, bq_loader, periods=periods, period_request=period_request))
         output["annual_rows"] = len(annual)
 
         # Step 10b: Quarterly financials (optional — only when quarter_labels specified)
         quarterly: list[dict] = []
-        if quarter_labels:
+        if requested_mode == "quarterly":
             quarterly = _enrich_rows(query_quarterly_financials(
-                ticker, bq_loader, quarter_labels=quarter_labels
+                ticker, bq_loader, quarter_labels=quarter_labels, period_request=period_request
             ))
             output["quarterly_rows"] = len(quarterly)
             logger.info(f"[{ticker}] Quarterly cols: {[r.get('quarter_label') for r in quarterly]}")
@@ -1530,7 +1255,7 @@ def analyze_ticker(
     filing_text_source: str = "none"
 
     if gcs_loader:
-        filing_priority = ["10-Q", "10-K"] if quarter_labels else ["10-K", "10-Q"]
+        filing_priority = ["10-Q", "10-K"] if requested_mode == "quarterly" else ["10-K", "10-Q"]
         for ft in filing_priority:
             uri_list = html_uris.get(ft, [])
             if uri_list:
@@ -1580,6 +1305,7 @@ def analyze_ticker(
         periods=periods,
         commentary=commentary,
         filing_text_source=filing_text_source,
+        mode=requested_mode,
     )
 
     memo_path = Path(OUTPUT_DIR) / f"{ticker}_credit_memo.md"
@@ -1636,7 +1362,7 @@ if _FLASK_AVAILABLE and app is not None:
     def analyze_single(ticker: str):
         body         = request.get_json(silent=True) or {}
         generate_html = body.get("html", True)
-        result       = analyze_ticker(ticker.upper(), generate_html=generate_html)
+        result       = analyze_ticker(ticker.upper(), generate_html=generate_html, period_request=body.get("period_request"))
         if request.method == "GET" and "html_path" in result:
             p = Path(result["html_path"])
             if p.exists():
@@ -1685,10 +1411,65 @@ def run_source_cli(argv: list[str]) -> Optional[int]:
     return 0
 
 
+def run_report_cli(argv: list[str]) -> Optional[int]:
+    """Full strict report pipeline, reusing the source request/snapshot/supplements."""
+    import argparse
+    probe = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+    probe.add_argument("--report-request")
+    options, _ = probe.parse_known_args(argv)
+    if options.report_request is None:
+        return None
+    parser = argparse.ArgumentParser(description="Calculate, render and validate the Loan Review contract", allow_abbrev=False)
+    parser.add_argument("ticker")
+    parser.add_argument("--report-request", required=True)
+    parser.add_argument("--source-snapshot")
+    parser.add_argument("--supplement", action="append", default=[])
+    parser.add_argument("--output-dir", required=True)
+    opts = parser.parse_args(argv)
+    try:
+        result = analyze_ticker(opts.ticker, source_request=load_source_json(opts.report_request),
+            source_snapshot=load_source_json(opts.source_snapshot) if opts.source_snapshot else None,
+            supplemental_evidence=tuple(load_source_json(p) for p in opts.supplement),
+            formal_report=True, report_output_dir=opts.output_dir, generate_html=False)
+    except (ValueError, OSError) as exc:
+        print(json.dumps({"status": "error", "error": str(exc)}, ensure_ascii=False), file=sys.stderr)
+        return 1
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return 0 if result.get('technical_validation_passed') else 1
+
+
+def run_period_cli(argv: list[str]) -> Optional[int]:
+    """Reuse source-request schema for explicit legacy periods; no new data contract."""
+    import argparse
+    probe = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+    probe.add_argument("--period-request")
+    options, _ = probe.parse_known_args(argv)
+    if options.period_request is None:
+        return None
+    parser = argparse.ArgumentParser(description="Legacy report with verified fiscal periods (not final acceptance)", allow_abbrev=False)
+    parser.add_argument("ticker")
+    parser.add_argument("--period-request", required=True, help="Existing annual/quarterly source-request JSON schema")
+    parser.add_argument("--no-html", action="store_true")
+    opts = parser.parse_args(argv)
+    try:
+        result = analyze_ticker(opts.ticker, period_request=load_source_json(opts.period_request), generate_html=not opts.no_html)
+    except (ValueError, OSError) as exc:
+        print(json.dumps({"status": "error", "error": str(exc)}, ensure_ascii=False), file=sys.stderr)
+        return 1
+    print(json.dumps(result, indent=2, default=str))
+    return 0 if result.get("status") == "success" else 1
+
+
 if __name__ == "__main__":
+    report_exit = run_report_cli(sys.argv[1:])
+    if report_exit is not None:
+        sys.exit(report_exit)
     source_exit = run_source_cli(sys.argv[1:])
     if source_exit is not None:
         sys.exit(source_exit)
+    period_exit = run_period_cli(sys.argv[1:])
+    if period_exit is not None:
+        sys.exit(period_exit)
     if len(sys.argv) > 1:
         # CLI usage:
         #   python agent_runner.py WMT --periods FY2022 FY2023 FY2024 FY2025
@@ -1730,7 +1511,7 @@ if __name__ == "__main__":
             sys.exit(1)
 
         if periods_cli is None:
-            print("⚠️  No --periods specified. Will use the most recent 4 fiscal years from BQ.")
+            print("Verified fiscal dates are required: use --period-request REQUEST.json. FY labels alone do not establish dates.")
             print("   To specify: --periods FY2022 FY2023 FY2024 FY2025")
 
         logger.info(f"CLI: tickers={tickers_arg}  periods={periods_cli}  html={generate_html}")

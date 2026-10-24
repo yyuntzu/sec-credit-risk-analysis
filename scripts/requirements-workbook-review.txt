@@ -1,0 +1,2 @@
+# Optional read-only legacy .xls adapter; not required by the core SEC pipeline.
+xlrd==2.0.2

@@ -84,12 +84,18 @@ The independently retained request mode is the validator's `expected_mode`.
 `empty_report` builds missing states, not plausible values or a completed report.
 See the output reference for field definitions, topics, evidence and test mappings.
 
-**Implementation status:** Block 1 defines and tests the contract only. The existing
-runner and writer have not yet been connected to it and still have legacy behavior,
-including data-driven mode selection. Do not claim a legacy pipeline run or a
-contract-valid object is a v1.0 accepted final report. Later blocks must connect
-extraction, calculation, narrative and rendering to the contract. No new CLI flag is
-available merely because this contract defines a mode.
+**Implementation status (2026-10-24):** The strict source → Fact calculation →
+evidence-linked comparison → contract renderer → acceptance path is connected via
+`agent_runner.py --report-request ... --source-snapshot ... --output-dir ...`.
+It reuses the existing source-request schema and does not use the legacy writer's
+financial proxies. `--source-request` remains source-only. `--period-request` is
+still the legacy report path and must not be described as strict final acceptance.
+See [integration and acceptance](references/loan-review-report-integration.md).
+Technical/render validation is distinct from `final_report_accepted`: unresolved
+definitions, source gaps, missing policies or incomplete reconciliation retain an
+unaccepted report. Do not label a successful run an accepted financial assessment.
+User-authorized Nexstar working-paper tests use the read-only workbook adapter into
+the same strict Report pipeline; the outputs explicitly are not SEC-verified facts.
 
 ### Grounding and writing requirements
 

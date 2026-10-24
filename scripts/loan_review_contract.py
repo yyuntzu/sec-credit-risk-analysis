@@ -1,13 +1,15 @@
-"""Loan Review v1.0 boundary contract (Block 1; not wired into the legacy writer).
+"""Loan Review v1.0 shared contract and approved calculation API.
+The strict pipeline uses these records; legacy formatting remains separate.
 
 Pure standard-library records, fixed layouts and structural validation. No extraction,
-financial calculation, prose generation, rendering, or delivery approval happens here.
+prose generation, rendering, or delivery approval happens here. Explicit calculation
+uses the existing Fact/Report contract and never approves pending definitions.
 Numbers use Decimal; percentages are unscaled fractions (0.25 renders as 25%).
 See references/output-format.md for the API, rule mapping and validation limits.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
 from decimal import Decimal
 from enum import Enum
@@ -293,6 +295,120 @@ def empty_report(mode: Mode | str, *, entity: str, scope: str, currency: str,
     return Report(mode, entity, scope, currency, scale, periods, report_headings(mode), tuple(tables), facts, evidence or {})
 
 
+def approved_formula_value(formula_id: str, values: tuple[Decimal, ...]) -> Decimal | None:
+    """Approved arithmetic only; semantic/period/decision gates belong to Fact validation.
+
+    Fractions remain unscaled (0.25, not 25). None denotes unavailable/zero divisor;
+    no conversion of missing inputs, estimates or pending business definitions.
+    """
+    arity = {"CF-01": 2, "CF-02": 2, "CF-03": 2, "CF-04": 3, "CF-05": 4,
+             "CF-06": 2, "CF-09": 2, "CF-10": 2, "CF-11": 2, "CF-12": 2,
+             "CF-16": 2, "COMMON-SIZE-v1": 2, "CASH-CHANGE-v1": 2, "LEVERAGE-v1": 2}
+    _require(formula_id in arity, "AUTH-03", "Formula is not an implemented approved calculation")
+    _require(len(values) == arity[formula_id], "CALC-02", "Formula input count mismatch")
+    if not all(_number(v) for v in values):
+        return None
+    if formula_id in ("CF-16", "CASH-CHANGE-v1"):
+        return values[0] - values[1]
+    if formula_id == "CF-04":
+        pretax, interest, capitalized = values
+        numerator, denominator = pretax + interest, interest + capitalized
+    elif formula_id == "CF-05":
+        pretax, interest, da, capitalized = values
+        numerator, denominator = pretax + interest + da, interest + capitalized
+    elif formula_id == "CF-09":
+        numerator, denominator = values[0] - values[1], values[1]
+    else:
+        numerator, denominator = values
+    return numerator / denominator if denominator != 0 else None
+
+
+def calculate_fact(report: Report, fact_id: str, *, input_ids: tuple[str, ...],
+                   formula_version: str) -> Report:
+    """Calculate an existing slot using approved inputs, preserving all contract gates.
+
+    This explicit step does not alter source-only preparation or add report rows.
+    Pending definitions and unavailable inputs retain not_calculable, never zero.
+    Conditional statement identities/cash reconciliation require a separate reviewed
+    bridge; they are deliberately not inferred by this generic arithmetic step.
+    """
+    validate_report(report, expected_mode=report.mode)
+    _require(fact_id in report.facts, "DATA-01", "Unknown target fact")
+    target = report.facts[fact_id]
+    spec = METRICS[target.metric]
+    formula = "COMMON-SIZE-v1" if ":pct:" in fact_id else spec.formula
+    _require(_text(formula_version), "CALC-02", "Explicit formula version required")
+    _require(formula is not None, "AUTH-03", "No approved generic formula for target")
+    _require(target.status not in AVAILABLE, "DATA-01", "Do not overwrite an available source/calculation")
+    missing_decisions = set(spec.pending) - set(report.decisions)
+    inputs = [report.facts.get(i) for i in input_ids]
+    reason = ("Unresolved definitions: " + ", ".join(sorted(missing_decisions)) if missing_decisions else
+              "Required inputs unavailable" if any(i is None or i.status not in AVAILABLE for i in inputs) else "")
+    if formula == "CASH-CHANGE-v1" and not any(report.evidence[eid].kind == "definition" for eid in target.evidence_ids):
+        reason = "Reviewed same-basis cash reconciliation required; no automatic cash bridge"
+    if reason:
+        updated = replace(target, status=Status.NOT_CALCULABLE, value=None, reason=reason)
+    else:
+        value = approved_formula_value(formula, tuple(i.value for i in inputs))
+        updated = (replace(target, status=Status.CALCULATED, value=value, reason="",
+                           formula_id=formula, formula_version=formula_version, input_ids=input_ids)
+                   if value is not None else replace(target, status=Status.NOT_CALCULABLE,
+                                                     value=None, reason="Zero divisor or nonnumeric input"))
+    result = replace(report, facts={**report.facts, fact_id: updated})
+    validate_report(result, expected_mode=report.mode)
+    return result
+
+
+def calculate_identity(report: Report, fact_id: str, *, formula_id: str,
+                       input_ids: tuple[str, ...], formula_version: str,
+                       definition_evidence_id: str) -> Report:
+    """DER-01..06 only after a reviewed, complete same-scope identity is supplied.
+
+    The definition evidence documents included/excluded bridge items (including
+    tax/discontinued/NCI scope). A tag or matching amount is not such a review.
+    """
+    validate_report(report, expected_mode=report.mode)
+    rules = {
+        "DER-01": ("gross_profit", ("revenue", "cost_of_revenue"), -1),
+        "DER-02": ("cost_of_revenue", ("revenue", "gross_profit"), -1),
+        "DER-03": ("operating_expense", ("gross_profit", "operating_income"), -1),
+        "DER-04": ("operating_income", ("gross_profit", "operating_expense"), -1),
+        "DER-05": ("pretax_profit", ("net_income", "income_tax"), 1),
+        "DER-06": ("net_income", ("pretax_profit", "income_tax"), -1),
+    }
+    _require(formula_id in rules and fact_id in report.facts, "AUTH-03", "Unsupported identity/target")
+    metric, expected, sign = rules[formula_id]
+    target = report.facts[fact_id]
+    _require(target.metric == metric and target.status not in AVAILABLE, "DATA-01", "Identity target mismatch or available source")
+    _require(_text(formula_version), "CALC-02", "Explicit formula version required")
+    evidence = report.evidence.get(definition_evidence_id)
+    _require(evidence is not None and evidence.kind == "definition" and target.period_role in evidence.period_roles,
+             "CALC-14", "Reviewed same-scope complete identity evidence required")
+    items = [report.facts.get(i) for i in input_ids]
+    _require(len(items) == 2 and all(i is not None for i in items) and tuple(i.metric for i in items) == expected,
+             "CALC-02", "Identity components/order mismatch")
+    _require(all(i.period_role == target.period_role and (i.start, i.end) == (target.start, target.end)
+                 and i.unit == target.unit and i.currency == target.currency for i in items),
+             "CALC-03", "Identity period/unit mismatch")
+    # A derived gross profit cannot be used to reverse-infer its own cost.
+    def depends_on(fid, metric, seen=None):
+        seen = set() if seen is None else seen
+        if fid in seen: return False
+        seen.add(fid)
+        item = report.facts[fid]
+        return item.metric == metric or any(depends_on(i, metric, seen) for i in item.input_ids)
+    _require(not any(depends_on(i.id, target.metric) for i in items), "CALC-02", "Circular/reverse identity")
+    if any(i.status not in AVAILABLE or not _number(i.value) for i in items):
+        updated = replace(target, status=Status.NOT_CALCULABLE, reason="Identity inputs unavailable")
+    else:
+        updated = replace(target, status=Status.CALCULATED, value=items[0].value + sign * items[1].value,
+                          reason="", formula_id=formula_id, formula_version=formula_version,
+                          input_ids=input_ids, evidence_ids=(definition_evidence_id,))
+    result = replace(report, facts={**report.facts, fact_id: updated})
+    validate_report(result, expected_mode=report.mode)
+    return result
+
+
 def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
     """Validate boundary structure and evidence references; raise ContractError.
 
@@ -387,7 +503,7 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
             _require(f.value is None and f.original_value is None and not f.input_ids and f.formula_id is None and f.formula_version is None, "MISS-01", f"{fid}: unavailable fact must not carry a value or completed calculation")
             _require(_text(f.reason), "MISS-06", f"{fid}: unavailable reason required")
             if f.status == Status.CONFLICT:
-                _require(len({e.source_id + ':' + e.version for e in evidence}) >= 2, "DATA-03", f"{fid}: conflicting sources required")
+                _require(len({(e.source_id, e.version, e.locator) for e in evidence}) >= 2, "DATA-03", f"{fid}: conflicting sources required")
             if f.status == Status.NOT_APPLICABLE:
                 _require(any(e.kind in ("review", "definition") for e in evidence), "MISS-03", f"{fid}: confirmed inapplicability evidence required")
             continue

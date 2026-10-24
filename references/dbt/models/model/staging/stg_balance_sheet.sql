@@ -27,45 +27,9 @@ pivoted as (
         max(case when field_name = 'retained_earnings'   then value end) / 1e6 as retained_earnings_m,
         max(case when field_name = 'inventory'           then value end) / 1e6 as inventory_m,
 
-        (
-            coalesce(max(case when field_name = 'short_term_loans' then value end), 0)
-            + coalesce(max(case when field_name = 'short_term_notes_payable' then value end), 0)
-            + coalesce(
-                max(case when field_name = 'current_maturities_ltd' then value end),
-                max(case when field_name in ('current_maturities_ltd_alt', 'current_maturities_ltd_alt2') then value end),
-                0
-            )
-        ) / 1e6 as short_term_debt_m,
-
-        -- Total Debt = short-term loans/notes + current maturities +
-        -- noncurrent long-term liabilities. DebtCurrent and aggregate
-        -- LongTermDebt are mutually exclusive fallbacks to prevent overlap.
-        case
-            when coalesce(
-                max(case when field_name = 'long_term_liabilities' then value end),
-                max(case when field_name in ('long_term_liabilities_alt', 'long_term_liabilities_alt2') then value end)
-            ) is not null then (
-                coalesce(max(case when field_name = 'short_term_loans' then value end), 0)
-                + coalesce(max(case when field_name = 'short_term_notes_payable' then value end), 0)
-                + coalesce(
-                    max(case when field_name = 'current_maturities_ltd' then value end),
-                    max(case when field_name in ('current_maturities_ltd_alt', 'current_maturities_ltd_alt2') then value end),
-                    case when max(case when field_name = 'short_term_loans' then value end) is null
-                           and max(case when field_name = 'short_term_notes_payable' then value end) is null
-                         then max(case when field_name = 'debt_current_fallback' then value end)
-                         else 0 end,
-                    0
-                )
-                + coalesce(
-                    max(case when field_name = 'long_term_liabilities' then value end),
-                    max(case when field_name in ('long_term_liabilities_alt', 'long_term_liabilities_alt2') then value end)
-                )
-            )
-            else coalesce(
-                max(case when field_name = 'long_term_debt_aggregate' then value end),
-                max(case when field_name in ('long_term_debt_aggregate_alt', 'long_term_debt_aggregate_alt2', 'long_term_debt_aggregate_alt3') then value end)
-            )
-        end / 1e6 as total_debt_m
+        -- DEC-02: do not adopt incomplete debt components or a lease policy.
+        cast(null as float64) as short_term_debt_m,
+        cast(null as float64) as total_debt_m
 
     from source
     where filing_type in ('10-K', '10-Q')

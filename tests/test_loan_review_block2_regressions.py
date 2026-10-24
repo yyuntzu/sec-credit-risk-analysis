@@ -34,7 +34,7 @@ class LegacyCompatibilityTests(unittest.TestCase):
         loader = self.loader(financial)
         for query in (runner.query_kpis_from_bq, runner.query_annual_financials, runner.query_quarterly_financials):
             with self.subTest(query=query.__name__), self.assertRaisesRegex(sources.SourceError, 'conflict'):
-                query('SYNTHETIC-ONLY', loader)
+                query('SYNTHETIC-ONLY', loader, **({} if query is runner.query_kpis_from_bq else {'period_request': request_fixture('annual' if query is runner.query_annual_financials else 'quarterly')}))
         self.assertEqual(loader.client.query.call_count, 3)
 
     def test_distinct_durations_are_not_duplicates(self):
@@ -44,26 +44,20 @@ class LegacyCompatibilityTests(unittest.TestCase):
         self.assertFalse(collapsed)
         self.assertEqual(len(config.query_parameters[0].values), 2)
 
-    def test_single_observation_keeps_existing_mart_result(self):
+    def test_readers_use_adopted_snapshot_not_stale_mart(self):
         for query in (runner.query_kpis_from_bq, runner.query_annual_financials, runner.query_quarterly_financials):
+            annual = query is runner.query_annual_financials
+            endpoint = '2025-12-31' if annual else '2025-06-30'
             loader = MagicMock()
             guard = MagicMock(); guard.result.return_value = []
-            mart = MagicMock(); mart.result.return_value = [{'period_end': '2025-09-30', 'revenue_m': 123}]
-            loader.client.query.side_effect = [guard, mart]
-            with self.subTest(query=query.__name__):
-                result = query('SYNTHETIC-ONLY', loader, **({'quarter_labels': ['Q3 2025']} if query is runner.query_quarterly_financials else {}))
-                self.assertEqual(result[0]['revenue_m'], 123)
-                self.assertEqual(loader.client.query.call_count, 2)
-
-    def test_unambiguous_raw_fallback_remains_available(self):
-        for query in (runner.query_kpis_from_bq, runner.query_annual_financials, runner.query_quarterly_financials):
-            loader = MagicMock()
-            guard = MagicMock(); guard.result.return_value = []
-            raw = MagicMock(); raw.result.return_value = [{'period_end': '2025-09-30', 'revenue_m': 123}]
-            loader.client.query.side_effect = [guard, RuntimeError('mart unavailable'), raw]
-            result = query('SYNTHETIC-ONLY', loader)
-            self.assertEqual(result[0]['revenue_m'], 123)
-            self.assertEqual(loader.client.query.call_count, 3)
+            raw = MagicMock(); raw.result.return_value = [{'period_end': endpoint, 'revenue_m': 123}]
+            loader.client.query.side_effect = [guard, raw]
+            kwargs = {} if query is runner.query_kpis_from_bq else {'period_request': request_fixture('annual' if annual else 'quarterly')}
+            result = query('SYNTHETIC-ONLY', loader, **kwargs)
+            self.assertEqual(result[-1]['revenue_m'], 123)
+            self.assertEqual(loader.client.query.call_count, 2)
+            self.assertNotIn('.stg_', loader.client.query.call_args.args[0])
+            self.assertNotIn('.fct_', loader.client.query.call_args.args[0])
 
     def test_guard_failure_never_falls_back(self):
         loader = MagicMock(); loader.client.query.side_effect = RuntimeError('BQ unavailable')
@@ -76,7 +70,7 @@ class LegacyCompatibilityTests(unittest.TestCase):
              patch.object(runner, 'run_dbt'), patch.object(runner, 'verify_marts_in_bq'), \
              patch.object(runner, 'generate_credit_memo') as writer, patch.object(runner, 'generate_commentary') as llm:
             loader.return_value.client.query.side_effect = RuntimeError('validation unavailable')
-            result = runner.analyze_ticker('SYNTHETIC-ONLY')
+            result = runner.analyze_ticker('SYNTHETIC-ONLY', period_request=request_fixture())
             self.assertEqual(result['status'], 'error')
             self.assertIn('validation unavailable', result['error'])
             writer.assert_not_called(); llm.assert_not_called()

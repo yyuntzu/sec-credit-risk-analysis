@@ -62,17 +62,19 @@ joined as (
     left join cf
         on inc.ticker      = cf.ticker
         and inc.period_end = cf.period_end
+        and inc.period_start = cf.period_start
+        and inc.period_days = cf.period_days
 
     where inc.period_days is not null
 ),
 
 -- ⚠️ 關鍵修正：JOIN 後再做一次 dedup
--- 同一個 ticker+period_end 只保留最新 filed_date
+-- Keep distinct flow intervals; identical end dates do not identify a fact.
 deduped as (
     select
         *,
         row_number() over (
-            partition by ticker, period_end
+            partition by ticker, period_start, period_end, period_days
             order by filed_date desc
         ) as _rn
     from joined

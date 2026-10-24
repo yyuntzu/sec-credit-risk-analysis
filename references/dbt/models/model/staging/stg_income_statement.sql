@@ -56,11 +56,8 @@ pivoted as (
         max(case when field_name = 'operating_expense_direct' then value end) / 1e6
                                                                         as operating_expense_direct_m,
 
-        -- EBITDA = Operating income + D&A（D&A 缺失時退回 operating income）
-        (
-            max(case when field_name = 'operating_income' then value end)
-            + coalesce(max(case when field_name = 'da' then value end), 0)
-        ) / 1e6                                                         as ebitda_m
+        -- DEC-06 is unresolved; operating income is not an EBITDA proxy.
+        cast(null as float64) as ebitda_m
 
     from source
     -- 只取季度申報（10-Q 和 10-K）

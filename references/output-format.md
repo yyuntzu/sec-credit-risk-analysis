@@ -246,3 +246,14 @@ prose, or authorize final delivery. Numeric golden tests belong to Block 3; pros
 checks to Block 4; writer checks to Block 5; end-to-end acceptance to Block 6.
 Passing this block must not be reported as passing those later gates (OBJ-02,
 CHANGE-04/05). Existing runtime outputs remain legacy until connected and tested.
+
+
+## Integration update — 2026-10-24
+
+The source-to-calculation-to-render-to-acceptance path is now connected through
+`--report-request` and `scripts/loan_review_pipeline.py`; see
+[report integration](loan-review-report-integration.md). The structural validator's
+limits above remain unchanged; numeric recomputation and rendered-table checks are
+separate functions. Unresolved inputs/decisions and incomplete reconciliation still
+block substantive acceptance. The source-only path remains source-only. Existing
+legacy report calls must not be confused with the strict renderer or final acceptance.
