@@ -44,23 +44,24 @@ def nexstar(name, mode, quarter=None):
 class NexstarGoldenTests(unittest.TestCase):
     def test_year_actual_values_ratios_and_exact_layout(self):
         report, acceptance, inputs, _ = nexstar('E-loan YYYY_Nexstar 2025.xls', 'annual')
-        self.assertEqual(report.facts['revenue:fy_t'].value, D(4949000))
+        self.assertEqual(report.facts['revenue:fy_t'].value, D(4949))
         self.assertEqual(report.facts['current_ratio:fy_t'].value, D(1473000)/D(711000))
-        self.assertEqual(report.facts['gross_margin:fy_t'].value, D(2714000)/D(4949000))
-        self.assertEqual(report.facts['revenue_growth:fy_t'].value, (D(4949000)-D(5407000))/D(5407000))
+        self.assertEqual(report.facts['gross_margin:fy_t'].value, D(2714)/D(4949))
+        self.assertEqual(report.facts['revenue_growth:fy_t'].value, (D(4949)-D(5407))/D(5407))
         text = render_loan_review(report, acceptance)
         self.assertTrue(pipeline.validate_rendered_report(report, text))
         self.assertEqual([len(t.spec.columns)+1 for t in report.tables], [7,5,5,5])
         self.assertFalse(acceptance['final_report_accepted'])
-        self.assertEqual(report.decisions, {})
+        self.assertIn("DEC-02", report.decisions)
+        self.assertNotIn("DEC-03", report.decisions)
         self.assertEqual(report.facts['capitalized_interest:fy_t'].value if 'capitalized_interest:fy_t' in report.facts else report.facts['input:capitalized_interest:fy_t'].value, None)
         self.assertTrue(acceptance['missing_inputs'])
 
     def test_q2_is_comparable_ytd_not_quarter_or_annualized(self):
         report, acceptance, _, candidates = nexstar('E-Loan YQYQ-Nexstar Q2.xls', 'quarterly', 2)
-        self.assertEqual(report.facts['revenue:current_interim'].value, D(3389000))
-        self.assertEqual(report.facts['revenue:prior_interim'].value, D(2462000))
-        self.assertEqual(report.facts['gross_margin:current_interim'].value, D(1848000)/D(3389000))
+        self.assertEqual(report.facts['revenue:current_interim'].value, D(3389))
+        self.assertEqual(report.facts['revenue:prior_interim'].value, D(2462))
+        self.assertEqual(report.facts['gross_margin:current_interim'].value, D(1848)/D(3389))
         self.assertEqual(report.facts['current_ratio:current_interim'].value, D(2005000)/D(1284000))
         self.assertEqual(report.periods[-1].start, date(2026,1,1))
         self.assertIsNone(report.periods[-1].ltm_start)
@@ -73,9 +74,9 @@ class NexstarGoldenTests(unittest.TestCase):
 
     def test_q1_negative_tax_benefit_remains_negative(self):
         report, _, _, _ = nexstar('E-Loan YQYQ-Nexstar Q1.xls', 'quarterly', 1)
-        self.assertEqual(report.facts['income_tax:current_interim'].value, D(-7000))
-        self.assertEqual(report.facts['net_income:current_interim'].value, D(160000))
-        self.assertEqual(report.facts['pretax_profit:current_interim'].value, D(153000))
+        self.assertEqual(report.facts['income_tax:current_interim'].value, D(-7))
+        self.assertEqual(report.facts['net_income:current_interim'].value, D(160))
+        self.assertEqual(report.facts['pretax_profit:current_interim'].value, D(153))
 
     def test_cf_period_is_unverified_and_fx_is_never_zero_filled(self):
         report, acceptance, _, _ = nexstar('E-loan YYYY_Nexstar 2025.xls', 'annual')
@@ -99,7 +100,7 @@ class NexstarGoldenTests(unittest.TestCase):
         report, acceptance, _, _ = nexstar('E-loan YYYY_Nexstar 2025.xls', 'annual')
         text = render_loan_review(report, acceptance)
         with self.assertRaisesRegex(ValueError, 'Rendered value'):
-            pipeline.validate_rendered_report(report, text.replace('4,949,000.00', '9,949,000.00', 1))
+            pipeline.validate_rendered_report(report, text.replace('4,949.00', '9,949,000.00', 1))
         with self.assertRaisesRegex(ValueError, 'headings'):
             pipeline.validate_rendered_report(report, '# Cover\n'+text)
         fid='current_ratio:fy_t'

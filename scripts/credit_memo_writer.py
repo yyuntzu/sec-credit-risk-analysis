@@ -759,10 +759,13 @@ def render_loan_review(report, acceptance) -> str:
     def value(f):
         if f.status not in AVAILABLE: return status[f.status.value]
         if f.unit == 'text': return esc(f.value)
-        if f.unit == 'percent': return f'{f.value * 100:,.2f}%'
+        def display(number, suffix=''):
+            text = f'{abs(number):,.2f}{suffix}'
+            return f'({text})' if number < 0 else text
+        if f.unit == 'percent': return display(f.value * 100, '%')
         if f.unit == 'percentage_points': return f'{f.value * 100:,.2f} 個百分點'
-        if f.unit == 'multiple': return f'{f.value:,.2f}x'
-        return f'{f.value:,.2f}'
+        if f.unit == 'multiple': return display(f.value, 'x')
+        return display(f.value)
     lines = []
     for level, heading in report.headings:
         lines += ['#' * level + ' ' + heading, '']

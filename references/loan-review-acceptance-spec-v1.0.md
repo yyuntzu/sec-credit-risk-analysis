@@ -465,3 +465,38 @@ Numerical tests must use unrounded expected values. Display tests must validate 
 These pending matters block only business decisions that depend on them. They need not prevent test design for rules that are already clear, but assumed answers must not be used to claim acceptance.
 
 **Track subsequent changes through rule ID → implementation location → test case → actual evidence. The final objective is achieved only when the new format, correct calculations, source support, and historical writing style all conform.**
+
+
+### 9.1 使用者核准紀錄（2026-10-24）
+
+核准依據：使用者在逐項白話說明後指示「approve all pending case and run test again」。以下記錄對先前明確建議的核准；未選定的選項不自行補定。本節是業務決策紀錄，不代表來源事實已查證、程式已實作或正式報表已通過驗收。
+
+| ID | 本次核准範圍 | 尚待選定／執行限制 |
+|---|---|---|
+| DEC-01 | 速動資產納入可自由動用現金及約當現金、可迅速變現短期投資、扣備抵後應收帳款；排除存貨、預付款、受限制現金及性質未明其他流動資產；不得重複計入，明細不足不計算。 | 每家公司來源仍須證明符合此口徑。 |
+| DEC-02 | Net Worth採包含非控制權益的合併總權益，不自行扣商譽／無形資產；Total Debt納入有息借款、公司債、當期到期部分及融資租賃；採一致合併範圍；Total Debt不等同Total Liabilities。 | 營業租賃負債是否納入尚未選定；整項不得當作無條件完成。 |
+| DEC-03 | 優先採明確貸款契約／授信範本定義；無定義時保持待確認，不以CapEx代本金或自行選DSCR分子。 | 尚未指定契約、分子、應付／實付本息及租賃處理。 |
+| DEC-04 | 平均餘額採期初與期末平均，缺期初不算；年度與YTD分開，年化不得稱LTM；完整月份才用月份換算；備抵依來源符號且只扣一次。 | 特殊／不完整期間另確認；不自動新增報表比率。 |
+| DEC-05 | 採費用化利息總額，不扣利息收入；僅有淨額時補查附註；資本化利息另取明確揭露且避免重複；未揭露不當0。 | CF-04／05公式不變；仍須取得來源證據。 |
+| DEC-06 | 區分一般、Adjusted及契約EBITDA；同範圍同定義比較；Adjusted須明確指定並有完整調節；LTM用實際連續12個月，不以年化替代；未解衝突保留。 | 正式槓桿採哪種EBITDA尚未選定。 |
+| DEC-07 | 每次指定as-of，僅使用當日以前公開來源；採截止日前適用最新正式重編並留原版及差異；截止日後重編另列更新，不改寫當時報告。 | 必須有實際公布／版本證據。 |
+| DEC-08 | 區分未揭露、待確認、來源衝突、無法計算、不適用；可產待驗收草稿，必要科目／核心比率／必要勾稽未完成不標正式通過。 | 沿用既有必要驗收條件，不新增缺值豁免。 |
+| DEC-09 | Excel為主要檔案，Quarter／Year分頁；繁中並保留英文；同表明示且統一幣別單位；金額／百分比／倍數顯示2位小數，負數括號；完整精度計算，顯示才四捨五入；缺值依DEC-08。 | 金額單位元／千元／百萬元尚未選定；現有Markdown輸出不因此視為Excel交付完成。 |
+| DEC-10 | 初期支援有固定期間、單位及來源的結構化輸入與已驗證Excel適配器；任意格式Excel／PDF解析列後續；標明非SEC來源。 | Nexstar適配器不視為通用解析器。 |
+| DEC-11 | 本階段交付Excel／正式報表、來源、缺資料與驗收結果；Dashboard不納入本階段共同交付。 | 日後加入Dashboard另驗收。 |
+
+不得將本節直接轉成所有Report的通用PASS或來源Evidence；待確認子項、缺資料與勾稽差異仍必須保留。程式及輸出是否符合本節須另行驗證。
+
+
+### 9.2 使用者補充核准（2026-10-24）
+
+本節優先於9.1中對應的未選選項，其他已核准限制維持不變。
+
+| ID | 明確核准內容 | 仍須核驗的條件 |
+|---|---|---|
+| DEC-02 | Total Debt不包含營業租賃負債；融資租賃及其他已核准有息債務範圍沿用9.1。 | 來源必須能區分營業／融資租賃，避免當期與非流動部分重複加總。 |
+| DEC-03 | DSCR = Cash Flow Available for Debt Service（CFADS）／Debt Service。 | 本式已核准，但CFADS包含／排除項目，以及Debt Service的本金、利息、租賃與應付／實付口徑尚未提供；不得自行用CFO、EBITDA、CapEx或其他代理值替代。必要組成未確定時仍為無法計算。 |
+| DEC-06 | 採Standard EBITDA：Net Income + Interest + Taxes + Depreciation & Amortization（D&A），不採Adjusted或契約EBITDA。 | 沿用合併範圍及精確期間；Interest依DEC-05採費用化利息總額；Taxes保留稅費／稅益符號，不取絕對值；D&A不得重複加總；不得以營業利益代替本式；LTM仍須完整連續12個月。Net Income的具體來源範圍仍需與合併及非控制權益處理一致，不僅憑同名採用。 |
+| DEC-09 | 正式報表金額採百萬元（million），標示實際幣別；其他精度／負數／缺值規則沿用9.1。 | 原始值與來源單位保留；顯示換算不代表匯率轉換，例如千美元除以1000顯示為百萬美元；百分比與倍數不套用金額縮放。 |
+
+本節記錄使用者核准，不代表程式已完成對應實作、SEC來源已核實或Nexstar勾稽差異已解除。DEC-03組成定義仍待補充，不能將僅有公式視為完整償債政策。

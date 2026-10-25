@@ -58,7 +58,7 @@ METRICS = {
     "gross_profit": MetricSpec("Gross profit", "money", "duration", "Source gross profit; derive only with verified identity", "CALC-14"),
     "operating_expense": MetricSpec("Operating expense", "money", "duration", "Operating expense excluding cost of revenue; verified scope", "CALC-14"),
     "operating_income": MetricSpec("Operating income", "money", "duration", "Source operating profit", "FMT-A1/FMT-Q1"),
-    "interest_expense": MetricSpec("Interest expense", "money", "duration", "Interest expense with verified gross/net definition", "FMT-A1/FMT-A4/FMT-Q1", pending=("DEC-05",)),
+    "interest_expense": MetricSpec("Interest expense", "money", "duration", "Gross expensed interest without netting interest income; exclude separately capitalized interest", "FMT-A1/FMT-A4/FMT-Q1", pending=("DEC-05",)),
     "pretax_profit": MetricSpec("Income before taxes", "money", "duration", "Source pre-tax profit; preserve signed tax benefits in identities", "CALC-14"),
     "income_tax": MetricSpec("Income tax expense", "money", "duration", "Signed income tax expense or benefit", "CALC-14"),
     "net_income": MetricSpec("Net income", "money", "duration", "Source net income with consolidation scope", "FMT-A1/FMT-Q1"),
@@ -73,13 +73,13 @@ METRICS = {
     "cash_flow_ratio": MetricSpec("Cash flow ratio", "percent", "duration", "CFO / Current Liabilities", "CF-03", "CF-03", ("cfo", "current_liabilities")),
     "debt_ratio": MetricSpec("Debt ratio", "percent", "instant", "Total Liabilities / Net Worth", "CF-06", "CF-06", ("total_liabilities", "net_worth"), ("DEC-02",)),
     "interest_coverage": MetricSpec("Interest coverage ratio", "multiple", "duration", "(Pre-tax Profit + Interest Expense) / (Interest Expense + Capitalized Interest)", "CF-04", "CF-04", ("pretax_profit", "interest_expense", "capitalized_interest"), ("DEC-05",)),
-    "total_debt": MetricSpec("Total debt", "money", "instant", "Verified debt components, lease treatment and scope; not total liabilities", "CALC-09", pending=("DEC-02",)),
+    "total_debt": MetricSpec("Total debt", "money", "instant", "Consolidated interest-bearing borrowings, bonds and finance lease liabilities, including current portions once; exclude operating lease liabilities and trade payables", "CALC-09", pending=("DEC-02",)),
     "debt_service": MetricSpec("Debt service", "money", "duration", "Pending approved debt-service definition; no CapEx proxy", "CALC-10", pending=("DEC-03",)),
-    "ltm_ebitda": MetricSpec("LTM EBITDA", "money", "ltm", "Complete fiscal-year EBITDA ending at the column date, with explicit basis", "CALC-11/CALC-12", pending=("DEC-06",)),
+    "ltm_ebitda": MetricSpec("LTM EBITDA", "money", "ltm", "Standard EBITDA: Net Income + Interest + Taxes + D&A", "CALC-11/CALC-12", None, ("net_income", "interest_expense", "income_tax", "da"), ("DEC-06",)),
     "ebitda_basis": MetricSpec("EBITDA basis", "text", "ltm", "Source and actual EBITDA definition, including adjustments", "FMT-A4/FMT-Q3", pending=("DEC-06",)),
     "total_leverage": MetricSpec("Total leverage ratio", "multiple", "ltm", "Total debt / applicable LTM EBITDA", "CALC-09", "LEVERAGE-v1", ("total_debt", "ltm_ebitda"), ("DEC-02", "DEC-06")),
     "ebitda_interest": MetricSpec("EBITDA / Interest expense", "multiple", "duration", "(Pre-tax Profit + Interest Expense + D&A) / (Interest Expense + Capitalized Interest)", "CF-05", "CF-05", ("pretax_profit", "interest_expense", "da", "capitalized_interest"), ("DEC-05",)),
-    "dscr": MetricSpec("Debt service coverage ratio", "multiple", "duration", "Pending approved DSCR numerator and debt-service definition", "CALC-10", pending=("DEC-03",)),
+    "dscr": MetricSpec("Debt service coverage ratio", "multiple", "duration", "CFADS / Debt Service; CFADS and debt-service components pending confirmation", "CALC-10", pending=("DEC-03",)),
     # Narrative calculations are supporting facts, not extra report rows.
     "revenue_growth": MetricSpec("Revenue growth rate", "percent", "duration", "(Current Year Revenues - Previous Year Revenues) / Previous Year Revenues", "CF-09", "CF-09", ("revenue", "revenue")),
     "gross_margin": MetricSpec("Gross profit margin", "percent", "duration", "Gross Profit / Revenues", "CF-10", "CF-10", ("gross_profit", "revenue")),
@@ -303,11 +303,13 @@ def approved_formula_value(formula_id: str, values: tuple[Decimal, ...]) -> Deci
     """
     arity = {"CF-01": 2, "CF-02": 2, "CF-03": 2, "CF-04": 3, "CF-05": 4,
              "CF-06": 2, "CF-09": 2, "CF-10": 2, "CF-11": 2, "CF-12": 2,
-             "CF-16": 2, "COMMON-SIZE-v1": 2, "CASH-CHANGE-v1": 2, "LEVERAGE-v1": 2}
+             "CF-16": 2, "COMMON-SIZE-v1": 2, "CASH-CHANGE-v1": 2, "LEVERAGE-v1": 2, "STANDARD-EBITDA-v1": 4}
     _require(formula_id in arity, "AUTH-03", "Formula is not an implemented approved calculation")
     _require(len(values) == arity[formula_id], "CALC-02", "Formula input count mismatch")
     if not all(_number(v) for v in values):
         return None
+    if formula_id == "STANDARD-EBITDA-v1":
+        return sum(values, Decimal(0))
     if formula_id in ("CF-16", "CASH-CHANGE-v1"):
         return values[0] - values[1]
     if formula_id == "CF-04":
@@ -336,7 +338,7 @@ def calculate_fact(report: Report, fact_id: str, *, input_ids: tuple[str, ...],
     _require(fact_id in report.facts, "DATA-01", "Unknown target fact")
     target = report.facts[fact_id]
     spec = METRICS[target.metric]
-    formula = "COMMON-SIZE-v1" if ":pct:" in fact_id else spec.formula
+    formula = "COMMON-SIZE-v1" if ":pct:" in fact_id else ("STANDARD-EBITDA-v1" if target.metric == "ltm_ebitda" else spec.formula)
     _require(_text(formula_version), "CALC-02", "Explicit formula version required")
     _require(formula is not None, "AUTH-03", "No approved generic formula for target")
     _require(target.status not in AVAILABLE, "DATA-01", "Do not overwrite an available source/calculation")
@@ -344,8 +346,21 @@ def calculate_fact(report: Report, fact_id: str, *, input_ids: tuple[str, ...],
     inputs = [report.facts.get(i) for i in input_ids]
     reason = ("Unresolved definitions: " + ", ".join(sorted(missing_decisions)) if missing_decisions else
               "Required inputs unavailable" if any(i is None or i.status not in AVAILABLE for i in inputs) else "")
+    if formula == "STANDARD-EBITDA-v1":
+        if "DEC-05" not in report.decisions:
+            reason = "Gross interest definition approval required"
+        basis = report.facts.get('ebitda_basis:' + target.period_role)
+        if basis is None or basis.status not in AVAILABLE or basis.value != spec.definition:
+            reason = "Verified Standard EBITDA basis required"
+        elif target.start is None or any(i is None or (i.start, i.end) != (target.start, target.end) for i in inputs):
+            reason = "Complete exact LTM components required; YTD/annualization is not LTM"
+        else:
+            target = replace(target, basis=spec.definition)
     if formula == "CASH-CHANGE-v1" and not any(report.evidence[eid].kind == "definition" for eid in target.evidence_ids):
         reason = "Reviewed same-basis cash reconciliation required; no automatic cash bridge"
+    if formula == "LEVERAGE-v1" and not reason:
+        # CALC-12: carry the denominator's verified basis into the calculated ratio.
+        target = replace(target, basis=inputs[1].basis)
     if reason:
         updated = replace(target, status=Status.NOT_CALCULABLE, value=None, reason=reason)
     else:
@@ -530,7 +545,7 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
         else:
             _require(_text(f.formula_id) and _text(f.formula_version) and bool(f.input_ids), "CALC-02", f"{fid}: formula/version/input IDs required")
             _require(f.original_value is None and f.original_scale is None, "DATA-01", f"{fid}: calculated fact must not claim an original value")
-            expected_formula = "COMMON-SIZE-v1" if common_size else spec.formula
+            expected_formula = "COMMON-SIZE-v1" if common_size else ("STANDARD-EBITDA-v1" if f.metric == "ltm_ebitda" else spec.formula)
             if expected_formula:
                 _require(f.formula_id == expected_formula, "AUTH-03", f"{fid}: wrong formula ID")
             else:
@@ -553,6 +568,9 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
                 expected_unit = METRICS[expected_inputs[index]].unit if index < len(expected_inputs) else "money"
                 _require(item.unit == expected_unit, "CALC-03", f"{fid}: input unit mismatch")
                 inputs.append(item)
+            if f.formula_id == "STANDARD-EBITDA-v1":
+                _require(f.basis == spec.definition and all((i.start, i.end) == (f.start, f.end) for i in inputs),
+                         "CALC-03", "Standard EBITDA needs complete exact LTM components and standard basis")
             if expected_inputs:
                 _require(tuple(i.metric for i in inputs) == expected_inputs, "CALC-02", f"{fid}: formula components/order mismatch")
                 for item in inputs:

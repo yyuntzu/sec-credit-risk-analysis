@@ -26,6 +26,58 @@ except ImportError:
 FORMULA_VERSION = 'acceptance-v1.0-addendum-2026-10-23'
 
 
+
+APPROVED_POLICY_VERSION = 'user-approved-2026-10-24'
+STANDARD_EBITDA_BASIS = 'Standard EBITDA: Net Income + Interest + Taxes + D&A'
+APPROVED_DEFINITIONS = {
+    'DEC-01': 'Unrestricted cash and equivalents + liquid short-term investments + net receivables; no inventory, prepayments, restricted cash or duplicate investments',
+    'DEC-02': 'Consolidated total equity including NCI; debt includes interest-bearing borrowings, bonds and finance leases, excludes operating leases; no duplicate current portions',
+    'DEC-04': 'Opening/closing average; verified complete Months; allowance deducted once; no LTM annualization',
+    'DEC-05': 'Gross expensed interest, without netting interest income; separately disclosed capitalized interest, no duplication',
+    'DEC-06': STANDARD_EBITDA_BASIS,
+    'DEC-07': 'Only publicly available sources at explicit as-of; latest applicable restatement by that date; retain prior versions',
+    'DEC-08': 'Explicit unavailable states; critical missing facts and incomplete reconciliations block final acceptance',
+    'DEC-09': 'Millions in source currency; two decimal places; parentheses for negatives; retain original precision and scale',
+    'DEC-10': 'Structured inputs and validated workbook adapters only; non-SEC provenance remains explicit',
+    'DEC-11': 'Dashboard excluded from this delivery',
+}
+
+
+def apply_approved_policy(report, inputs, candidates):
+    """Business approval is separate from verification of company-specific inputs.
+
+    DEC-03 deliberately remains unresolved: CFADS/debt-service components unknown.
+    Existing Fact/Evidence/decision fields and metric IDs are reused.
+    """
+    evidence, decisions = dict(report.evidence), dict(report.decisions)
+    roles = tuple(p.role for p in report.periods)
+    decisions.pop('DEC-03', None)  # CFADS/debt service components still unresolved.
+    for decision, content in APPROVED_DEFINITIONS.items():
+        eid = 'approval:' + APPROVED_POLICY_VERSION + ':' + decision
+        evidence[eid] = Evidence(eid, report.entity, report.scope,
+            'user-approved-policy', APPROVED_POLICY_VERSION, date(2026, 10, 24),
+            'references/loan-review-acceptance-spec-v1.0.md#9.1-9.2', 'definition', roles, content)
+        decisions[decision] = eid
+    updated = replace(report, scale=Decimal(1000000), evidence=evidence, decisions=decisions)
+    converted = {}
+    for fid, original in inputs.items():
+        item = dict(original)
+        spec = METRICS[item['metric']]
+        if item['status'] == 'sourced' and item['value'] is not None and item['unit'] == 'money':
+            item['value'] = str(number(item['value']) * report.scale / updated.scale)
+        # A business policy is not evidence that a raw label meets that policy.
+        if spec.pending and item['status'] == 'sourced':
+            selected = [candidates[eid] for eid in item.get('evidence_ids', ())]
+            compatible = bool(selected) and all(c.get('definition') == spec.definition for c in selected)
+            if item['metric'] in ('ltm_ebitda', 'ebitda_basis'):
+                compatible = compatible and item.get('basis') == STANDARD_EBITDA_BASIS
+            if not compatible:
+                item.update(status='not_calculable', value=None,
+                    reason='Approved policy; company-specific source definition not yet verified; candidate retained')
+        converted[fid] = item
+    return updated, converted
+
+
 def adopt_inputs(report, inputs, candidates):
     """Adopt exact source inputs; keep pending source candidates in the audit registry."""
     facts, evidence = dict(report.facts), dict(report.evidence)
@@ -102,13 +154,37 @@ def calculate_report(report, identity_reviews=()):
     report = _supporting_slots(report)
     for review in identity_reviews:
         report = calculate_identity(report, **review)
+    # The displayed basis is the approved formula, not an invented company EBITDA.
+    for period in report.periods:
+        role = period.role
+        target = report.facts.get('ltm_ebitda:' + role)
+        basis = report.facts.get('ebitda_basis:' + role)
+        if target is None or basis is None or target.start is None:
+            continue
+        components = [report.facts.get(m + ':' + role) or report.facts.get('input:' + m + ':' + role)
+                      for m in METRICS['ltm_ebitda'].inputs]
+        if not all(f and f.status in AVAILABLE and (f.start, f.end) == (target.start, target.end)
+                   for f in components):
+            continue
+        if basis.status in (Status.CONFLICT, Status.NOT_APPLICABLE) or (basis.status in AVAILABLE and basis.value != STANDARD_EBITDA_BASIS):
+            continue
+        if 'DEC-06' not in report.decisions or 'DEC-05' not in report.decisions:
+            continue
+        approval = report.evidence[report.decisions['DEC-06']]
+        eid = 'policy-basis:' + role
+        evidence = replace(approval, id=eid, kind='fact', period_roles=(role,),
+                           content='User-selected calculation basis; not a company-reported EBITDA amount: ' + STANDARD_EBITDA_BASIS)
+        basis = replace(basis, status=Status.SOURCED, value=STANDARD_EBITDA_BASIS,
+                        original_value=STANDARD_EBITDA_BASIS, original_scale=None,
+                        evidence_ids=(eid,), reason='', basis=STANDARD_EBITDA_BASIS)
+        report = replace(report, facts={**report.facts, basis.id: basis}, evidence={**report.evidence, eid: evidence})
     # Supporting margins precede the change-in-margin fact.
     keys = sorted(report.facts, key=lambda fid: report.facts[fid].metric == 'operating_margin_change')
     roles = [p.role for p in report.periods]
     for fid in keys:
         f = report.facts[fid]; spec = METRICS[f.metric]
         common = ':pct:' in fid
-        if f.status in AVAILABLE or (not common and not spec.formula):
+        if f.status in AVAILABLE or (not common and not spec.formula and f.metric != "ltm_ebitda"):
             continue
         # Source conflicts are not erased by a second calculation attempt.
         if f.status in (Status.CONFLICT, Status.NOT_APPLICABLE):
@@ -128,7 +204,8 @@ def calculate_report(report, identity_reviews=()):
                     role = 'prior_interim' if role == 'current_interim' else 'prior_period_not_in_report'
             canonical = f'{metric}:{role}'
             ids.append(canonical if canonical in report.facts else f'input:{metric}:{role}')
-        report = calculate_fact(report, fid, input_ids=tuple(ids), formula_version=FORMULA_VERSION)
+        report = calculate_fact(report, fid, input_ids=tuple(ids),
+            formula_version=APPROVED_POLICY_VERSION if f.metric == "ltm_ebitda" else FORMULA_VERSION)
     return report
 
 
@@ -259,7 +336,9 @@ def validate_rendered_report(report, markdown):
                 else:
                     suffix = '%' if f.unit == 'percent' else 'x' if f.unit == 'multiple' else ''
                     number = f.value * 100 if f.unit == 'percent' else f.value
-                    if text != f'{number:,.2f}{suffix}':
+                    expected_text = f'{abs(number):,.2f}{suffix}'
+                    if number < 0: expected_text = f'({expected_text})'
+                    if text != expected_text:
                         raise ValueError(f'Rendered value/unit mismatch: {fid}')
     if any(token in markdown for token in ('[value]', '[refer to MD&A]', '{{value}}')):
         raise ValueError('Unfilled template placeholder in rendered report')
@@ -325,6 +404,7 @@ def acceptance_result(report, checks=(), limitations=()):
 
 
 def complete_report(report, inputs, candidates, *, checks=(), limitations=(), identity_reviews=()):
+    report, inputs = apply_approved_policy(report, inputs, candidates)
     report = adopt_inputs(report, inputs, candidates)
     report = calculate_report(report, identity_reviews)
     report = build_narratives(report)

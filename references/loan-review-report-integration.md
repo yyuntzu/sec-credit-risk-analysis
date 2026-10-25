@@ -66,3 +66,14 @@ Year使用 `--mode annual`；Q1使用 `--mode quarterly --quarter 1`。讀取舊
 - 現金差額只列算術比較及來源，不推測是匯率、受限制現金或SEC財報錯誤，也不塞入Other補平。
 
 本次三份Nexstar報表皆為「正式版型、待資料／定義驗收」，不是已核准交付的完整信用評估。沒有部署、抓新公司的資料或改動原始Excel。
+
+## 已核准口徑實作（2026-10-24，後續更新）
+
+核准依據見驗收規格§9.1／9.2。本節優先於上文舊的「DEC-01等均未核准」描述；來源未核實仍保留，不因政策核准而填值。
+
+- 正式complete_report入口以既有Evidence與decisions記錄使用者核准；不改source-only準備行為。DEC-03仍未具完整CFADS／Debt Service組成，不解除計算限制。
+- 金額統一百萬元，保留原值、幣別與original_scale；比率不縮放；負數括號。來源科目只符合名稱不足以採用，需符合核准口徑；Total Debt排除營業租賃負債，融資租賃及current portions避免重複。
+- 既有ltm_ebitda科目新增STANDARD-EBITDA-v1計算：淨利＋總額費用化利息＋帶符號稅費＋D&A。必要輸入完整、同範圍且精確涵蓋LTM期間時才計算，保留input IDs與使用者核准版本；未核實basis、Adjusted／契約basis及YTD替代不得採用。
+- 已核准的口徑不自動證明公司原始利息、淨值、債務、D&A或CF期間符合定義；來源補查及完整勾稽仍是實質驗收條件。未登錄ROA／週轉等公式不因DEC-04政策核准而新增科目。
+- Excel匯出腳本scripts/export_loan_review_excel.mjs使用bundled Artifact Tool讀已驗證report.json與版型標籤，Quarter／Year各一頁，Quarter內Q1與Q2分區；來源及公式同頁可追溯。數值、百分比及倍數使用原生數值／格式，缺資料保留文字，來源空白不轉0。共398個Fact值／狀態與JSON比對，另測修改原值、空白、合法0的重算；原生Microsoft Excel尚未執行。
+- 新增9項政策回歸測試，全套159項通過。Nexstar三份原始xls再次讀取、雜湊不變；新版輸出與新舊比較在outputs/nexstar_approved_policy_20261024。三份技術／版型檢查通過，財務實質驗收仍未通過。無部署、無新增公司資料抓取。
