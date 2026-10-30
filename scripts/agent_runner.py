@@ -1,6 +1,6 @@
 """
 agent_runner.py — formal Loan Review entrypoint with explicit legacy compatibility.
-CLI/HTTP default: review_workflow.run_review(); --legacy opts into the historical path.
+CLI and /v2 HTTP: review_workflow.run_review(); unversioned HTTP retains legacy request shapes.
 變更重點（相較於 v1）：
   + ingest_ticker() 新增 Step 7：下載 10-K / 10-Q HTML 原文 → 存 GCS
   + 新增 download_filing_html()：從 SEC EDGAR 下載單一 filing HTML
@@ -1128,6 +1128,34 @@ def prepare_loan_review_source_stage(ticker: str, request_payload: dict,
     return prepare_source_inputs(request_payload, rows, supplements)
 
 
+def query_legacy_mart(ticker, loader, *, annual=False):
+    """Read existing mart definitions only for the unvalidated legacy API.
+
+    No raw SUM fallback or invented formal provenance. Fiscal-year display labels
+    retain the historical calendar-year convention and are not acceptance proof.
+    """
+    from google.cloud import bigquery
+    if not re.fullmatch(r'[A-Z0-9.-]{1,20}', ticker):
+        raise ValueError('Invalid ticker')
+    table = 'int_financials_combined' if annual else 'fct_credit_kpis'
+    condition = 'AND period_days + 1 IN (364,365,366,371)' if annual else ''
+    config = bigquery.QueryJobConfig(query_parameters=[bigquery.ScalarQueryParameter('ticker', 'STRING', ticker)])
+    rows = loader.client.query(
+        f'SELECT * FROM `{loader.dataset_ref}.{table}` WHERE ticker = @ticker {condition} '
+        'ORDER BY period_end DESC LIMIT 8', job_config=config).result()
+    result = []
+    for raw in rows:
+        row = dict(raw)
+        if annual:
+            row['fiscal_year'] = row['period_end'].year
+            row['cost_of_sales_m'] = row.get('cost_of_revenue_m')
+            row['operating_expense_m'] = row.get('operating_expense_direct_m')
+            ca, cl = _sf(row.get('current_assets_m')), _sf(row.get('current_liabilities_m'))
+            row['current_ratio_pct'] = ca / cl * 100 if ca is not None and cl not in (None, 0) else None
+        result.append(row)
+    return sorted(result, key=lambda r: r['period_end']) if annual else result
+
+
 def analyze_ticker(
     ticker: str,
     periods: Optional[list[str]] = None,
@@ -1139,6 +1167,7 @@ def analyze_ticker(
     period_request: Optional[dict] = None,
     formal_report: bool = False,
     report_output_dir: Optional[str] = None,
+    legacy_compatibility: bool = False,
 ) -> dict:
     """
     Low-level compatibility API. New integrations should call review_workflow.run_review().
@@ -1192,7 +1221,10 @@ def analyze_ticker(
                 "final_report_accepted": False}
     try:
         requested_mode = period_request.get("mode") if isinstance(period_request, dict) else None
-        _requested_financial_periods(period_request, ticker, requested_mode or "annual")
+        if legacy_compatibility and period_request is None:
+            requested_mode = 'annual'
+        else:
+            _requested_financial_periods(period_request, ticker, requested_mode or "annual")
         if quarter_labels and requested_mode != "quarterly":
             raise SourceError("Quarter labels conflict with explicit annual mode")
     except (ValueError, TypeError) as exc:
@@ -1231,11 +1263,13 @@ def analyze_ticker(
 
     try:
         # Step 9: Quarterly KPIs
-        kpis = query_kpis_from_bq(ticker, bq_loader, period_request=period_request)
+        kpis = (query_legacy_mart(ticker, bq_loader) if legacy_compatibility else
+                query_kpis_from_bq(ticker, bq_loader, period_request=period_request))
         output["kpi_rows"] = len(kpis)
 
         # Step 10a: Annual financials (for YOY tables, filtered by periods)
-        annual = _enrich_rows(query_annual_financials(ticker, bq_loader, periods=periods, period_request=period_request))
+        annual = (query_legacy_mart(ticker, bq_loader, annual=True) if legacy_compatibility else
+                  _enrich_rows(query_annual_financials(ticker, bq_loader, periods=periods, period_request=period_request)))
         output["annual_rows"] = len(annual)
 
         # Step 10b: Quarterly financials (optional — only when quarter_labels specified)
@@ -1250,7 +1284,7 @@ def analyze_ticker(
     except Exception as exc:
         output.update(status="error", error=f"Legacy source validation/query failed: {exc}")
         return output
-    output["source_adoption_paths"] = bq_loader.loan_review_source_paths
+    output["source_adoption_paths"] = getattr(bq_loader, 'loan_review_source_paths', [])
 
     # Step 11: Match narrative to the review basis. Quarterly Loan Reviews
     # need current YTD MD&A and guidance from the latest 10-Q.
@@ -1310,6 +1344,9 @@ def analyze_ticker(
         filing_text_source=filing_text_source,
         mode=requested_mode,
     )
+    if legacy_compatibility:
+        memo = ('> Legacy compatibility report. Uses historical mart definitions and calendar-year labels; '
+                'not a formally accepted Loan Review.\n\n' + memo)
 
     memo_path = Path(OUTPUT_DIR) / f"{ticker}_credit_memo.md"
     memo_path.write_text(memo, encoding="utf-8")
@@ -1378,9 +1415,25 @@ def formal_http_review(ticker, body):
 
 if _FLASK_AVAILABLE and app is not None:
 
+    def legacy_http_review(ticker, body):
+        if not isinstance(body, dict) or set(body) - {'html'}:
+            raise ValueError('Legacy options support html only; use /v2/analyze with a review_request')
+        if not isinstance(body.get('html', True), bool):
+            raise ValueError('html must be boolean')
+        return analyze_ticker(ticker.upper(), generate_html=body.get('html', True), legacy_compatibility=True)
+
+    @app.route("/v2/run", methods=["POST"])
     @app.route("/run", methods=["POST", "GET"])
     def trigger_ingestion():
         body = request.get_json(silent=True)
+        if not request.path.startswith('/v2/') and (body is None or isinstance(body, dict) and 'reviews' not in body):
+            body = body or {}
+            tickers = body.get('tickers', DEFAULT_TICKERS)
+            if set(body) - {'tickers'} or not isinstance(tickers, list) or not tickers or any(
+                    not isinstance(t, str) or not re.fullmatch(r'[A-Za-z0-9.-]{1,20}', t) for t in tickers):
+                return jsonify({'error': 'tickers must be a nonempty ticker array'}), 400
+            result = {t: legacy_http_review(t, {}) for t in tickers}
+            return jsonify({'result': result, 'success': all(r.get('status') == 'success' for r in result.values())}), 200
         if not isinstance(body, dict) or set(body) != {'reviews'} or not isinstance(body['reviews'], list) or not body['reviews']:
             return jsonify({'error': 'Provide a nonempty reviews array with ticker and review_request per item'}), 400
         results = []
@@ -1392,10 +1445,19 @@ if _FLASK_AVAILABLE and app is not None:
             except (ValueError, TypeError) as exc: return jsonify({'error': str(exc), 'completed': results}), 400
         return jsonify({'result': results, 'success': all(r['status'] == 'accepted' for r in results)}), 500 if any(r['status'] == 'failed' for r in results) else 200
 
+    @app.route("/v2/analyze/<ticker>", methods=["POST"])
     @app.route("/analyze/<ticker>", methods=["GET", "POST"])
     def analyze_single(ticker: str):
-        try: result = formal_http_review(ticker.upper(), request.get_json(silent=True))
+        body = request.get_json(silent=True)
+        legacy = not request.path.startswith('/v2/') and (body is None or isinstance(body, dict) and not (set(body) - {'html'}))
+        try:
+            result = legacy_http_review(ticker, body or {}) if legacy else formal_http_review(ticker.upper(), body)
         except (ValueError, TypeError) as exc: return jsonify({'error': str(exc)}), 400
+        if legacy:
+            if request.method == 'GET' and result.get('html_path'):
+                return Response(Path(result['html_path']).read_text(encoding='utf-8'), mimetype='text/html',
+                                headers={'Warning': '299 - "Legacy report; not formal acceptance"'})
+            return jsonify(result), 200 if result.get('status') == 'success' else 500
         return jsonify(result), 500 if result['status'] == 'failed' else 200
 
     @app.route("/memo/<ticker>", methods=["GET"])

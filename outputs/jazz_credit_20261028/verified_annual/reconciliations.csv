@@ -1,9 +1,0 @@
-﻿檢查,期間,狀態,單位,幣別,scale,計算值,原檔列示值,差額_計算減原檔,原因與限制,來源位置
-cash_bridge,FY2022（參考基期）,not_calculable,,,,,,,完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項,
-balance_sheet_equation,FY2022（參考基期）,not_calculable,,,,,,,資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益,
-cash_bridge,FY2023,not_calculable,,,,,,,完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項,
-balance_sheet_equation,FY2023,not_calculable,,,,,,,資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益,
-cash_bridge,FY2024,not_calculable,,,,,,,完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項,
-balance_sheet_equation,FY2024,not_calculable,,,,,,,資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益,
-cash_bridge,FY2025,not_calculable,,,,,,,完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項,
-balance_sheet_equation,FY2025,not_calculable,,,,,,,資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益,

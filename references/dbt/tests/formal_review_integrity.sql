@@ -1,4 +1,4 @@
-{{ config(tags=['formal_review_marts']) }}
+{{ config(severity='error', tags=['formal_review_marts']) }}
 -- Run-scoped keys and evidence references must remain unique and complete.
 with failures as (
 select run_id, fact_id as key from {{ ref('fct_loan_review_facts') }} group by 1,2 having count(*) != 1

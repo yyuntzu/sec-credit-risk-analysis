@@ -1,6 +1,7 @@
 # Formal Loan Review integration
 
-The default CLI, shell and HTTP entrypoints use `review_workflow.run_review()`.
+The default CLI, shell and versioned `/v2` HTTP entrypoints use `review_workflow.run_review()`.
+Unversioned HTTP routes also retain the historical request shapes described below.
 Financial results are calculated once by the existing formal contract. Dashboard,
 Excel and BigQuery publication consume that same report; dbt does not recalculate
 financial ratios or infer missing facts. The old `analyze_ticker()` function remains
@@ -96,8 +97,11 @@ Cloud sequence:
 3. `dbt run` and `dbt test --select stg_loan_review_run_sources`.
 4. Read only this run and entity, check exact JSON round-trip against the source
    bundle, then adopt sources and calculate the formal report.
-5. Generate local deliverables. Append canonical report/facts/evidence/acceptance
-   to `raw_review_results` without rounding Decimal payload strings.
+5. Generate local deliverables. Only after final acceptance and every requested
+   deliverable passes, append canonical report/facts/evidence/acceptance to
+   `raw_review_results` without rounding Decimal payload strings. Drafts retain
+   local outputs and cloud source/run audit records, with `blocked_acceptance`;
+   delivery failures use `blocked_delivery`. Neither is a successful publication.
 6. Build/test `tag:formal_review_marts`; write the final run manifest to
    `raw_review_runs`. A failed mandatory cloud step fails the run.
 
@@ -111,8 +115,9 @@ runs. No financial value is summed across source versions. New marts:
 - `fct_loan_review_acceptance`: technical/rendered/substantive acceptance flags.
 - `dim_loan_review_runs`: requested outputs and publication/execution status.
 
-Join by `run_id` and filter acceptance/run status as appropriate. A published
-draft remains a draft. Exact values and original payloads are preserved alongside
+Join by `run_id` and filter acceptance/run status as appropriate. The acceptance
+view exposes final acceptance only after the run manifest records both `accepted`
+and `published`; failed warehouse validation cannot expose an accepted run. Exact values and original payloads are preserved alongside
 BI-friendly numeric casts; BIGNUMERIC/Excel floating-point precision limits still
 apply. Existing legacy marts are retained and are not the formal result source.
 
@@ -151,7 +156,7 @@ to this adapter, as its calendar/identity come from the validated workbook.
 ## HTTP
 
 Start the existing Flask service with `venv/bin/python scripts/agent_runner.py`.
-`POST /analyze/AMZN` uses an inline JSON envelope:
+`POST /v2/analyze/AMZN` uses an inline JSON envelope:
 
 ```json
 {
@@ -166,12 +171,24 @@ Start the existing Flask service with `venv/bin/python scripts/agent_runner.py`.
 
 For offline requests use `source: "snapshot"` and `source_snapshot` with the full
 snapshot object. For BQ reuse supply `source_run_id`. HTTP accepts structured
-JSON, not arbitrary workbook/server file paths. `POST /run` accepts
+JSON, not arbitrary workbook/server file paths. `POST /v2/run` accepts
 `{"reviews": [{"ticker": "AMZN", "review_request": {"...": "full request"}}]}`.
 HTTP 400 means malformed options/request, 500 execution/output failure, 200 a
 completed review; inspect `status`/`final_report_accepted` to distinguish a draft.
 Artifact paths in responses are server-local; use local files or your deployment's
 artifact delivery layer. Existing `/memo/<ticker>` serves legacy files only.
+
+The unversioned `/run` still accepts `{"tickers": ["AMZN"]}` and GET uses the
+configured default tickers. `/analyze/AMZN` still accepts an empty body or `html`,
+and GET can serve the generated HTML. These calls explicitly use the legacy
+pipeline and existing warehouse marts, not formal source adoption. Their results
+always have `final_report_accepted=false`; legacy Markdown includes a notice.
+The historical KPI definitions and calendar-year labels are compatibility
+estimates, not the approved formal metric definitions. Warehouse availability,
+SEC ingestion, and any configured MD&A service are still required by that path.
+There is no raw-SUM fallback when the compatibility marts are unavailable.
+Unversioned routes also accept formal envelopes for existing formal clients;
+`/v2` never silently falls back to legacy execution.
 
 ## Compatibility and verification
 
@@ -194,3 +211,10 @@ round-trip, publication and failure assertions. Live SEC/GCP/dbt query execution
 requires configured network access/credentials. No production cloud writes are
 performed by the unit tests. DEC-03/CFADS/debt-service definitions and missing
 company-specific evidence continue to block final acceptance when applicable.
+
+## Review remediation
+
+See [PR #1 remediation](pr1-review-remediation.md) for the eight findings, strict
+reconciliation schema, regression tests, publication gates, and verification limits.
+Run artifacts under `outputs/` and local `node_modules` links are ignored; create
+new deliverables locally rather than committing validation receipts or raw filings.

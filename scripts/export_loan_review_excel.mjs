@@ -1,11 +1,16 @@
 /** Generic canonical formal-report Excel exporter. Requires bundled @oai/artifact-tool. */
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import {Workbook, SpreadsheetFile} from '@oai/artifact-tool';
 const root=path.resolve(process.argv[2]);
 const report=JSON.parse(await fs.readFile(path.join(root,'report.json'),'utf8'));
 const acceptance=JSON.parse(await fs.readFile(path.join(root,'acceptance.json'),'utf8'));
 if(!acceptance.technical_validation_passed || !acceptance.rendered_validation_passed) throw Error('Unvalidated report');
+for(const name of ['report.json','report.md']) {
+ const digest=createHash('sha256').update(await fs.readFile(path.join(root,name))).digest('hex');
+ if(acceptance.artifact_sha256?.[name]!==digest) throw Error('Stale artifact validation receipt: '+name);
+}
 const wb=Workbook.create();
 const review=wb.worksheets.add('Review');
 const source=wb.worksheets.add('Sources');

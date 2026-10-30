@@ -70,13 +70,10 @@ class FormalIntegrationTests(unittest.TestCase):
         cloud.stage_bundle.side_effect = lambda run_id, entity, bundle: bundle
         with tempfile.TemporaryDirectory() as tmp:
             result = self.run_local(tmp, execution='cloud', cloud=cloud)
-            self.assertEqual(result['cloud_status'], 'published')
+            self.assertEqual(result['cloud_status'], 'blocked_acceptance')
             cloud.ensure.assert_called_once()
             cloud.stage_bundle.assert_called_once()
-            run_id, entity, payload, acceptance = cloud.publish.call_args.args
-            self.assertEqual(run_id, result['run_id'])
-            self.assertEqual(payload, json.loads(Path(tmp, 'report.json').read_text()))
-            self.assertEqual(acceptance, json.loads(Path(tmp, 'acceptance.json').read_text()))
+            cloud.publish.assert_not_called()
             cloud.record_run.assert_called_once()
 
     def test_cloud_failure_is_not_silently_local_success(self):
@@ -94,8 +91,9 @@ class FormalIntegrationTests(unittest.TestCase):
         cloud.publish.side_effect = RuntimeError('dbt test failed')
         with tempfile.TemporaryDirectory() as tmp:
             result = self.run_local(tmp, execution='cloud', cloud=cloud)
-            self.assertEqual(result['status'], 'failed')
-            self.assertEqual(result['cloud_status'], 'failed')
+            self.assertEqual(result['status'], 'draft')
+            self.assertEqual(result['cloud_status'], 'blocked_acceptance')
+            cloud.publish.assert_not_called()
             self.assertTrue(Path(tmp, 'dashboard.html').exists())
 
     def test_bigquery_backend_is_reachable(self):
@@ -166,8 +164,8 @@ class FormalIntegrationTests(unittest.TestCase):
     def test_http_formal_and_batch_inputs(self):
         if runner.app is None: self.skipTest('Flask not installed')
         with runner.app.test_client() as client, tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {'OUTPUT_DIR': tmp}):
-            self.assertEqual(client.post('/analyze/AMZN', json={}).status_code, 400)
-            self.assertEqual(client.post('/run', json={'tickers': ['AMZN']}).status_code, 400)
+            self.assertEqual(client.post('/v2/analyze/AMZN', json={}).status_code, 400)
+            self.assertEqual(client.post('/v2/run', json={'tickers': ['AMZN']}).status_code, 400)
             body = {'review_request': request_fixture(), 'source_snapshot': snapshot(), 'excel': False}
             response = client.post('/analyze/SYNTHETIC-ONLY', json=body)
             self.assertEqual(response.status_code, 200)
@@ -188,7 +186,7 @@ class CloudStorageTests(unittest.TestCase):
                  patch('scripts.review_cloud.subprocess.run', return_value=MagicMock(returncode=0)) as run:
                 os.environ.pop('DBT_EXECUTABLE', None); os.environ.pop('DBT_PYTHON', None)
                 cloud.dbt('source')
-                self.assertEqual(run.call_args.args[0][:3], [executable, str(script), 'test'])
+                self.assertEqual(run.call_args.args[0][:3], [executable, str(script), '--warn-error'])
 
     def test_run_scoped_source_roundtrip_rejects_partial_reads(self):
         cloud = ReviewCloud(project='fixture-project', dataset='raw', client=MagicMock())
@@ -220,8 +218,8 @@ class CloudStorageTests(unittest.TestCase):
         cloud = ReviewCloud(project='fixture-project', dataset='raw', client=MagicMock())
         with patch.dict(os.environ, {'DBT_EXECUTABLE': 'dbt'}), patch('scripts.review_cloud.subprocess.run', return_value=MagicMock(returncode=0)) as run:
             cloud.dbt('source')
-            self.assertEqual(run.call_args_list[0].args[0][1], 'run')
-            self.assertEqual(run.call_args_list[1].args[0][1], 'test')
+            self.assertEqual(run.call_args_list[0].args[0][2], 'run')
+            self.assertEqual(run.call_args_list[1].args[0][2], 'test')
             self.assertIn('stg_loan_review_run_sources', run.call_args.args[0])
             self.assertEqual(run.call_args.kwargs['env']['BQ_DATASET_ID'], 'raw')
         with patch('scripts.review_cloud.subprocess.run', return_value=MagicMock(returncode=1, stderr='failure', stdout='')):

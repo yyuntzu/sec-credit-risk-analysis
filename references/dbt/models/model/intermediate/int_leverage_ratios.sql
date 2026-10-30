@@ -1,3 +1,5 @@
+-- Legacy compatibility model: existing KPI definitions are preserved.
+-- These estimates are not the canonical formal Loan Review calculation contract.
 {{ config(materialized='view') }}
 
 with base as (
@@ -9,8 +11,8 @@ select
     period_end,
     filed_date,
 
-    -- CF-06 = Total Liabilities / approved Net Worth
-    cast(null as float64) as debt_ratio, -- CF-06 requires approved Net Worth (DEC-02)
+    -- Debt Ratio = 總負債 / 總資產
+    safe_divide(total_liabilities_m, total_assets_m)          as debt_ratio,
 
     -- Total Leverage = 總債務 / TTM EBITDA
     safe_divide(total_debt_m, ttm_ebitda_m)                   as total_leverage_ratio,
@@ -27,11 +29,13 @@ select
     cash_m,
 
     -- Risk Flags
-    'NO_DATA' as debt_ratio_flag, -- DEC-02 pending.
-
+    case
+        when safe_divide(total_liabilities_m, total_assets_m) > 0.80 then 'CRITICAL'
+        when safe_divide(total_liabilities_m, total_assets_m) > 0.65 then 'WARNING'
+        else 'OK'
+    end                                                        as debt_ratio_flag,
 
     case
-        when total_debt_m is null or ttm_ebitda_m is null then 'NO_DATA'
         when safe_divide(total_debt_m, ttm_ebitda_m) > 6.0   then 'CRITICAL'
         when safe_divide(total_debt_m, ttm_ebitda_m) > 4.0   then 'WARNING'
         else 'OK'

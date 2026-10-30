@@ -1,3 +1,5 @@
+-- Legacy compatibility model: existing KPI definitions are preserved.
+-- These estimates are not the canonical formal Loan Review calculation contract.
 {{ config(materialized='view') }}
 
 with source as (
@@ -26,6 +28,8 @@ pivoted as (
                                                                         as operating_income_m,
         max(case when field_name = 'net_income'       then value end) / 1e6
                                                                         as net_income_m,
+        max(case when field_name = 'income_before_tax' then value end) / 1e6 as income_before_tax_m,
+        max(case when field_name = 'income_tax_expense' then value end) / 1e6 as income_tax_m,
         max(case when field_name = 'eps_basic'        then value end)  as eps_basic,
         max(case when field_name = 'eps_diluted'      then value end)  as eps_diluted,
 
@@ -56,8 +60,11 @@ pivoted as (
         max(case when field_name = 'operating_expense_direct' then value end) / 1e6
                                                                         as operating_expense_direct_m,
 
-        -- DEC-06 is unresolved; operating income is not an EBITDA proxy.
-        cast(null as float64) as ebitda_m
+        -- EBITDA = Operating income + D&A（D&A 缺失時退回 operating income）
+        (
+            max(case when field_name = 'operating_income' then value end)
+            + coalesce(max(case when field_name = 'da' then value end), 0)
+        ) / 1e6                                                         as ebitda_m
 
     from source
     -- 只取季度申報（10-Q 和 10-K）

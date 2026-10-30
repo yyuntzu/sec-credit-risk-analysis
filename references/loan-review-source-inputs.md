@@ -281,3 +281,16 @@ This is not live BigQuery execution. No deployment, migration or commit was run.
 - Final local regression result: **115 tests passed**, including the previous 101
   cases (with the obsolete equal-value blocking expectation updated) and 14 new
   equivalence/query cases. `git diff --check` passed.
+
+
+### DEC-07 explicit amendment selection (PR #1 remediation)
+
+The formal source selector now selects the latest explicit `10-K/A` or `10-Q/A`
+for the same SEC concept, unit, scope and exact interval, only among documents
+available by `as_of`. All candidate IDs remain in the bundle; unselected IDs are
+recorded in `superseded_candidate_ids`, and selected evidence IDs identify the
+adopted version. Conflicting latest amendments, different concepts/definitions,
+non-amended disagreements and conflicting supplements remain unresolved.
+This narrowly scoped policy supersedes the earlier blanket conflict handling
+for explicit SEC amendments. The legacy lossless-source reader retains its
+strict equivalence rule and is not silently given a latest-filing preference.

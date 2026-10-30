@@ -10,6 +10,7 @@ from dataclasses import asdict, replace
 from datetime import date
 from decimal import Decimal
 import json
+import hashlib
 import csv
 import re
 from pathlib import Path
@@ -17,11 +18,11 @@ from pathlib import Path
 try:
     from .loan_review_contract import (AVAILABLE, METRICS, Fact, Evidence, Narrative, Status,
         Mode, _dates, calculate_fact, calculate_identity, approved_formula_value, validate_report)
-    from .loan_review_sources import parse_request, normalize_value, number, day
+    from .loan_review_sources import parse_request, normalize_value, number, day, load_json
 except ImportError:
     from loan_review_contract import (AVAILABLE, METRICS, Fact, Evidence, Narrative, Status,
         Mode, _dates, calculate_fact, calculate_identity, approved_formula_value, validate_report)
-    from loan_review_sources import parse_request, normalize_value, number, day
+    from loan_review_sources import parse_request, normalize_value, number, day, load_json
 
 FORMULA_VERSION = 'acceptance-v1.0-addendum-2026-10-23'
 
@@ -35,7 +36,7 @@ APPROVED_DEFINITIONS = {
     'DEC-04': 'Opening/closing average; verified complete Months; allowance deducted once; no LTM annualization',
     'DEC-05': 'Gross expensed interest, without netting interest income; separately disclosed capitalized interest, no duplication',
     'DEC-06': STANDARD_EBITDA_BASIS,
-    'DEC-07': 'Only publicly available sources at explicit as-of; latest applicable restatement by that date; retain prior versions',
+    'DEC-07': 'Only sources available at explicit as-of; latest explicit SEC amendment for the same concept and interval; ambiguous versions remain conflicts; retain prior versions',
     'DEC-08': 'Explicit unavailable states; critical missing facts and incomplete reconciliations block final acceptance',
     'DEC-09': 'Millions in source currency; two decimal places; parentheses for negatives; retain original precision and scale',
     'DEC-10': 'Structured inputs and validated workbook adapters only; non-SEC provenance remains explicit',
@@ -366,6 +367,97 @@ def automatic_reconciliation_checks(report):
     return checks
 
 
+def verify_reconciliation(report, check):
+    """Recompute a reviewed bridge exclusively from canonical monetary facts.
+
+    A caller's PASS, amounts, tolerance, and generic evidence are not authority.
+    A structured review must bind the exact equation and tolerance. Rounding
+    tolerance is capped independently by the original source precision.
+    """
+    result = {**check, 'verified': False}
+    if check.get('status') not in ('matched', 'within_precision'):
+        return result
+    try:
+        role, kind = check['period_role'], check['kind']
+        schemas = {
+            'cash_bridge': ('ending_cash', ('beginning_cash', 'cfo', 'cfi', 'cff', 'cash_fx', 'cash_other')),
+            'balance_sheet_equation': ('total_assets', ('total_liabilities', 'net_worth')),
+        }
+        reported_metric, term_metrics = schemas[kind]
+        terms = check['terms']
+        if not isinstance(terms, list) or any(set(t) != {'fact_id', 'coefficient'} for t in terms):
+            raise ValueError('Explicit canonical bridge terms required')
+        if any(number(t['coefficient']) != 1 for t in terms):
+            raise ValueError('Bridge components must be signed source facts, each included once')
+        ids = [t['fact_id'] for t in terms] + [check['reported_fact_id']]
+        if len(ids) != len(set(ids)):
+            raise ValueError('Duplicate bridge component')
+        facts = [report.facts[fid] for fid in ids]
+        if tuple(f.metric for f in facts[:-1]) != term_metrics or facts[-1].metric != reported_metric:
+            raise ValueError('Bridge component identity/order mismatch')
+        if any(f.status not in AVAILABLE or f.unit != 'money' or f.currency != report.currency
+               or f.period_role != role for f in facts):
+            raise ValueError('Unavailable or incompatible canonical bridge facts')
+        period = next(p for p in report.periods if p.role == role)
+        if any((f.start, f.end) != _dates(f.metric, period) for f in facts):
+            raise ValueError('Bridge component period mismatch')
+
+        def lineage(f):
+            if f.status == Status.SOURCED:
+                return set(f.evidence_ids)
+            return set().union(*(lineage(report.facts[i]) for i in f.input_ids))
+
+        def rounding_bound(f):
+            if f.status == Status.SOURCED:
+                # Original source decimal places, never display rounding.
+                quantum = Decimal(1).scaleb(f.original_value.as_tuple().exponent)
+                return quantum * f.original_scale / report.scale / 2
+            return sum((rounding_bound(report.facts[i]) for i in f.input_ids), Decimal(0))
+
+        eids = check['evidence_ids']
+        if len(eids) != len(set(eids)):
+            raise ValueError('Duplicate reconciliation evidence')
+        cited = [report.evidence[eid] for eid in eids]
+        expected_sources = set().union(*(lineage(f) for f in facts))
+        if not expected_sources <= set(eids) or not any(e.kind == 'fact' for e in cited):
+            raise ValueError('Reconciliation must cite the canonical source lineage')
+        if any(role not in e.period_roles for e in cited):
+            raise ValueError('Reconciliation evidence period mismatch')
+        tolerance = number(check.get('tolerance', 0))
+        maximum = sum((rounding_bound(f) for f in facts), Decimal(0))
+        if tolerance < 0 or tolerance > maximum:
+            raise ValueError('Tolerance exceeds original-source rounding precision')
+        binding = dict(kind=kind, period_role=role, terms=terms,
+                       reported_fact_id=check['reported_fact_id'], currency=report.currency,
+                       scale=str(report.scale), tolerance=str(tolerance))
+        approved = False
+        for e in cited:
+            if e.kind not in ('review', 'definition'):
+                continue
+            try:
+                approved |= json.loads(e.content) == binding
+            except (ValueError, TypeError):
+                pass
+        if not approved:
+            raise ValueError('Structured review of complete same-basis bridge required')
+        calculated = sum((f.value for f in facts[:-1]), Decimal(0))
+        reported = facts[-1].value
+        difference = calculated - reported
+        if kind == 'cash_bridge':
+            change = report.facts.get('cash_change:' + role)
+            if change and change.status in AVAILABLE and change.value != reported - facts[0].value:
+                raise ValueError('Canonical cash change disagrees with ending minus beginning cash')
+        status = 'matched' if difference == 0 else 'within_precision' if abs(difference) <= tolerance else 'unexplained_difference'
+        if any(number(check[key]) != value for key, value in (
+                ('calculated_value', calculated), ('reported_value', reported), ('difference', difference))):
+            raise ValueError('Supplied reconciliation amounts differ from canonical arithmetic')
+        result.update(calculated_value=calculated, reported_value=reported, difference=difference,
+                      tolerance=tolerance, status=status, verified=status in ('matched', 'within_precision'))
+    except (KeyError, ValueError, TypeError, AttributeError, StopIteration) as exc:
+        result.update(status='not_calculable', verification_error=str(exc))
+    return result
+
+
 def acceptance_result(report, checks=(), limitations=()):
     checked = validate_arithmetic(report)
     bound = {fid for table in report.tables for row in table.cells for fid in row}
@@ -379,17 +471,8 @@ def acceptance_result(report, checks=(), limitations=()):
     if absent_narratives: blockers.append('Required analytical coverage remains incomplete')
     if 'DEC-08' not in report.decisions: blockers.append('DEC-08 missing-data/delivery policy remains unapproved')
     if 'DEC-09' not in report.decisions: blockers.append('DEC-09 presentation policy remains unapproved')
-    # A bare PASS supplied by a caller is not proof of complete reconciliation.
-    verified_coverage = set()
-    for check in checks:
-        eids = check.get('evidence_ids', ())
-        cited = [report.evidence[eid] for eid in eids if eid in report.evidence]
-        role = check.get('period_role')
-        if (check['status'] in ('matched', 'within_precision') and role in {p.role for p in report.periods}
-                and len(cited) == len(eids) and any(e.kind == 'fact' for e in cited)
-                and any(e.kind in ('review', 'definition') for e in cited)
-                and all(role in e.period_roles for e in cited)):
-            verified_coverage.add((check['kind'], role))
+    checks = [verify_reconciliation(report, check) for check in checks]
+    verified_coverage = {(c['kind'], c['period_role']) for c in checks if c['verified']}
     expected_coverage = {(kind, p.role) for kind in ('balance_sheet_equation', 'cash_bridge') for p in report.periods}
     if verified_coverage != expected_coverage or any(c['status'] not in ('matched', 'within_precision') for c in checks):
         blockers.append('Reconciliation is incomplete or contains unexplained differences')
@@ -479,8 +562,14 @@ def write_report_artifacts(report, acceptance, directory, *, source_bundle=None)
     markdown = render_loan_review(report, acceptance)
     validate_rendered_report(report, markdown)
     acceptance['rendered_validation_passed'] = True
+    payload = json.dumps(asdict(report), ensure_ascii=False, indent=2, default=str)
+    acceptance['validator_version'] = 'formal-review-pr1-remediation-v1'
+    acceptance['artifact_sha256'] = {
+        'report.json': hashlib.sha256(payload.encode('utf-8')).hexdigest(),
+        'report.md': hashlib.sha256(markdown.encode('utf-8')).hexdigest(),
+    }
     (directory / 'report.md').write_text(markdown, encoding='utf-8')
-    (directory / 'report.json').write_text(json.dumps(asdict(report), ensure_ascii=False, indent=2, default=str), encoding='utf-8')
+    (directory / 'report.json').write_text(payload, encoding='utf-8')
     (directory / 'acceptance.json').write_text(json.dumps(acceptance, ensure_ascii=False, indent=2, default=str), encoding='utf-8')
     write_findings(report, acceptance, directory, source_bundle)
     if source_bundle is not None:
@@ -492,3 +581,24 @@ def write_report_artifacts(report, acceptance, directory, *, source_bundle=None)
             'final_report_accepted': acceptance['final_report_accepted'],
             'technical_validation_passed': acceptance['technical_validation_passed'],
             'rendered_validation_passed': True}
+
+
+def validate_saved_artifacts(directory):
+    """Reject stale validation receipts as well as numerically stale reports."""
+    try:
+        from .review_workflow import restore_report
+    except ImportError:
+        from review_workflow import restore_report
+    directory = Path(directory)
+    acceptance = load_json(directory / 'acceptance.json')
+    for name in ('report.json', 'report.md'):
+        expected = acceptance.get('artifact_sha256', {}).get(name)
+        if expected != hashlib.sha256((directory / name).read_bytes()).hexdigest():
+            raise ValueError('Stale artifact validation receipt: ' + name)
+    report = restore_report(json.loads((directory / 'report.json').read_text(encoding='utf-8')))
+    verified = acceptance_result(report, acceptance.get('reconciliations', ()), acceptance.get('source_limitations', ()))
+    validate_rendered_report(report, (directory / 'report.md').read_text(encoding='utf-8'))
+    if (acceptance.get('final_report_accepted') != verified['substantive_data_ready']
+            or acceptance.get('rendered_validation_passed') is not True):
+        raise ValueError('Saved acceptance differs from independently verified report')
+    return report, acceptance

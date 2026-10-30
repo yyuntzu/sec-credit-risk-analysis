@@ -85,13 +85,14 @@ class SourceExtractionTests(unittest.TestCase):
         self.assertEqual(len({r["fact_id"] for r in rows}), 3)
         self.assertEqual({r["period_start"] for r in rows}, {"2025-01-01", "2025-07-01", "2025-10-01"})
 
-    def test_restatements_amendments_not_latest_wins_AT22(self):
+    def test_explicit_amendments_selected_with_all_versions_retained_AT22(self):
         records = [entry(), entry(2000000, accn="0000000001-26-000002", filed="2026-03-01", form="10-K/A")]
         rows = rows_of(extract({"Revenues": {"units": {"USD": records}}}))
         self.assertEqual(len(rows), 2)
         b = prepare_source_inputs(request_fixture(), rows)
-        self.assertEqual(b["inputs"]["revenue:fy_t"]["status"], "conflict")
-        self.assertIsNone(b["inputs"]["revenue:fy_t"]["value"])
+        self.assertEqual(b["inputs"]["revenue:fy_t"]["status"], "sourced")
+        self.assertEqual(b["inputs"]["revenue:fy_t"]["value"], "2")
+        self.assertEqual(len(b["inputs"]["revenue:fy_t"]["superseded_candidate_ids"]), 1)
         self.assertEqual(len(b["inputs"]["revenue:fy_t"]["candidate_ids"]), 2)
 
     def test_equal_versions_retain_all_evidence_without_priority(self):

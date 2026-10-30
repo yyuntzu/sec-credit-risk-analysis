@@ -85,6 +85,20 @@ class ReviewCloud:
         return result
 
     def publish(self, run_id, entity, payload, acceptance):
+        # Revalidate at this boundary as well; direct callers cannot forge PASS.
+        try:
+            from .review_workflow import restore_report
+            from .loan_review_pipeline import acceptance_result
+        except ImportError:
+            from review_workflow import restore_report
+            from loan_review_pipeline import acceptance_result
+        report = restore_report(payload)
+        verified = acceptance_result(report, acceptance.get('reconciliations', ()), acceptance.get('source_limitations', ()))
+        if (entity != report.entity or not verified['substantive_data_ready']
+                or acceptance.get('final_report_accepted') is not True
+                or acceptance.get('technical_validation_passed') is not True
+                or acceptance.get('rendered_validation_passed') is not True):
+            raise ValueError('Cloud publication requires independently verified final acceptance')
         records = [('report', 'report', payload), ('acceptance', 'acceptance', acceptance)]
         for fid, fact in payload['facts'].items():
             records.append(('fact', fid, fact))
@@ -114,7 +128,7 @@ class ReviewCloud:
         else:
             prefix = [executable]
         for command in ('run', 'test'):
-            completed = subprocess.run([*prefix, command, '--select', selection, *common], capture_output=True,
+            completed = subprocess.run([*prefix, '--warn-error', command, '--select', selection, *common], capture_output=True,
                                        text=True, timeout=300, env=env)
             if completed.returncode:
                 raise RuntimeError(f'dbt {stage}/{command} failed: {completed.stderr[-1500:]} {completed.stdout[-1500:]}')

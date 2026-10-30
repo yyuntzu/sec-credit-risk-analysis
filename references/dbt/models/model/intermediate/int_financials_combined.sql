@@ -25,6 +25,10 @@ joined as (
         inc.accession_number,
 
         inc.revenue_m,
+        inc.cost_of_revenue_m,
+        inc.operating_expense_direct_m,
+        inc.income_before_tax_m,
+        inc.income_tax_m,
         inc.gross_profit_m,
         inc.operating_income_m,
         inc.ebit_m,

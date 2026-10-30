@@ -1,3 +1,5 @@
+-- Legacy compatibility model: existing KPI definitions are preserved.
+-- These estimates are not the canonical formal Loan Review calculation contract.
 {{ config(materialized='table') }}
 
 select
@@ -9,11 +11,14 @@ select
     filed_date,
     accession_number,
 
-    -- A filing's calendar end date does not establish its fiscal year/quarter.
-    -- Preserve columns; fiscal labels require the verified request calendar.
-    cast(null as int64) as fiscal_year,
-    cast(null as int64) as fiscal_quarter,
-    cast(period_start as string) || ' / ' || cast(period_end as string) as period_label,
+    -- 年度和季度拆分（給 Looker filter 用）
+    extract(year  from period_end)             as fiscal_year,
+    extract(quarter from period_end)           as fiscal_quarter,
+
+    -- 標籤（給 Looker 顯示用）
+    cast(extract(year from period_end) as string)
+        || ' Q'
+        || cast(extract(quarter from period_end) as string)    as period_label,
 
     -- 申報時間差（申報延遲天數，越小越好）
     date_diff(filed_date, period_end, day)     as filing_lag_days,

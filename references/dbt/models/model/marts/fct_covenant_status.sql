@@ -33,16 +33,16 @@ covenant_actual as (
         end                                                    as actual_value,
 
         -- 資料是否可用
-        case c.covenant_name
-            when 'interest_coverage_ratio'  then k.coverage_flag
-            when 'dscr'                     then k.coverage_flag
+        case
+            when c.covenant_name != 'current_ratio' and not coalesce(k.is_full_ttm, false) then 'NO_DATA'
+            when c.covenant_name in ('interest_coverage_ratio', 'dscr') then k.coverage_flag
             else 'OK'
         end                                                    as data_quality_flag
 
     from kpis k
     inner join covenants c
         on k.ticker = c.ticker
-    where k.is_full_ttm = true   -- 只在 TTM 完整時評估 covenant
+    -- Keep every evaluation; unavailable TTM inputs produce NO_DATA below.
 ),
 
 with_headroom as (
@@ -50,6 +50,7 @@ with_headroom as (
         *,
         -- Headroom：距離門檻值的緩衝空間
         case
+            when actual_value is null or data_quality_flag = 'NO_DATA' then null
             when covenant_type = 'max'
             then threshold_value - actual_value
             when covenant_type = 'min'
@@ -58,6 +59,7 @@ with_headroom as (
 
         -- Headroom %：相對緩衝空間
         case
+            when actual_value is null or data_quality_flag = 'NO_DATA' then null
             when covenant_type = 'max' and threshold_value != 0
             then safe_divide(threshold_value - actual_value, threshold_value)
             when covenant_type = 'min' and actual_value != 0

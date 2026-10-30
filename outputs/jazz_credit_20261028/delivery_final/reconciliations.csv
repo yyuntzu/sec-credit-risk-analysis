@@ -1,9 +1,0 @@
-﻿檢查,期間,狀態,單位,幣別,scale,計算值,原檔列示值,差額_計算減原檔,原因與限制,來源位置
-cash_bridge,FY2022（參考基期）,matched,money,USD,1000000,290.034,290.034,0.000,Complete source bridge including reported FX -6.222 million,https://www.sec.gov/Archives/edgar/data/1232524/000123252423000015/jazz-20221231.htm
-balance_sheet_equation,FY2022（參考基期）,matched,money,USD,1000000,10835.255,10835.255,0.000,Sum of source liability rows plus full consolidated equity,https://www.sec.gov/Archives/edgar/data/1232524/000123252423000015/jazz-20221231.htm
-cash_bridge,FY2023,matched,money,USD,1000000,624.828,624.828,0.000,Complete source bridge including reported FX 1.137 million,https://www.sec.gov/Archives/edgar/data/1232524/000123252424000015/jazz-20231231.htm
-balance_sheet_equation,FY2023,matched,money,USD,1000000,11393.359,11393.359,0.000,Sum of source liability rows plus full consolidated equity,https://www.sec.gov/Archives/edgar/data/1232524/000123252424000015/jazz-20231231.htm
-cash_bridge,FY2024,matched,money,USD,1000000,906.554,906.554,0.000,Complete source bridge including reported FX -1.675 million,https://www.sec.gov/Archives/edgar/data/1232524/000123252425000011/jazz-20241231.htm
-balance_sheet_equation,FY2024,matched,money,USD,1000000,12012.257,12012.257,0.000,Sum of source liability rows plus full consolidated equity,https://www.sec.gov/Archives/edgar/data/1232524/000123252425000011/jazz-20241231.htm
-cash_bridge,FY2025,matched,money,USD,1000000,-1020.965,-1020.965,0.000,Complete source bridge including reported FX 6.555 million,https://www.sec.gov/Archives/edgar/data/1232524/000123252426000013/jazz-20251231.htm
-balance_sheet_equation,FY2025,matched,money,USD,1000000,11659.340,11659.34,0.000,Sum of source liability rows plus full consolidated equity,https://www.sec.gov/Archives/edgar/data/1232524/000123252426000013/jazz-20251231.htm

@@ -1,7 +1,0 @@
-{
-  "checkedNumericOutputs": 30,
-  "sourceEditRecalculated": true,
-  "nativeExcelTested": false,
-  "errors": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
-  "inspection": "{\"kind\":\"table\",\"sheet\":\"Quarter\",\"address\":\"A9:E12\",\"rows\":4,\"cols\":5,\"values\":[[\"科目\",\"Q1 2025 YTD (3 months)\",\"% sales\",\"Q2 2026 YTD (6 months)\",\"% sales\"],[\"Net sales\",155667,1,382125,1],[\"Cost of sales\",76976,0.4944914464851253,183241,0.47953156689564935],[\"Implied gross profit\",78691,0.5055085535148747,198884,0.5204684331043506]]}"
-}

@@ -52,6 +52,11 @@ def restore_report(data):
 
 def export_excel(directory):
     """Use the bundled runtime; dependencies are never installed into the repository."""
+    try:
+        from .loan_review_pipeline import validate_saved_artifacts
+    except ImportError:
+        from loan_review_pipeline import validate_saved_artifacts
+    validate_saved_artifacts(directory)
     dependencies = Path(os.environ.get('REVIEW_RUNTIME_ROOT', Path.home() / '.cache/codex-runtimes/codex-primary-runtime/dependencies'))
     node = os.environ.get('REVIEW_NODE', str(dependencies / 'node/bin/node'))
     packages = Path(os.environ.get('REVIEW_NODE_MODULES', dependencies / 'node/node_modules'))
@@ -199,14 +204,18 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
                 manifest['stages'][name] = 'failed'
                 manifest.setdefault('errors', {})[name] = str(exc)
         if execution == 'cloud':
-            try:
-                cloud.publish(run_id, entity, report_payload(report), acceptance)
-                manifest['cloud_status'] = 'published'
-                manifest['stages']['cloud_publish'] = 'passed'
-            except Exception as exc:
-                manifest['cloud_status'] = 'failed'
-                manifest['stages']['cloud_publish'] = 'failed'
-                manifest.setdefault('errors', {})['cloud_publish'] = str(exc)
+            if not manifest['final_report_accepted'] or manifest.get('errors'):
+                manifest['cloud_status'] = 'blocked_acceptance' if not manifest['final_report_accepted'] else 'blocked_delivery'
+                manifest['stages']['cloud_publish'] = 'blocked'
+            else:
+                try:
+                    cloud.publish(run_id, entity, report_payload(report), acceptance)
+                    manifest['cloud_status'] = 'published'
+                    manifest['stages']['cloud_publish'] = 'passed'
+                except Exception as exc:
+                    manifest['cloud_status'] = 'failed'
+                    manifest['stages']['cloud_publish'] = 'failed'
+                    manifest.setdefault('errors', {})['cloud_publish'] = str(exc)
         manifest['status'] = ('failed' if manifest.get('errors') else 'accepted' if manifest['final_report_accepted'] else 'draft')
     except Exception as exc:
         manifest['status'] = 'failed'

@@ -95,6 +95,9 @@ for _key, _label, _kind, _pending in (
     ("net_worth", "Net Worth", "instant", ("DEC-02",)),
     ("capitalized_interest", "Capitalized Interest", "duration", ("DEC-05",)),
     ("da", "Depreciation & Amortization", "duration", ()),
+    ("total_assets", "Total Assets", "instant", ()),
+    ("cash_fx", "Cash bridge FX effect", "duration", ()),
+    ("cash_other", "Other cash bridge adjustments", "duration", ()),
 ):
     METRICS[_key] = MetricSpec(_label, "money", _kind, f"Verified source {_label}", "DATA-01", pending=_pending)
 
@@ -485,6 +488,16 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
     else:
         earlier, prior, latest, current = report.periods
         _require(prior.quarter == current.quarter, "FMT-03", "comparable YTD fiscal quarters required")
+        if prior.start and prior.end and current.start and current.end:
+            prior_days = (prior.end - prior.start).days + 1
+            current_days = (current.end - current.start).days + 1
+            # Calendar and 52/53-week issuers differ by at most a fiscal week.
+            # The broad quarter envelope supports month-end and retail calendars;
+            # matching caller-supplied quarter numbers alone proves nothing.
+            low, high = {1: (84, 98), 2: (175, 189), 3: (266, 280)}[prior.quarter]
+            _require(low <= prior_days <= high and low <= current_days <= high
+                     and abs(prior_days - current_days) <= 7,
+                     "FMT-03", "YTD fiscal periods are not comparable to the declared quarter")
         _require(earlier.fiscal_year + 1 == prior.fiscal_year == latest.fiscal_year == current.fiscal_year - 1, "FMT-03", "quarterly fiscal-year roles mismatch")
         for prev, curr in ((earlier, prior), (earlier, latest), (latest, current)):
             if prev.end and curr.start:

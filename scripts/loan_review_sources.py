@@ -1,7 +1,8 @@
 """Block 2: exact-period source selection and auditable structured supplements.
 
 This produces source inputs, not a calculated/narrated/rendered credit assessment.
-No latest-version, alternate-tag priority, missing-to-zero or currency conversion.
+Only explicit same-concept SEC amendments may supersede older values; no alternate-tag
+priority, missing-to-zero or currency conversion.
 See references/loan-review-source-inputs.md for schemas, rollout and test boundaries.
 """
 from __future__ import annotations
@@ -100,6 +101,7 @@ SEC_FIELDS = {
     "cfo": ("cfo",), "cfi": ("cfi",), "cff": ("cff",),
     "current_assets": ("current_assets",), "current_liabilities": ("current_liabilities",),
     "total_liabilities": ("total_liabilities",),
+    "total_assets": ("total_assets",),
     "capitalized_interest": ("capitalized_interest",), "da": ("da",),
 }
 
@@ -177,6 +179,7 @@ def validate_sec_rows(rows, *, entity, cik):
             "document_date": filed.isoformat(), "source_url": row["source_url"],
             "document_url": row["document_url"], "locator": row["source_locator"],
             "namespace": row["namespace"], "tag": row["xbrl_tag"],
+            "filing_type": row.get("filing_type"),
             "definition": row["xbrl_tag"], "basis": "", "reason": "" if value is not None else "SEC entry has no numeric value",
         }
         require(item["id"] not in candidates or candidates[item["id"]] == item, "Duplicate SEC fact ID with different metadata")
@@ -268,8 +271,26 @@ def prepare_source_inputs(request_payload, sec_rows, supplements=()):
         elif matches and len(matching_units) != len(matches):
             item.update(status="conflict", reason="Incompatible units; no implicit currency conversion or unit selection")
         elif matching_units:
-            signatures = set()
+            # Only an explicitly amended filing may supersede a different SEC
+            # value for the same concept and exact interval. Different concepts,
+            # supplements, or same-date disagreements remain conflicts.
+            groups = {}
             for c in matching_units:
+                group_key = (c['origin'], c.get('namespace'), c.get('tag'), c['definition'], c['basis'])
+                groups.setdefault(group_key, []).append(c)
+            selected = []
+            for group in groups.values():
+                latest_date = max(c['document_date'] for c in group)
+                latest = [c for c in group if c['document_date'] == latest_date]
+                if (all(c['origin'] == 'sec' for c in group)
+                        and all(c.get('filing_type') in ('10-K/A', '10-Q/A') for c in latest)):
+                    selected.extend(latest)
+                else:
+                    selected.extend(group)
+            item['superseded_candidate_ids'] = sorted(c['id'] for c in matching_units if c not in selected)
+            item['selection_policy'] = 'DEC-07: latest explicit amendment for the same SEC concept and interval; retain all candidates'
+            signatures = set()
+            for c in selected:
                 value = c["value"]
                 if value is not None and unit != "text":
                     value = normalize_value(value, c["scale"], report.scale if unit == "money" else Decimal(1))
@@ -280,8 +301,8 @@ def prepare_source_inputs(request_payload, sec_rows, supplements=()):
             else:
                 status, value, basis, _ = signatures.pop()
                 item.update(status=status, value=str(value) if value is not None and unit != "text" else value,
-                            basis=basis, evidence_ids=sorted(c["id"] for c in matching_units),
-                            reason="All matching sources retained; no version silently preferred" if status == "sourced" else matching_units[0]["reason"])
+                            basis=basis, evidence_ids=sorted(c["id"] for c in selected),
+                            reason=item['selection_policy'] if status == "sourced" else selected[0]["reason"])
         inputs[key] = item
 
     for key, f in report.facts.items():
@@ -296,7 +317,7 @@ def prepare_source_inputs(request_payload, sec_rows, supplements=()):
             select(key, f.metric, f.period_role, f.start, f.end, f.unit)
     # Required ratio/EBITDA inputs also exist when absent. Never manufacture zero.
     for p in report.periods:
-        for metric in ("capitalized_interest", "da", "current_assets", "current_liabilities", "quick_assets", "net_worth", "total_liabilities"):
+        for metric in ("capitalized_interest", "da", "current_assets", "current_liabilities", "quick_assets", "net_worth", "total_liabilities", "total_assets", "cash_fx", "cash_other"):
             spec = METRICS[metric]
             select(f"input:{metric}:{p.role}", metric, p.role, None if spec.period_kind == "instant" else p.start, p.end, spec.unit)
     return {
