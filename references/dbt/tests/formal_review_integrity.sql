@@ -1,6 +1,13 @@
 {{ config(severity='error', tags=['formal_review_marts']) }}
 -- Run-scoped keys and evidence references must remain unique and complete.
 with failures as (
+select run_id, commentary_id as key from {{ ref('fct_loan_review_commentary') }}
+where status = 'supported' and (explanation is null or display_text is null)
+union all
+select run_id, commentary_id from {{ ref('fct_loan_review_commentary') }}
+where final_report_accepted and entry_kind = 'narrative'
+    and (not coalesce(reviewed, false) or claim_type not in ('cause','management'))
+union all
 select run_id, fact_id as key from {{ ref('fct_loan_review_facts') }} group by 1,2 having count(*) != 1
 union all
 select run_id, evidence_id from {{ ref('dim_loan_review_evidence') }} group by 1,2 having count(*) != 1

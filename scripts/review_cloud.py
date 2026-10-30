@@ -100,6 +100,11 @@ class ReviewCloud:
                 or acceptance.get('rendered_validation_passed') is not True):
             raise ValueError('Cloud publication requires independently verified final acceptance')
         records = [('report', 'report', payload), ('acceptance', 'acceptance', acceptance)]
+        try:
+            from .formal_commentary import commentary_payload
+        except ImportError:
+            from formal_commentary import commentary_payload
+        records.extend(('commentary',n['id'],n) for n in commentary_payload(report))
         for fid, fact in payload['facts'].items():
             records.append(('fact', fid, fact))
             for eid in fact['evidence_ids']:

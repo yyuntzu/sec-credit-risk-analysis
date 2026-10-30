@@ -63,6 +63,24 @@ def accepted_fixture():
             eids = sorted({e for fid in ids for e in report.facts[fid].evidence_ids}) + [eid]
             checks.append({**binding, 'status': 'matched', 'calculated_value': D(100),
                            'reported_value': D(100), 'difference': D(0), 'evidence_ids': eids})
+    # Substantive acceptance now also requires independently reviewed causes.
+    from scripts.formal_commentary import review_binding
+    tables=[]; evidence=dict(report.evidence)
+    for table in report.tables:
+        narratives=[]
+        for n in table.narratives:
+            eid='synthetic-passage:'+table.spec.key+':'+n.topic
+            evidence[eid]=Evidence(eid,report.entity,report.scope,'fixture-mda','v1',date(2026,1,1),
+                'fixture://mda','passage',n.period_roles,'Synthetic source-supported explanation.')
+            n=replace(n,claim_type='cause',text='Synthetic source-supported explanation.',evidence_ids=(eid,))
+            rid='commentary-review:'+table.spec.key+':'+n.topic
+            review=dict(binding=review_binding(table.spec.key,n),method='checked_against_source',
+                        verified_by='Synthetic reviewer',verified_at='2026-01-01')
+            evidence[rid]=Evidence(rid,report.entity,report.scope,'fixture-review','v1',date(2026,1,1),
+                'fixture://review','review',n.period_roles,json.dumps(review))
+            narratives.append(replace(n,evidence_ids=(eid,rid)))
+        tables.append(replace(table,narratives=tuple(narratives)))
+    report=replace(report,tables=tuple(tables),evidence=evidence)
     return report, pipeline.acceptance_result(report, checks)
 
 

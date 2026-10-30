@@ -194,7 +194,8 @@ Unversioned routes also accept formal envelopes for existing formal clients;
 
 `--legacy --period-request request.json` explicitly selects the historical
 BigQuery/Memo workflow. `--source-request` explicitly selects source-only staging.
-The historical MD&A LLM path is isolated to legacy mode. Formal narratives remain
+The historical string-only MD&A API remains isolated to legacy mode. Formal mode
+uses the evidence-bound commentary stage documented in `formal-commentary.md`. Formal narratives remain
 evidence-bound; this integration does not invent a new LLM approval path.
 
 Run `venv/bin/python -m unittest discover -s tests -v`.
@@ -218,3 +219,17 @@ See [PR #1 remediation](pr1-review-remediation.md) for the eight findings, stric
 reconciliation schema, regression tests, publication gates, and verification limits.
 Run artifacts under `outputs/` and local `node_modules` links are ignored; create
 new deliverables locally rather than committing validation receipts or raw filings.
+
+
+## Evidence-bound commentary
+
+Formal SEC runs retrieve MD&A for the requested fiscal endpoints and `as_of`, then
+generate source-cited proposals. Snapshot runs remain offline. Use `--commentary`
+with a documents/claims bundle, or explicitly select `--commentary-mode model`
+to invoke the configured model on supplied documents. See
+[formal commentary](formal-commentary.md) for inputs, review, examples, and limits.
+
+Outputs now include `commentary.json` and `commentary_validation.json`; JSON,
+Markdown, Dashboard, Excel, and the formal BigQuery commentary view share the
+same narratives. A numeric comparison is insufficient for cause-analysis
+acceptance. Unreviewed model proposals remain visible and block final acceptance.

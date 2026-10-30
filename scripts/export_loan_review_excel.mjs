@@ -7,10 +7,11 @@ const root=path.resolve(process.argv[2]);
 const report=JSON.parse(await fs.readFile(path.join(root,'report.json'),'utf8'));
 const acceptance=JSON.parse(await fs.readFile(path.join(root,'acceptance.json'),'utf8'));
 if(!acceptance.technical_validation_passed || !acceptance.rendered_validation_passed) throw Error('Unvalidated report');
-for(const name of ['report.json','report.md']) {
+for(const name of ['report.json','report.md','commentary.json']) {
  const digest=createHash('sha256').update(await fs.readFile(path.join(root,name))).digest('hex');
  if(acceptance.artifact_sha256?.[name]!==digest) throw Error('Stale artifact validation receipt: '+name);
 }
+const commentary=JSON.parse(await fs.readFile(path.join(root,'commentary.json'),'utf8'));
 const wb=Workbook.create();
 const review=wb.worksheets.add('Review');
 const source=wb.worksheets.add('Sources');
@@ -98,6 +99,16 @@ for(const [ti,table] of report.tables.entries()) {
   }
   row++;
  }
+ for(const entry of commentary.filter(n=>n.table===table.spec.key)) {
+  const paragraphs=[entry.display.text,...entry.display.sources.map(s=>`${s.quote}\n來源：${s.source_id} · ${s.document_date} · ${s.locator}`)];
+  // Split long source paragraphs so Excel's row-height limit does not clip text.
+  for(const paragraph of paragraphs) for(let pos=0;pos<paragraph.length;pos+=400) {
+   const line=paragraph.slice(pos,pos+400);
+   review.mergeCells(`A${row}:G${row}`);review.getRange(`A${row}`).values=[[text(line)]];
+   review.getRange(`A${row}:G${row}`).format={wrapText:true,rowHeight:Math.max(36,18*Math.ceil(line.length/65)),font:{color:entry.display.reviewed?'#243746':'#9A3412'}};
+   row++;
+  }
+ }
  reviewRanges.push([table.spec.key,`A${start}:G${row}`]);
  row+=2;
 }
@@ -139,5 +150,5 @@ for(const [key,range] of reviewRanges) {
  await fs.writeFile(path.join(root,'Review_'+key+'_preview.png'),new Uint8Array(await image.arrayBuffer()));
 }
 const file=await SpreadsheetFile.exportXlsx(wb);await file.save(path.join(root,'loan_review.xlsx'));
-await fs.writeFile(path.join(root,'excel_validation.json'),JSON.stringify({cells_checked:verification.length,output_bindings:bindings.length,passed:true,engine:'artifact-tool; native Excel not run'},null,2));
+await fs.writeFile(path.join(root,'excel_validation.json'),JSON.stringify({cells_checked:verification.length,output_bindings:bindings.length,commentary_entries:commentary.length,passed:true,engine:'artifact-tool; native Excel not run'},null,2));
 console.log('Excel export verified',verification.length);

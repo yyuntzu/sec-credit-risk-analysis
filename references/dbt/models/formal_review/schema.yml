@@ -1,5 +1,12 @@
 version: 2
 models:
+  - name: fct_loan_review_commentary
+    columns:
+      - name: commentary_id
+        tests:
+          - not_null:
+              config:
+                severity: error
   - name: stg_loan_review_run_sources
     columns:
       - name: run_id

@@ -466,9 +466,15 @@ def acceptance_result(report, checks=(), limitations=()):
                    for f in report.facts.values() if f.id in bound and f.status not in AVAILABLE]
     absent_narratives = [{'table': t.spec.key, 'topic': n.topic, 'reason': n.reason}
                          for t in report.tables for n in t.narratives if n.status != 'supported']
+    try:
+        from .formal_commentary import commentary_gaps
+    except ImportError:
+        from formal_commentary import commentary_gaps
+    missing_commentary = commentary_gaps(report)
     blockers = list(limitations)
     if unavailable: blockers.append('Required report cells are unavailable or definitions unresolved')
     if absent_narratives: blockers.append('Required analytical coverage remains incomplete')
+    if missing_commentary: blockers.append('Required source-based cause commentary is missing or awaits independent review')
     if 'DEC-08' not in report.decisions: blockers.append('DEC-08 missing-data/delivery policy remains unapproved')
     if 'DEC-09' not in report.decisions: blockers.append('DEC-09 presentation policy remains unapproved')
     checks = [verify_reconciliation(report, check) for check in checks]
@@ -483,7 +489,8 @@ def acceptance_result(report, checks=(), limitations=()):
             'missing_or_pending': unavailable,
             'missing_inputs': [{'fact_id': f.id, 'metric': f.metric, 'period_role': f.period_role, 'status': f.status.value, 'reason': f.reason, 'evidence_ids': f.evidence_ids}
                                for f in report.facts.values() if f.id.startswith('input:') and f.status not in AVAILABLE], 'incomplete_narratives': absent_narratives,
-            'reconciliations': list(checks)}
+            'reconciliations': list(checks), 'commentary_complete': not missing_commentary,
+            'incomplete_commentary': missing_commentary}
 
 
 def complete_report(report, inputs, candidates, *, checks=(), limitations=(), identity_reviews=()):
@@ -562,19 +569,27 @@ def write_report_artifacts(report, acceptance, directory, *, source_bundle=None)
     markdown = render_loan_review(report, acceptance)
     validate_rendered_report(report, markdown)
     acceptance['rendered_validation_passed'] = True
+    try:
+        from .formal_commentary import commentary_payload
+    except ImportError:
+        from formal_commentary import commentary_payload
+    commentary_json = json.dumps(commentary_payload(report), ensure_ascii=False, indent=2)
     payload = json.dumps(asdict(report), ensure_ascii=False, indent=2, default=str)
-    acceptance['validator_version'] = 'formal-review-pr1-remediation-v1'
+    acceptance['validator_version'] = 'formal-review-commentary-v1'
     acceptance['artifact_sha256'] = {
         'report.json': hashlib.sha256(payload.encode('utf-8')).hexdigest(),
         'report.md': hashlib.sha256(markdown.encode('utf-8')).hexdigest(),
+        'commentary.json': hashlib.sha256(commentary_json.encode('utf-8')).hexdigest(),
     }
     (directory / 'report.md').write_text(markdown, encoding='utf-8')
     (directory / 'report.json').write_text(payload, encoding='utf-8')
+    (directory / 'commentary.json').write_text(commentary_json, encoding='utf-8')
     (directory / 'acceptance.json').write_text(json.dumps(acceptance, ensure_ascii=False, indent=2, default=str), encoding='utf-8')
     write_findings(report, acceptance, directory, source_bundle)
     if source_bundle is not None:
         (directory / 'source_inputs.json').write_text(json.dumps(source_bundle, ensure_ascii=False, indent=2, default=str), encoding='utf-8')
     return {'report_path': str((directory / 'report.md').resolve()),
+            'commentary_path': str((directory / 'commentary.json').resolve()),
             'report_data_path': str((directory / 'report.json').resolve()),
             'acceptance_path': str((directory / 'acceptance.json').resolve()),
             'findings_path': str((directory / 'review_findings.md').resolve()),
@@ -591,11 +606,17 @@ def validate_saved_artifacts(directory):
         from review_workflow import restore_report
     directory = Path(directory)
     acceptance = load_json(directory / 'acceptance.json')
-    for name in ('report.json', 'report.md'):
+    for name in ('report.json', 'report.md', 'commentary.json'):
         expected = acceptance.get('artifact_sha256', {}).get(name)
         if expected != hashlib.sha256((directory / name).read_bytes()).hexdigest():
             raise ValueError('Stale artifact validation receipt: ' + name)
     report = restore_report(json.loads((directory / 'report.json').read_text(encoding='utf-8')))
+    try:
+        from .formal_commentary import commentary_payload
+    except ImportError:
+        from formal_commentary import commentary_payload
+    if json.loads((directory/'commentary.json').read_text(encoding='utf-8')) != commentary_payload(report):
+        raise ValueError('Saved commentary differs from canonical narratives')
     verified = acceptance_result(report, acceptance.get('reconciliations', ()), acceptance.get('source_limitations', ()))
     validate_rendered_report(report, (directory / 'report.md').read_text(encoding='utf-8'))
     if (acceptance.get('final_report_accepted') != verified['substantive_data_ready']

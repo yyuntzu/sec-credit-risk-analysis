@@ -18,6 +18,10 @@ def report_payload(report):
 def write_dashboard(report, acceptance, directory):
     """Static, self-contained HTML; every displayed cell is bound to a formal Fact."""
     e = lambda value: escape(str(value), quote=True)
+    try:
+        from .formal_commentary import narrative_display
+    except ImportError:
+        from formal_commentary import narrative_display
     parts = [f'<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>{e(report.entity)} Loan Review</title>',
         '<style>body{font:16px system-ui;margin:32px;color:#243746}table{border-collapse:collapse;width:100%;margin:20px 0}td,th{border:1px solid #cbd5e1;padding:10px;text-align:right}th:first-child,td:first-child{text-align:left}th{background:#e8eef4}details{margin:12px 0}.pending{color:#9a3412}small{color:#475569}</style>',
         f'<h1>{e(report.entity)} · Loan Review</h1>',
@@ -45,7 +49,11 @@ def write_dashboard(report, acceptance, directory):
             parts.append('</tr>')
         parts.append('</tbody></table>')
         for narrative in table.narratives + table.notes:
-            parts.append(f'<p>{e(narrative.text or narrative.reason)}</p>')
+            display=narrative_display(report,table.spec.key,narrative)
+            parts.append(f'<p data-commentary-topic="{e(narrative.topic)}" data-reviewed="{str(display["reviewed"]).lower()}">{e(display["text"])}</p>')
+            for source in display['sources']:
+                parts.append(f'<blockquote data-evidence-id="{e(source["evidence_id"])}">{e(source["quote"])}<br>'
+                    f'{e(source["source_id"])} · {e(source["document_date"])} · {e(source["locator"])}</blockquote>')
     parts.append('<h2>來源與計算依據</h2>')
     for f in report.facts.values():
         parts.append(f'<details><summary>{e(f.id)} · {e(f.status.value)}</summary><p>{e(f.definition)}</p><p>{e(f.reason)}</p><p>Formula: {e(f.formula_id or "—")} · Inputs: {e(", ".join(f.input_ids))}</p>')

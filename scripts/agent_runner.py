@@ -1395,7 +1395,7 @@ def formal_http_review(ticker, body):
         from review_workflow import run_review
     if not isinstance(body, dict): raise ValueError('JSON object required')
     allowed = {'review_request', 'period_request', 'source_request', 'source', 'source_snapshot',
-               'supplements', 'execution', 'html', 'excel', 'source_run_id'}
+               'supplements', 'execution', 'html', 'excel', 'source_run_id', 'commentary', 'commentary_mode'}
     unknown = set(body) - allowed
     if unknown: raise ValueError('Unsupported options: ' + ', '.join(sorted(unknown)))
     requests = [body[k] for k in ('review_request', 'period_request', 'source_request') if k in body]
@@ -1406,7 +1406,8 @@ def formal_http_review(ticker, body):
     return run_review(ticker, requests[0], source=body.get('source', 'snapshot' if 'source_snapshot' in body else 'sec'),
         snapshot=body.get('source_snapshot'), supplements=tuple(body.get('supplements', ())),
         execution=body.get('execution', 'local'), html=body.get('html', True), excel=body.get('excel', True),
-        source_run_id=body.get('source_run_id'))
+        source_run_id=body.get('source_run_id'), commentary=body.get('commentary'),
+        commentary_mode=body.get('commentary_mode','auto'))
 
 
 # ══════════════════════════════════════════════════════════════════════════════

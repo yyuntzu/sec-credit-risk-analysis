@@ -798,12 +798,16 @@ def render_loan_review(report, acceptance) -> str:
         if reasons:
             lines += ['> 本表限制：' + esc(human_reason('；'.join(reasons))), '']
         for n in matching.narratives:
-            text = n.text
-            for metric, name in chinese.items():
-                if metric in METRICS and text.startswith(METRICS[metric].label + ' '):
-                    text = name + text[len(METRICS[metric].label):]
-                    break
-            lines.append('- ' + (esc(text) if n.status == 'supported' else esc(chinese.get(n.topic, n.topic) + '：尚未完成分析；' + human_reason(n.reason))))
+            try:
+                from .formal_commentary import narrative_display
+            except ImportError:
+                from formal_commentary import narrative_display
+            display=narrative_display(report,matching.spec.key,n)
+            safe=lambda text:esc(text).replace('<','&lt;').replace('>','&gt;')
+            lines.append('- '+safe(display['text']))
+            for source in display['sources']:
+                lines.append('> '+safe(source['quote']))
+                lines.append('> 來源：'+safe(source['source_id']+' · '+source['document_date']+' · '+source['locator']))
         if matching.narratives: lines.append('')
         for n in matching.notes:
             lines += ['> ' + esc(n.text if n.status == 'supported' else n.reason), '']

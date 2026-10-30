@@ -90,9 +90,14 @@ def write_json(path, value):
 
 def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements=(),
                workbook=None, review_date=None, mode=None, quarter=None, execution='local',
-               output_dir=None, html=True, excel=True, cloud=None, source_run_id=None):
+               output_dir=None, html=True, excel=True, cloud=None, source_run_id=None,
+               commentary=None, commentary_mode='auto'):
     """Execute once; an unaccepted review is an explicit draft, not a delivery success."""
     if execution not in ('local', 'cloud'): raise ValueError('execution must be local or cloud')
+    if commentary_mode not in ('auto','model','reviewed','off'): raise ValueError('Invalid commentary mode')
+    if commentary_mode=='off' and commentary is not None: raise ValueError('commentary input conflicts with off mode')
+    if commentary is not None and (not isinstance(commentary,dict) or set(commentary)-{'documents','claims'}):
+        raise ValueError('Commentary input requires documents and optional claims')
     if source not in ('sec', 'snapshot', 'bigquery', 'workbook'): raise ValueError('Unknown source backend')
     if snapshot is not None and source != 'snapshot': raise ValueError('snapshot requires source=snapshot')
     if source == 'snapshot' and snapshot is None: raise ValueError('snapshot source requires a snapshot')
@@ -183,6 +188,50 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
             'formal-review-integration-v1', date(2026, 10, 27), 'references/loan-review-integration.md',
             'definition', tuple(p.role for p in report.periods), 'Dashboard authorized; display canonical formal facts and acceptance state')
         report = replace(report, evidence=evidence, decisions={**report.decisions, 'DEC-11': eid})
+        # Commentary has its own auditable stage. Failure keeps numeric drafts;
+        # neither missing nor model-proposed causes can pass final acceptance.
+        try:
+            try:
+                from .formal_commentary import collect_sec_documents, validate_documents, apply_commentary, commentary_gaps
+                from .mda_commentary import generate_formal_commentary, MODEL
+            except ImportError:
+                from formal_commentary import collect_sec_documents, validate_documents, apply_commentary, commentary_gaps
+                from mda_commentary import generate_formal_commentary, MODEL
+            generation_model = None
+            commentary_input = commentary if commentary is not None else (snapshot or {}).get('commentary')
+            if commentary_mode != 'off':
+                if commentary_input is None and source!='sec' and commentary_mode in ('model','reviewed'):
+                    raise ValueError('Explicit MD&A documents/claims required for this commentary mode')
+                if commentary_input is None and source == 'sec' and commentary_mode in ('auto','model'):
+                    commentary_input = {'documents':collect_sec_documents(runner.SECEdgarClient(), request)}
+                if commentary_input is not None:
+                    if request is None:
+                        raise ValueError('MD&A requires a verified fiscal request/CIK; workbook provenance alone cannot establish SEC identity')
+                    if not isinstance(commentary_input,dict) or set(commentary_input)-{'documents','claims'}:
+                        raise ValueError('Invalid commentary input envelope')
+                    documents = commentary_input.get('documents', [])
+                    if not isinstance(documents,list): raise ValueError('Commentary documents must be a list')
+                    validate_documents(report, request, documents)
+                    claims = commentary_input.get('claims')
+                    if claims is None and (commentary_mode=='model' or commentary_mode=='auto' and source=='sec'):
+                        generation_model=os.environ.get('FORMAL_COMMENTARY_MODEL',os.environ.get('ANTHROPIC_MODEL',MODEL))
+                        claims = generate_formal_commentary(report, documents)
+                    if claims is None: claims=[]
+                    if not isinstance(claims,list): raise ValueError('Commentary claims must be a list')
+                    report = apply_commentary(report, request, documents, claims)
+                    write_json(directory / 'commentary_inputs.json', dict(documents=documents,claims=claims))
+                    manifest['outputs']['commentary_inputs_path']=str(directory/'commentary_inputs.json')
+            gaps = commentary_gaps(report)
+            manifest['stages']['commentary'] = 'not_requested' if commentary_mode=='off' else 'incomplete' if gaps else 'passed'
+            write_json(directory/'commentary_validation.json',dict(complete=not gaps,incomplete_topics=gaps,
+                mode=commentary_mode,model=generation_model,version='formal-commentary-v1',
+                semantic_review='Independent source review required for model proposals'))
+            manifest['outputs']['commentary_validation_path']=str(directory/'commentary_validation.json')
+        except Exception as exc:
+            manifest['stages']['commentary']='failed'
+            manifest.setdefault('errors',{})['commentary']=str(exc)
+            write_json(directory/'commentary_validation.json',dict(complete=False,error=str(exc)))
+            manifest['outputs']['commentary_validation_path']=str(directory/'commentary_validation.json')
         outputs = write_report_artifacts(report, acceptance, directory, source_bundle=bundle)
         acceptance = load_json(directory / 'acceptance.json')
         manifest.update(final_report_accepted=acceptance['final_report_accepted'], acceptance_blockers=acceptance['acceptance_blockers'])
@@ -253,6 +302,8 @@ def cli(argv):
     parser.add_argument('--output-dir')
     parser.add_argument('--no-html', action='store_true')
     parser.add_argument('--no-excel', action='store_true')
+    parser.add_argument('--commentary', help='JSON documents/claims bundle; offline unless model mode is selected')
+    parser.add_argument('--commentary-mode', choices=('auto','model','reviewed','off'), default='auto')
     args = parser.parse_args(argv)
     try:
         result = run_review(args.ticker, load_json(args.request) if args.request else None,
@@ -261,7 +312,8 @@ def cli(argv):
             supplements=tuple(load_json(p) for p in args.supplement), workbook=args.workbook,
             review_date=args.review_date, mode=args.mode, quarter=args.quarter,
             execution=args.execution, output_dir=args.output_dir, html=not args.no_html, excel=not args.no_excel,
-            source_run_id=args.source_run_id)
+            source_run_id=args.source_run_id, commentary=load_json(args.commentary) if args.commentary else None,
+            commentary_mode=args.commentary_mode)
     except (ValueError, OSError) as exc:
         parser.error(str(exc))
     print(json.dumps(result, ensure_ascii=False, indent=2))
