@@ -1,3 +1,5 @@
+-- Legacy compatibility model: existing KPI definitions are preserved.
+-- These estimates are not the canonical formal Loan Review calculation contract.
 {{ config(
    materialized='table',
    partition_by={'field': 'period_end', 'data_type': 'date'},
@@ -25,6 +27,10 @@ quarterly_clean as (
    from quarterly
    where _rn = 1
 ),
+linked_quarters as (
+   select *, lag(period_end) over(partition by ticker order by period_end) as previous_end
+   from quarterly_clean
+),
 ttm as (
    select
        ticker,
@@ -42,6 +48,11 @@ ttm as (
        sum(interest_expense_m) over w as ttm_interest_expense_m,
        sum(da_m)               over w as ttm_da_m,
        count(period_end)       over w as periods_available,
+       count(*) over w = 4
+         and date_diff(period_end, min(period_start) over w, day) + 1 in (364,365,366,371)
+         and countif(previous_end is null or date_add(previous_end, interval 1 day) != period_start)
+             over (partition by ticker order by period_end rows between 2 preceding and current row) = 0
+         as verified_legacy_ttm_interval,
        -- 修正 EBITDA 判斷邏輯
        case
            when sum(da_m) over w > 0
@@ -57,7 +68,7 @@ ttm as (
        long_term_debt_m,
        total_equity_m,
        retained_earnings_m
-   from quarterly_clean
+   from linked_quarters
    window w as (
        partition by ticker
        order by period_end
@@ -94,10 +105,7 @@ select
    safe_divide(ttm_ebitda_m, ttm_revenue_m)       as ebitda_margin,
    safe_divide(ttm_gross_profit_m, ttm_revenue_m) as gross_margin,
    safe_divide(ttm_net_income_m, ttm_revenue_m)   as net_margin,
-   case
-       when periods_available >= 4 then true
-       else false
-   end                                            as is_full_ttm,
+   verified_legacy_ttm_interval as is_full_ttm,
    case
        when ttm_da_m > 0 then 'EBIT + DA'
        else 'Operating Income (approx)'

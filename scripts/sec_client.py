@@ -5,13 +5,16 @@ SEC EDGAR API Client v3 — 動態 CIK 查詢版
   2. 新增 resolve_cik(ticker) — 用 EDGAR company search API 動態查詢
   3. CIK 結果 in-memory cache，同一 session 不重複查詢
   4. get_company_submissions / get_company_facts 自動呼叫 resolve_cik
-  5. 保留所有 v2 的 period validation / dedup 邏輯
+  5. Block 2: preserve exact periods, units and all filing versions with source IDs
 """
 
 import os
 import re
 import time
 import logging
+import hashlib
+import json
+from decimal import Decimal
 from datetime import datetime, date
 from typing import Optional
 import requests
@@ -61,6 +64,11 @@ BALANCE_SHEET_TAGS = frozenset({
     "LongTermDebtAndCapitalLeaseObligationsCurrent",
     "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
     "ShortTermNotesPayable",
+    "ShortTermBorrowings",
+    "DebtCurrent",
+    "InventoryNet",
+    "AccountsReceivableNetCurrent",
+    "AllowanceForDoubtfulAccountsReceivableCurrent",
     "StockholdersEquity",
     "RetainedEarningsAccumulatedDeficit",
 })
@@ -151,7 +159,7 @@ def resolve_cik(ticker: str, session: Optional[requests.Session] = None) -> str:
     except Exception as e:
         logger.warning(f"[{ticker}] Search API lookup failed: {e}")
 
-    
+    raise ValueError(f"Cannot resolve CIK for ticker {ticker!r}")
 
 def preload_cik_cache(tickers: list[str], session: Optional[requests.Session] = None) -> dict[str, str]:
     """
@@ -214,38 +222,38 @@ def _period_days(start: Optional[str], end: Optional[str]) -> Optional[int]:
 
 
 def _is_valid_period(entry: dict, filing_type: str, xbrl_tag: str = "") -> bool:
-    if xbrl_tag in BALANCE_SHEET_TAGS:
-        return True
+    """Classify by the concept's period kind, never by the filing's form/year.
 
-    days = _period_days(entry.get("start"), entry.get("end"))
-    if days is None:
+    A 10-K can repeat quarterly data; a 10-Q can repeat annual comparative data.
+    Retain exact intervals for later request-based matching, including amendments.
+    """
+    if filing_type not in ("10-K", "10-K/A", "10-Q", "10-Q/A"):
         return False
-
-    if filing_type == "10-K":
-        return ANNUAL_MIN_DAYS <= days <= ANNUAL_MAX_DAYS
-
-    if filing_type == "10-Q":
-        return QUARTERLY_MIN_DAYS <= days <= QUARTERLY_MAX_DAYS
-
-    return False
+    if _parse_date(entry.get("end")) is None:
+        return False
+    if xbrl_tag in BALANCE_SHEET_TAGS:
+        return entry.get("start") is None
+    days = _period_days(entry.get("start"), entry.get("end"))
+    return days is not None and days >= 0
 
 
-def _dedupe_by_period(
-    entries: list[dict],
-    is_point_in_time: bool = False,
-) -> list[dict]:
-    seen: dict[tuple, dict] = {}
-    for e in entries:
-        key = (e.get("end"),) if is_point_in_time else (e.get("start"), e.get("end"))
-        existing = seen.get(key)
-        if not existing:
-            seen[key] = e
-        else:
-            e_date  = _parse_date(e.get("filed"))        or date.min
-            ex_date = _parse_date(existing.get("filed")) or date.min
-            if e_date > ex_date:
-                seen[key] = e
+def _dedupe_by_period(entries: list[dict], is_point_in_time: bool = False) -> list[dict]:
+    """Remove exact repetitions only. Never select latest filing/value silently."""
+    seen = {}
+    for entry in entries:
+        key = json.dumps(entry, sort_keys=True, default=str)
+        seen.setdefault(key, entry)
     return list(seen.values())
+
+
+def financial_fact_id(row: dict) -> str:
+    """Immutable observation identity; a changed value/version is a new record."""
+    fields = ("ticker", "cik", "scope", "field_name", "namespace", "xbrl_tag",
+              "unit", "period_kind", "period_start", "period_end", "filing_type",
+              "accession_number", "filed_date", "original_value", "source_locator",
+              "filing_fiscal_year", "filing_fiscal_period")
+    key = json.dumps({k: row.get(k) for k in fields}, sort_keys=True, default=str)
+    return "sec:" + hashlib.sha256(key.encode()).hexdigest()
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -265,7 +273,7 @@ class SECEdgarClient:
         time.sleep(self.rate_limit)
         resp = self.session.get(url, timeout=30)
         resp.raise_for_status()
-        return resp.json()
+        return json.loads(resp.text, parse_float=Decimal)
 
     def _resolve(self, ticker: str) -> str:
         """Resolve ticker to CIK, using shared session for efficiency."""
@@ -305,9 +313,14 @@ class SECEdgarClient:
     def extract_financial_facts(self, ticker: str) -> dict:
         """
         從 companyfacts API 提取結構化財務數據。
-        保留 v2 所有 point-in-time / duration 驗證邏輯。
+        保留 instant/duration 真實期間及所有申報版本，不默選最新值。
         """
+        ticker = ticker.strip().upper()
+        expected_cik = self._resolve(ticker)
         facts_data = self.get_company_facts(ticker)
+        actual_cik = str(facts_data.get("cik", "")).zfill(10)
+        if not expected_cik or actual_cik != expected_cik:
+            raise ValueError("SEC companyfacts entity does not match requested CIK")
         us_gaap    = facts_data.get("facts", {}).get("us-gaap", {})
 
         metrics_map: dict[str, dict[str, str]] = {
@@ -319,6 +332,7 @@ class SECEdgarClient:
                 "NetIncomeLoss":                                         "net_income",
                 "EarningsPerShareBasic":                                 "eps_basic",
                 "EarningsPerShareDiluted":                               "eps_diluted",
+                "InterestCostsCapitalized":                              "capitalized_interest",
                 "InterestExpense":                                       "interest_expense",
                 # Some filers (e.g. AMZN) stopped tagging InterestExpense and
                 # switched to InterestExpenseNonoperating instead — same concept,
@@ -358,6 +372,8 @@ class SECEdgarClient:
                 "ShortTermNotesPayable":                      "short_term_notes_payable",
                 "DebtCurrent":                                "debt_current_fallback",
                 "InventoryNet":                               "inventory",
+                "AccountsReceivableNetCurrent":                "accounts_receivable_net",
+                "AllowanceForDoubtfulAccountsReceivableCurrent": "receivables_allowance",
             },
             "cash_flow": {
                 "NetCashProvidedByUsedInOperatingActivities":  "cfo",
@@ -384,41 +400,46 @@ class SECEdgarClient:
 
                 tag_data  = us_gaap[xbrl_tag]
                 units     = tag_data.get("units", {})
-                unit_data: list[dict] = units.get("USD") or units.get("USD/shares") or []
-
-                if not unit_data:
-                    continue
-
-                is_pit = xbrl_tag in BALANCE_SHEET_TAGS
-
-                for target_form in ["10-K", "10-Q"]:
-                    form_entries = [e for e in unit_data if e.get("form") == target_form]
-                    valid_entries = [
-                        e for e in form_entries
-                        if _is_valid_period(e, target_form, xbrl_tag=xbrl_tag)
-                    ]
-
-                    if not valid_entries:
-                        continue
-
-                    deduped = _dedupe_by_period(valid_entries, is_point_in_time=is_pit)
-
-                    for entry in deduped:
-                        days = _period_days(entry.get("start"), entry.get("end"))
-                        result[statement].append({
-                            "ticker":           ticker,
-                            "field_name":       field_name,
-                            "xbrl_tag":         xbrl_tag,
-                            "value":            entry.get("val"),
-                            "unit":             entry.get("unit", "USD"),
-                            "period_start":     entry.get("start"),
-                            "period_end":       entry.get("end"),
-                            "period_days":      days,
-                            "filing_type":      target_form,
-                            "accession_number": entry.get("accn"),
-                            "filed_date":       entry.get("filed"),
-                            "ingested_at":      ingested_at,
-                        })
+                for unit, unit_data in units.items():
+                    # Unit is the enclosing companyfacts key, not an entry field.
+                    for entry in _dedupe_by_period(unit_data):
+                        form = entry.get("form", "")
+                        if not _is_valid_period(entry, form, xbrl_tag):
+                            continue
+                        if not entry.get("accn") or not _parse_date(entry.get("filed")):
+                            raise ValueError(f"{ticker}/{xbrl_tag}: missing filing identity")
+                        value = entry.get("val")
+                        if value is not None:
+                            if isinstance(value, bool) or not Decimal(str(value)).is_finite():
+                                raise ValueError(f"{ticker}/{xbrl_tag}: invalid numeric value")
+                        row = {
+                            "ticker": ticker,
+                            "cik": actual_cik,
+                            "scope": "entity-wide",
+                            "field_name": field_name,
+                            "namespace": "us-gaap",
+                            "xbrl_tag": xbrl_tag,
+                            "value": float(value) if value is not None else None,
+                            "original_value": str(value) if value is not None else None,
+                            "unit": unit,
+                            "period_kind": "instant" if xbrl_tag in BALANCE_SHEET_TAGS else "duration",
+                            "period_start": entry.get("start"),
+                            "period_end": entry["end"],
+                            "period_days": _period_days(entry.get("start"), entry["end"]),
+                            "filing_type": form,
+                            "accession_number": entry["accn"],
+                            "filed_date": entry["filed"],
+                            "source_version": entry["accn"] + ":" + entry["filed"],
+                            "source_url": self.FACTS_URL.format(cik=actual_cik),
+                            "document_url": f"https://www.sec.gov/Archives/edgar/data/{int(actual_cik)}/{entry['accn'].replace('-', '')}/{entry['accn']}-index.html",
+                            "source_locator": json.dumps({"namespace": "us-gaap", "tag": xbrl_tag, "unit": unit, "entry": entry}, sort_keys=True, default=str),
+                            # fy/fp describe the filing context, not necessarily the fact period.
+                            "filing_fiscal_year": entry.get("fy"),
+                            "filing_fiscal_period": entry.get("fp"),
+                            "ingested_at": ingested_at,
+                        }
+                        row["fact_id"] = financial_fact_id(row)
+                        result[statement].append(row)
 
             logger.info(
                 f"[{ticker}] {statement}: extracted {len(result[statement])} rows"

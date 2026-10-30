@@ -1,0 +1,9 @@
+version: 2
+sources:
+  - name: formal_review_raw
+    database: "{{ env_var('GCP_PROJECT_ID', 'focus-heuristic-438521-v4') }}"
+    schema: "{{ env_var('BQ_DATASET_ID', 'sec_raw') }}"
+    tables:
+      - name: raw_review_sources
+      - name: raw_review_results
+      - name: raw_review_runs

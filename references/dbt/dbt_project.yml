@@ -120,4 +120,7 @@ seeds:
 
 # ── Test 設定 ─────────────────────────────────────────────────────────────────
 data_tests:
+  sec_credit_analysis:
+    formal_review:
+      +severity: error
   +severity: warn  # 測試失敗不中斷 pipeline，但記錄 warning

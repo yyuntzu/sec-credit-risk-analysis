@@ -1,0 +1,42 @@
+version: 2
+models:
+  - name: stg_loan_review_run_sources
+    columns:
+      - name: run_id
+        tests:
+          - not_null:
+              config:
+                severity: error
+      - name: payload
+        tests:
+          - not_null:
+              config:
+                severity: error
+  - name: fct_loan_review_facts
+    columns:
+      - name: fact_id
+        tests:
+          - not_null:
+              config:
+                severity: error
+  - name: dim_loan_review_evidence
+    columns:
+      - name: evidence_id
+        tests:
+          - not_null:
+              config:
+                severity: error
+  - name: fct_loan_review_acceptance
+    columns:
+      - name: run_id
+        tests:
+          - not_null:
+              config:
+                severity: error
+  - name: dim_loan_review_runs
+    columns:
+      - name: run_id
+        tests:
+          - not_null:
+              config:
+                severity: error

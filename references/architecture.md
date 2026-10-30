@@ -1,5 +1,16 @@
 # Architecture Reference
 
+## Current default: formal Loan Review
+
+CLI / Shell / HTTP → `review_workflow.run_review()` → source validation →
+formal calculation and acceptance → shared Report → Markdown / Dashboard / Excel.
+Cloud mode additionally stages the source bundle in BigQuery, reads it back
+through dbt, and publishes canonical results to the formal review marts.
+
+See [current execution and cloud instructions](loan-review-integration.md).
+The architecture details below describe the retained **legacy** path and its
+historical limitations; they are not the default formal report data flow.
+
 按需載入 — 只有在需要了解技術細節、debug、或修改 pipeline 時才看這份文件。
 
 ---

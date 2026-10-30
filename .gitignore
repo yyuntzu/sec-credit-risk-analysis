@@ -16,3 +16,7 @@ references/dbt/.user.yml
 target/
 dbt_packages/
 dbt_internal_packages/
+
+# Run artifacts and local dependency links are not source inputs.
+outputs/
+node_modules/

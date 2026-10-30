@@ -47,7 +47,7 @@ select
     -- YoY 成長率
     safe_divide(
         ttm_revenue_m - revenue_m_prior_year,
-        abs(revenue_m_prior_year)
+        revenue_m_prior_year
     )                                                          as revenue_yoy_growth,
 
     safe_divide(
@@ -64,9 +64,9 @@ select
     case
         
         when safe_divide(ttm_revenue_m - revenue_m_prior_year,
-                         abs(revenue_m_prior_year)) < -0.20   then 'CRITICAL'
+                         revenue_m_prior_year) < -0.20   then 'CRITICAL'
         when safe_divide(ttm_revenue_m - revenue_m_prior_year,
-                         abs(revenue_m_prior_year)) < -0.10   then 'WARNING'
+                         revenue_m_prior_year) < -0.10   then 'WARNING'
         else 'OK'
     end                                                        as revenue_growth_flag,
 
