@@ -1,0 +1,43 @@
+{
+  "run_id": "a2b7c3e7ec8149698539cb58973ca016",
+  "entity": "CDW",
+  "execution": "cloud",
+  "source": "snapshot",
+  "status": "draft",
+  "started_at": "2026-10-27T18:22:33.942568+00:00",
+  "final_report_accepted": false,
+  "pipeline_version": "formal-review-integration-v1",
+  "formula_version": "acceptance-v1.0-addendum-2026-10-23",
+  "policy_version": "user-approved-2026-10-24",
+  "source_run_id": null,
+  "cloud_status": "published",
+  "outputs": {
+    "report_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/report.md",
+    "report_data_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/report.json",
+    "acceptance_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/acceptance.json",
+    "findings_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/review_findings.md",
+    "source_inputs_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/source_inputs.json",
+    "missing_data_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/missing_data.csv",
+    "reconciliations_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/reconciliations.csv",
+    "dashboard_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/dashboard.html",
+    "excel_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/loan_review.xlsx"
+  },
+  "stages": {
+    "sources": "passed",
+    "cloud_sources": "passed",
+    "report": "passed",
+    "dashboard": "passed",
+    "excel": "passed",
+    "cloud_publish": "passed"
+  },
+  "acceptance_blockers": [
+    "Required report cells are unavailable or definitions unresolved",
+    "Required analytical coverage remains incomplete",
+    "Reconciliation is incomplete or contains unexplained differences"
+  ],
+  "mode": "quarterly",
+  "currency": "USD",
+  "scale": "1000000",
+  "finished_at": "2026-10-27T18:23:32.132222+00:00",
+  "manifest_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cdw_credit_20261027/review_cloud/run_manifest.json"
+}

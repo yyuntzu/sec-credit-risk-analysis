@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "mode": "quarterly",
+  "entity": "NVDA",
+  "cik": "0001045810",
+  "scope": "entity-wide",
+  "currency": "USD",
+  "scale": "1000000",
+  "as_of": "2026-10-25",
+  "periods": [
+    {
+      "role": "earlier_fy_end",
+      "label": "FY2024",
+      "fiscal_year": 2024,
+      "start": "2023-01-30",
+      "end": "2024-01-28",
+      "ltm_start": "2023-01-30",
+      "evidence_ids": [
+        "calendar-earlier_fy_end"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "prior_interim",
+      "label": "FY2025 Q2",
+      "fiscal_year": 2025,
+      "start": "2024-01-29",
+      "end": "2024-07-28",
+      "ltm_start": "2023-07-31",
+      "evidence_ids": [
+        "calendar-prior_interim"
+      ],
+      "quarter": 2,
+      "reason": ""
+    },
+    {
+      "role": "latest_fy_end",
+      "label": "FY2025",
+      "fiscal_year": 2025,
+      "start": "2024-01-29",
+      "end": "2025-01-26",
+      "ltm_start": "2024-01-29",
+      "evidence_ids": [
+        "calendar-latest_fy_end"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "current_interim",
+      "label": "FY2026 Q2",
+      "fiscal_year": 2026,
+      "start": "2025-01-27",
+      "end": "2025-07-27",
+      "ltm_start": "2024-07-29",
+      "evidence_ids": [
+        "calendar-current_interim"
+      ],
+      "quarter": 2,
+      "reason": ""
+    }
+  ],
+  "evidence": [
+    {
+      "id": "calendar-earlier_fy_end",
+      "entity": "NVDA",
+      "scope": "entity-wide",
+      "source_id": "0001045810-24-000029",
+      "version": "0001045810-24-000029",
+      "document_date": "2024-02-21",
+      "locator": "SEC companyfacts us-gaap:Revenues exact interval; submissions reportDate",
+      "kind": "calendar",
+      "period_roles": [
+        "earlier_fy_end"
+      ],
+      "content": "{\"company\": \"NVIDIA CORP\", \"filing\": \"10-K\", \"observations\": [{\"start\": \"2023-01-30\", \"end\": \"2024-01-28\", \"val\": 60922000000, \"accn\": \"0001045810-24-000029\", \"fy\": 2024, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2024-02-21\"}]}",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar-prior_interim",
+      "entity": "NVDA",
+      "scope": "entity-wide",
+      "source_id": "0001045810-24-000264",
+      "version": "0001045810-24-000264",
+      "document_date": "2024-08-28",
+      "locator": "SEC companyfacts us-gaap:Revenues exact interval; submissions reportDate",
+      "kind": "calendar",
+      "period_roles": [
+        "prior_interim"
+      ],
+      "content": "{\"company\": \"NVIDIA CORP\", \"filing\": \"10-Q\", \"observations\": [{\"start\": \"2024-01-29\", \"end\": \"2024-07-28\", \"val\": 56084000000, \"accn\": \"0001045810-24-000264\", \"fy\": 2025, \"fp\": \"Q2\", \"form\": \"10-Q\", \"filed\": \"2024-08-28\"}, {\"start\": \"2024-04-29\", \"end\": \"2024-07-28\", \"val\": 30040000000, \"accn\": \"0001045810-24-000264\", \"fy\": 2025, \"fp\": \"Q2\", \"form\": \"10-Q\", \"filed\": \"2024-08-28\"}]}",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar-latest_fy_end",
+      "entity": "NVDA",
+      "scope": "entity-wide",
+      "source_id": "0001045810-25-000023",
+      "version": "0001045810-25-000023",
+      "document_date": "2025-02-26",
+      "locator": "SEC companyfacts us-gaap:Revenues exact interval; submissions reportDate",
+      "kind": "calendar",
+      "period_roles": [
+        "latest_fy_end"
+      ],
+      "content": "{\"company\": \"NVIDIA CORP\", \"filing\": \"10-K\", \"observations\": [{\"start\": \"2024-01-29\", \"end\": \"2025-01-26\", \"val\": 130497000000, \"accn\": \"0001045810-25-000023\", \"fy\": 2025, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2025-02-26\"}]}",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar-current_interim",
+      "entity": "NVDA",
+      "scope": "entity-wide",
+      "source_id": "0001045810-25-000209",
+      "version": "0001045810-25-000209",
+      "document_date": "2025-08-27",
+      "locator": "SEC companyfacts us-gaap:Revenues exact interval; submissions reportDate",
+      "kind": "calendar",
+      "period_roles": [
+        "current_interim"
+      ],
+      "content": "{\"company\": \"NVIDIA CORP\", \"filing\": \"10-Q\", \"observations\": [{\"start\": \"2025-01-27\", \"end\": \"2025-07-27\", \"val\": 90805000000, \"accn\": \"0001045810-25-000209\", \"fy\": 2026, \"fp\": \"Q2\", \"form\": \"10-Q\", \"filed\": \"2025-08-27\"}, {\"start\": \"2025-04-28\", \"end\": \"2025-07-27\", \"val\": 46743000000, \"accn\": \"0001045810-25-000209\", \"fy\": 2026, \"fp\": \"Q2\", \"form\": \"10-Q\", \"filed\": \"2025-08-27\"}]}",
+      "purpose": "borrower"
+    }
+  ]
+}

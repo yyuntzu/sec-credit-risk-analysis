@@ -1,0 +1,9 @@
+{
+  "numericOutputsChecked": 44,
+  "sourceEditRecalculated": true,
+  "blankNotZero": true,
+  "zeroDenominatorHandled": true,
+  "nativeExcelTested": false,
+  "formulaErrors": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
+  "inspection": "{\"kind\":\"table\",\"sheet\":\"Quarter\",\"address\":\"A9:E12\",\"rows\":4,\"cols\":5,\"values\":[[\"Metric／科目\",\"H1 2025\",\"% revenue\",\"H1 2026\",\"% revenue\"],[\"Total net revenue／營業收入\",11826.253,1,12674.534,1],[\"Cost of revenue／營業成本\",7000.12,0.591913601036609,6599.214,0.5206671898154205],[\"Gross profit／毛利\",4826.133,0.408086398963391,6075.32,0.47933281018457957]]}"
+}

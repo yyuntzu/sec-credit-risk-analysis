@@ -1,0 +1,3257 @@
+Results of Operations 
+ The following discussion contains forward-looking statements regarding industry trends, our expectations regarding our future performance, liquidity and capital resources and other non-historical statements that involve risks and uncertainties. Our actual results may differ materially from those discussed in or implied by the forward-looking statements as a result of various factors, including, without limitation, those set forth under Part I, Item 1A., &#x201c;Risk Factors,&#x201d; and other matters included elsewhere in this Annual Report on Form 10-K. The following discussion and analysis of our financial condition and results of operations should be read in conjunction with our consolidated financial statements and the notes thereto included elsewhere in this Annual Report on Form 10-K. 
+ This section of this Annual Report on Form 10-K generally discusses 2022 and 2021 items and year-over-year comparisons between 2022 and 2021. A detailed discussion of 2020 items and year-over-year comparisons between 2021 and 2020 that are not included in this Annual Report on Form 10-K can be found in &#x201c;Management&#x2019;s Discussion and Analysis of Financial Condition and Results of Operations&#x201d; in Part II, Item 7. of our Annual Report on Form 10-K for the year ended December 31, 2021, as filed with the SEC on February 17, 2022. 
+ Overview 
+ We design and manufacture vehicle propulsion solutions, including commercial-duty on-highway, off-highway and defense fully automatic transmissions and electric hybrid and fully electric systems. The business was founded in 1915 and has been headquartered in Indianapolis, Indiana since inception. Allison is traded on the New York Stock Exchange under the symbol, &#x201c;ALSN&#x201d;. 
+ We have approximately 3,500 employees. Although approximately 74% of revenues were generated in North America in 2022, we have a global presence by serving customers in Asia, Europe, South America and Africa. We serve customers through an independent network of approximately 1,600 independent distributor and dealer locations worldwide. 
+ Trends Impacting Our Business 
+ Global markets continue to experience supply chain, labor, energy and raw material constraints as a result of global economic volatility, the war in Ukraine and the COVID-19 pandemic, that impacted our business in 2022 and continue to impact our business performance. As a result, during 2022 we experienced raw material and component part price inflation, increased freight and logistics costs, increased labor costs, production constraints due to labor shortages and increased foreign exchange volatility. In addition, our net sales for 2022 were negatively impacted as a result of our customers&#x2019; inability to secure components from the broader commercial vehicle supply base which resulted in reduced commercial vehicle build schedules and the inability of the commercial vehicle market to produce sufficient quantities to meet demand. We expect that commercial vehicle build schedules will continue to be negatively impacted by the availability of components in 2023. 
+ Our net sales are driven by commercial vehicle production, which tends to be highly correlated to macroeconomic conditions. In 2023, we expect higher net sales driven by price increases on certain products and the continued execution of growth initiatives. 
+ &#160; 
+ 35 
+ 
+ Table of Contents 
+ &#160; 
+ Full Year 2022 and 2021 Net Sales by End Market (in millions) 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ End Market 
+ &#160; 
+ 2022 Net Sales 
+ &#160; 
+ &#160; 
+ 2021 Net Sales 
+ &#160; 
+ &#160; 
+ % Variance 
+ &#160; 
+ 
+ 
+ North America On-Highway 
+ &#160; 
+ $ 
+ 1,359 
+ &#160; 
+ &#160; 
+ $ 
+ 1,177 
+ &#160; 
+ &#160; 
+ &#160; 
+ 15 
+ % 
+ 
+ 
+ North America Off-Highway 
+ &#160; 
+ &#160; 
+ 86 
+ &#160; 
+ &#160; 
+ &#160; 
+ 58 
+ &#160; 
+ &#160; 
+ &#160; 
+ 48 
+ % 
+ 
+ 
+ Defense 
+ &#160; 
+ &#160; 
+ 146 
+ &#160; 
+ &#160; 
+ &#160; 
+ 186 
+ &#160; 
+ &#160; 
+ &#160; 
+ (22 
+ )% 
+ 
+ 
+ Outside North America On-Highway 
+ &#160; 
+ &#160; 
+ 463 
+ &#160; 
+ &#160; 
+ &#160; 
+ 381 
+ &#160; 
+ &#160; 
+ &#160; 
+ 22 
+ % 
+ 
+ 
+ Outside North America Off-Highway 
+ &#160; 
+ &#160; 
+ 127 
+ &#160; 
+ &#160; 
+ &#160; 
+ 83 
+ &#160; 
+ &#160; 
+ &#160; 
+ 53 
+ % 
+ 
+ 
+ Service Parts, Support Equipment and Other 
+ &#160; 
+ &#160; 
+ 588 
+ &#160; 
+ &#160; 
+ &#160; 
+ 517 
+ &#160; 
+ &#160; 
+ &#160; 
+ 14 
+ % 
+ 
+ 
+ Total Net Sales 
+ &#160; 
+ $ 
+ 2,769 
+ &#160; 
+ &#160; 
+ $ 
+ 2,402 
+ &#160; 
+ &#160; 
+ &#160; 
+ 15 
+ % 
+ 
+ 
+ North America On-Highway end market net sales were up 15% for the year ended December 31, 2022 compared to the year ended December 31, 2021, principally driven by strength in customer demand for last mile delivery, regional haul and vocational trucks. 
+ Global Off-Highway end market net sales were up 51% for the year ended December 31, 2022 compared to the year ended December 31, 2021, principally driven by demand for hydraulic fracturing applications in the energy sector as well as higher demand in the mining and construction sectors. 
+ Defense end market net sales were down 22% for the year ended December 31, 2022 compared to the year ended December 31, 2021, principally driven by lower usage of defense vehicles during the COVID-19 pandemic leading to lower demand for Tracked and Wheeled vehicle applications. 
+ Outside North America On-Highway end market net sales were up 22% for the year ended December 31, 2022 compared to the year ended December 31, 2021, principally driven by the continued execution of our growth initiatives in EMEA, Asia-Pacific and South America. 
+ Service Parts, Support Equipment and Other end market net sales were up 14% for the year ended December 31, 2022 compared to the year ended December 31, 2021, principally driven by higher demand for global service parts and support equipment and price increases on certain products. 
+ Key Components of our Results of Operations 
+ Net sales 
+ We generate our net sales primarily from the sale of vehicle propulsion solutions, service and component parts, support equipment, defense kits, engineering services, royalties and extended transmission coverage to a wide array of OEMs, distributors and the U.S. government. Sales are recorded in accordance with the terms of the contract, net of provisions for customer allowances and other rebates. Engineering services are recorded as net sales in accordance with the terms of the contract. The associated costs are recorded in cost of sales. We also have royalty agreements with third parties that provide net sales as a result of joint efforts in developing marketable products. 
+ Cost of sales 
+ Our primary components of cost of sales are purchased parts, the overhead expense related to our manufacturing operations and direct labor associated with the manufacture and assembly of vehicle propulsion solutions and parts. For the year ended December 31, 2022, direct material costs were approximately 66%, overhead costs were approximately 27% and direct labor costs were approximately 7% of total cost of sales. We are subject to changes in our cost of sales caused by movements in underlying commodity prices. We seek to hedge against this risk by using LTAs. See Part II, Item 7A., &#x201c;Quantitative and Qualitative Disclosures about Market Risk&#x2014;Commodity Price Risk&#x201d; included in this Annual Report on Form 10-K. 
+ 36 
+ 
+ Table of Contents 
+ &#160; 
+ Selling, general and administrative 
+ The principal components of our selling, general and administrative expenses are salaries and benefits for our office personnel, advertising and promotional expenses, product warranty expense, expenses relating to certain information technology systems and amortization of our intangible assets. 
+ Engineering &#x2014; research and development 
+ We incur costs in connection with research and development programs that are expected to contribute to future earnings. Such costs are expensed as incurred. 
+ Non-GAAP Financial Measures 
+ We use Adjusted Earnings before Interest, Taxes, Depreciation, and Amortization (&#x201c;EBITDA&#x201d;) and Adjusted EBITDA as a percent of net sales to measure our operating profitability. We believe that Adjusted EBITDA and Adjusted EBITDA as a percent of net sales provide management, investors and creditors with useful measures of the operational results of our business and increase the period-to-period comparability of our operating profitability and comparability with other companies. Adjusted EBITDA as a percent of net sales is also used in the calculation of management&#x2019;s incentive compensation program. The most directly comparable GAAP measure to Adjusted EBITDA and Adjusted EBITDA as a percent of net sales is Net income and Net income as a percent of net sales, respectively. Adjusted EBITDA is calculated as earnings before interest expense, net, income tax expense, amortization of intangible assets, depreciation of property, plant and equipment and other adjustments as defined by the Second Amended and Restated Credit Agreement dated as of March 29, 2019 as amended (the &#x201c;Credit Agreement&#x201d;) governing ATI's term loan facility due March 2026 (&#x201c;Term Loan&#x201d;). Adjusted EBITDA as a percent of net sales is calculated as Adjusted EBITDA divided by net sales. 
+ We use Adjusted free cash flow to evaluate the amount of cash generated by our business that, after the capital investment needed to maintain and grow our business and certain mandatory debt service requirements, can be used for repayment of debt, stockholder distributions and strategic opportunities, including investing in our business. We believe that Adjusted free cash flow enhances the understanding of the cash flows of our business for management, investors and creditors. Adjusted free cash flow is also used in the calculation of management&#x2019;s incentive compensation program. The most directly comparable GAAP measure to Adjusted free cash flow is Net cash provided by operating activities. Adjusted free cash flow is calculated as Net cash provided by operating activities, excluding non-recurring restructuring charges, after additions of long-lived assets. 
+ 37 
+ 
+ Table of Contents 
+ &#160; 
+ The following is a reconciliation of Net income and Net income as a percent of net sales to Adjusted EBITDA and Adjusted EBITDA as a percent of net sales and a reconciliation of Net cash provided by operating activities to Adjusted free cash flow: 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ For the years ended December 31, 
+ &#160; 
+ 
+ 
+ (unaudited, in millions) 
+ &#160; 
+ 2022 
+ &#160; 
+ &#160; 
+ 2021 
+ &#160; 
+ &#160; 
+ 2020 
+ &#160; 
+ 
+ 
+ Net income (GAAP) 
+ &#160; 
+ $ 
+ 531 
+ &#160; 
+ &#160; 
+ $ 
+ 442 
+ &#160; 
+ &#160; 
+ $ 
+ 299 
+ &#160; 
+ 
+ 
+ plus: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Interest expense, net 
+ &#160; 
+ &#160; 
+ 118 
+ &#160; 
+ &#160; 
+ &#160; 
+ 116 
+ &#160; 
+ &#160; 
+ &#160; 
+ 137 
+ &#160; 
+ 
+ 
+ Income tax expense 
+ &#160; 
+ &#160; 
+ 114 
+ &#160; 
+ &#160; 
+ &#160; 
+ 130 
+ &#160; 
+ &#160; 
+ &#160; 
+ 94 
+ &#160; 
+ 
+ 
+ Depreciation of property, plant and equipment 
+ &#160; 
+ &#160; 
+ 109 
+ &#160; 
+ &#160; 
+ &#160; 
+ 104 
+ &#160; 
+ &#160; 
+ &#160; 
+ 96 
+ &#160; 
+ 
+ 
+ Amortization of intangible assets 
+ &#160; 
+ &#160; 
+ 46 
+ &#160; 
+ &#160; 
+ &#160; 
+ 46 
+ &#160; 
+ &#160; 
+ &#160; 
+ 52 
+ &#160; 
+ 
+ 
+ Unrealized loss (gain) on marketable securities (a) 
+ &#160; 
+ &#160; 
+ 22 
+ &#160; 
+ &#160; 
+ &#160; 
+ (4 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Stock-based compensation expense (b) 
+ &#160; 
+ &#160; 
+ 18 
+ &#160; 
+ &#160; 
+ &#160; 
+ 14 
+ &#160; 
+ &#160; 
+ &#160; 
+ 17 
+ &#160; 
+ 
+ 
+ Unrealized loss on foreign exchange (c) 
+ &#160; 
+ &#160; 
+ 6 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ 
+ 
+ Technology-related investment gain (d) 
+ &#160; 
+ &#160; 
+ (6 
+ ) 
+ &#160; 
+ &#160; 
+ (3 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Acquisition-related earnouts (e) 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1 
+ &#160; 
+ 
+ 
+ Pension curtailment (f) 
+ &#160; 
+ &#160; 
+ 1 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ UAW Local 933 retirement incentive (g) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ (2 
+ ) 
+ &#160; 
+ &#160; 
+ 7 
+ &#160; 
+ 
+ 
+ Restructuring charges (h) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 14 
+ &#160; 
+ 
+ 
+ Expenses related to long-term debt refinancing (i) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 13 
+ &#160; 
+ 
+ 
+ Adjusted EBITDA (Non-GAAP) 
+ &#160; 
+ $ 
+ 961 
+ &#160; 
+ &#160; 
+ $ 
+ 844 
+ &#160; 
+ &#160; 
+ $ 
+ 732 
+ &#160; 
+ 
+ 
+ Net sales (GAAP) 
+ &#160; 
+ $ 
+ 2,769 
+ &#160; 
+ &#160; 
+ $ 
+ 2,402 
+ &#160; 
+ &#160; 
+ $ 
+ 2,081 
+ &#160; 
+ 
+ 
+ Net income as a percent of net sales (GAAP) 
+ &#160; 
+ &#160; 
+ 19.2 
+ % 
+ &#160; 
+ &#160; 
+ 18.4 
+ % 
+ &#160; 
+ &#160; 
+ 14.4 
+ % 
+ 
+ 
+ Adjusted EBITDA as a percent of net sales (Non-GAAP) 
+ &#160; 
+ &#160; 
+ 34.7 
+ % 
+ &#160; 
+ &#160; 
+ 35.1 
+ % 
+ &#160; 
+ &#160; 
+ 35.2 
+ % 
+ 
+ 
+ Net cash provided by operating activities (GAAP) 
+ &#160; 
+ $ 
+ 657 
+ &#160; 
+ &#160; 
+ $ 
+ 635 
+ &#160; 
+ &#160; 
+ $ 
+ 561 
+ &#160; 
+ 
+ 
+ (Deductions) or additions to reconcile to Adjusted free cash flow: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Additions of long-lived assets 
+ &#160; 
+ &#160; 
+ (167 
+ ) 
+ &#160; 
+ &#160; 
+ (175 
+ ) 
+ &#160; 
+ &#160; 
+ (115 
+ ) 
+ 
+ 
+ Restructuring charges (h) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 12 
+ &#160; 
+ 
+ 
+ Adjusted free cash flow (Non-GAAP) 
+ &#160; 
+ $ 
+ 490 
+ &#160; 
+ &#160; 
+ $ 
+ 460 
+ &#160; 
+ &#160; 
+ $ 
+ 458 
+ &#160; 
+ 
+ 
+ &#160; 
+ (a) Represents losses (gains) (recorded in Other (expense) income, net) related to an investment in the common stock of Jing-Jin Electric Technologies Co. Ltd. 
+ (b) Represents stock-based compensation expense (recorded in Cost of sales, Selling, general and administrative, and Engineering &#x2014; research and development). 
+ (c) Represents losses (recorded in Other (expense) income, net) on intercompany financing transactions related to investments in plant assets for our India facility. 
+ (d) Represents gains (recorded in Other (expense) income, net) related to investments in co-development agreements to expand our position in propulsion solution technologies. 
+ (e) Represents expenses (recorded in Selling, general and administrative and Engineering &#x2014; research and development) for earnouts related to our acquisition of Vantage Power Limited. 
+ (f) Represents a curtailment loss (recorded in Selling, general and administrative) for our European subsidiary's defined benefit pension plan. 
+ (g) Represents (adjustments) charges (recorded in Cost of sales) related to a 2018 to 2021 retirement incentive program for certain employees represented by the International Union, United Automobile, Aerospace and Agricultural Implement Workers of America (&#x201c;UAW&#x201d;) pursuant to the UAW Local 933 collective bargaining agreement effective through November 2023. 
+ (h) Represents restructuring and pension plan settlement charges (recorded in Cost of sales, Selling, general and administrative, Engineering &#x2014; research and development, and Other (expense) income, net) related to voluntary and involuntary separation programs for both hourly and salaried employees in 2020. 
+ (i) Represents expenses (recorded in Other (expense) income, net) related to the redemption of ATI&#x2019;s 5.0% Senior Notes due 2024 (&#x201c;5.0% Senior Notes&#x201d;) in the fourth quarter of 2020. 
+ &#160; 
+ &#160; 
+ 38 
+ 
+ Table of Contents 
+ &#160; 
+ Results of Operations 
+ The following table sets forth certain financial information for the years ended December 31, 2022 and 2021. The following table and discussion should be read in conjunction with the information contained in our consolidated financial statements and the notes thereto included in Part II, Item 8. of this Annual Report on Form 10-K. 
+ Comparison of years ended December 31, 2022 and 2021 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ Years ended December 31, 
+ &#160; 
+ 
+ 
+ (dollars in millions) 
+ &#160; 
+ 2022 
+ &#160; 
+ &#160; 
+ % of net sales 
+ &#160; 
+ &#160; 
+ 2021 
+ &#160; 
+ &#160; 
+ % of net sales 
+ &#160; 
+ 
+ 
+ Net sales 
+ &#160; 
+ $ 
+ 2,769 
+ &#160; 
+ &#160; 
+ &#160; 
+ 100 
+ % 
+ &#160; 
+ $ 
+ 2,402 
+ &#160; 
+ &#160; 
+ &#160; 
+ 100 
+ % 
+ 
+ 
+ Cost of sales 
+ &#160; 
+ &#160; 
+ 1,472 
+ &#160; 
+ &#160; 
+ &#160; 
+ 53 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1,257 
+ &#160; 
+ &#160; 
+ &#160; 
+ 52 
+ &#160; 
+ 
+ 
+ Gross profit 
+ &#160; 
+ &#160; 
+ 1,297 
+ &#160; 
+ &#160; 
+ &#160; 
+ 47 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1,145 
+ &#160; 
+ &#160; 
+ &#160; 
+ 48 
+ &#160; 
+ 
+ 
+ Operating expenses: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Selling, general and administrative 
+ &#160; 
+ &#160; 
+ 328 
+ &#160; 
+ &#160; 
+ &#160; 
+ 12 
+ &#160; 
+ &#160; 
+ &#160; 
+ 305 
+ &#160; 
+ &#160; 
+ &#160; 
+ 13 
+ &#160; 
+ 
+ 
+ Engineering &#x2014; research and development 
+ &#160; 
+ &#160; 
+ 185 
+ &#160; 
+ &#160; 
+ &#160; 
+ 7 
+ &#160; 
+ &#160; 
+ &#160; 
+ 171 
+ &#160; 
+ &#160; 
+ &#160; 
+ 7 
+ &#160; 
+ 
+ 
+ Total operating expenses 
+ &#160; 
+ &#160; 
+ 513 
+ &#160; 
+ &#160; 
+ &#160; 
+ 19 
+ &#160; 
+ &#160; 
+ &#160; 
+ 476 
+ &#160; 
+ &#160; 
+ &#160; 
+ 20 
+ &#160; 
+ 
+ 
+ Operating income 
+ &#160; 
+ &#160; 
+ 784 
+ &#160; 
+ &#160; 
+ &#160; 
+ 28 
+ &#160; 
+ &#160; 
+ &#160; 
+ 669 
+ &#160; 
+ &#160; 
+ &#160; 
+ 28 
+ &#160; 
+ 
+ 
+ Other expense, net: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Interest expense, net 
+ &#160; 
+ &#160; 
+ (118 
+ ) 
+ &#160; 
+ &#160; 
+ (4 
+ ) 
+ &#160; 
+ &#160; 
+ (116 
+ ) 
+ &#160; 
+ &#160; 
+ (5 
+ ) 
+ 
+ 
+ Other (expense) income, net 
+ &#160; 
+ &#160; 
+ (21 
+ ) 
+ &#160; 
+ &#160; 
+ (1 
+ ) 
+ &#160; 
+ &#160; 
+ 19 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1 
+ &#160; 
+ 
+ 
+ Total other expense, net 
+ &#160; 
+ &#160; 
+ (139 
+ ) 
+ &#160; 
+ &#160; 
+ (5 
+ ) 
+ &#160; 
+ &#160; 
+ (97 
+ ) 
+ &#160; 
+ &#160; 
+ (4 
+ ) 
+ 
+ 
+ Income before income taxes 
+ &#160; 
+ &#160; 
+ 645 
+ &#160; 
+ &#160; 
+ &#160; 
+ 23 
+ &#160; 
+ &#160; 
+ &#160; 
+ 572 
+ &#160; 
+ &#160; 
+ &#160; 
+ 24 
+ &#160; 
+ 
+ 
+ Income tax expense 
+ &#160; 
+ &#160; 
+ (114 
+ ) 
+ &#160; 
+ &#160; 
+ (4 
+ ) 
+ &#160; 
+ &#160; 
+ (130 
+ ) 
+ &#160; 
+ &#160; 
+ (6 
+ ) 
+ 
+ 
+ Net income 
+ &#160; 
+ $ 
+ 531 
+ &#160; 
+ &#160; 
+ &#160; 
+ 19 
+ % 
+ &#160; 
+ $ 
+ 442 
+ &#160; 
+ &#160; 
+ &#160; 
+ 18 
+ % 
+ 
+ 
+ &#160; 
+ Net sales 
+ Net sales for the year ended December 31, 2022 were $2,769 million compared to $2,402 million for the year ended December 31, 2021, an increase of 15%. The increase was principally driven by a $182 million, or 15%, increase in net sales in the North America On-Highway end market principally driven by strength in customer demand for last mile delivery, regional haul and vocational trucks, an $82 million, or 22%, increase in net sales in the Outside North America On-Highway end market principally driven by the continued execution of our growth initiatives in EMEA, Asia-Pacific and South America, a $72 million, or 51%, increase in net sales in the Global Off-Highway end market principally driven by demand for hydraulic fracturing applications in the energy sector as well as higher demand in the mining and construction sectors and a $71 million, or 14%, increase in net sales in the Service Parts, Support Equipment and Other end market principally driven by higher demand for global service parts and support equipment and price increases on certain products, partially offset by a $40 million, or 22%, decrease in net sales in the Defense end market principally driven by lower usage of defense vehicles during the COVID-19 pandemic leading to lower demand for Tracked and Wheeled vehicle applications. 
+ Cost of sales 
+ Cost of sales for the year ended December 31, 2022 was $1,472 million compared to $1,257 million for the year ended December 31, 2021, an increase of 17%. The increase was principally driven by increased direct material and manufacturing expense commensurate with increased net sales and higher direct material costs. 
+ 39 
+ 
+ Table of Contents 
+ &#160; 
+ Gross profit 
+ Gross profit for the year ended December 31, 2022 was $1,297 million compared to $1,145 million for the year ended December 31, 2021, an increase of 13%. The increase was principally driven by $170 million related to increased net sales and $119 million of price increases on certain products, partially offset by $96 million of higher direct material costs and $38 million of higher manufacturing expense commensurate with increased net sales. Gross profit as a percent of net sales for the year ended December 31, 2022 decreased 90 basis points compared to the same period in 2021 principally driven by increased cost of goods sold, partially offset by price increases on certain products. 
+ Selling, general and administrative 
+ Selling, general and administrative expenses for the year ended December 31, 2022 were $328 million compared to $305 million for the year ended December 31, 2021, an increase of 8%. The increase was principally driven by higher product warranty expense and higher commercial activities spending. 
+ Engineering &#x2014; research and development 
+ Engineering expenses for the year ended December 31, 2022 were $185 million compared to $171 million for the year ended December 31, 2021, an increase of 8%. The increase was principally driven by increased product initiatives spending. 
+ Interest expense, net 
+ Interest expense, net for the year ended December 31, 2022 was $118 million compared to $116 million for the year ended December 31, 2021, an increase of 2%. The increase was principally driven by $10 million of higher interest expense on ATI's Term Loan due to higher variable interest rates, partially offset by $8 million of lower interest expense on interest rate hedges. 
+ Other (expense) income, net 
+ Other (expense) income, net for the year ended December 31, 2022 was ($21) million compared to $19 million for the year ended December 31, 2021. The change was principally driven by $26 million of unfavorable change in marketable securities, $6 million of unfavorable foreign exchange on intercompany financing and $5 million of unfavorable change associated with assets held in a rabbi trust. 
+ Income tax expense 
+ Income tax expense for the year ended December 31, 2022 was $114 million resulting in an effective tax rate of 18%, compared to $130 million of income tax expense and an effective tax rate of 23% for the year ended December 31, 2021. The decrease in income tax expense was principally driven by enacted state tax rate legislation that resulted in a deferred tax benefit, partially offset by increased taxable income. The decrease in the effective tax rate was principally driven by enacted state tax rate legislation that resulted in a deferred tax benefit. 
+ 40 
+ 
+ Table of Contents 
+ &#160; 
+ Liquidity and Capital Resources 
+ We generate cash primarily from operations to fund our operating, investing and financing activities. Our principal uses of cash are operating expenses, capital expenditures, working capital needs, debt service, dividends on common stock, stock repurchases, and strategic growth initiatives, including investments, acquisitions and collaborations. Our ability to generate cash in the future and our future uses of cash are subject to general economic, financial, competitive, legislative, regulatory and other factors that may be beyond our control. We had total available cash and cash equivalents of $232 million and $127 million as of December 31, 2022 and 2021, respectively. Of the available cash and cash equivalents, $121 million was deposited in operating accounts and $111 million was invested in U.S. government backed securities as of December 31, 2022, compared to December 31, 2021, when all of the $127 million was deposited in operating accounts. 
+ As of December 31, 2022, the total of cash held by foreign subsidiaries was $57 million, the majority of which was at our subsidiaries located in China, the Netherlands, Japan and India. We manage our worldwide cash requirements considering available funds among the subsidiaries through which we conduct our business and the cost effectiveness with which those funds can be accessed. As a result, we do not currently anticipate that local liquidity restrictions will preclude us from funding our targeted expectations or operating needs with local resources. 
+ We have not recognized any deferred tax liabilities associated with earnings in foreign subsidiaries, except for our subsidiary located in China, as they are intended to be permanently reinvested and used to support foreign operations or have no associated tax requirements. We have recorded a deferred tax liability of $3 million for the tax liability associated with the remittance of previously taxed income and unremitted earnings for our subsidiary located in China. The remaining deferred tax liabilities, if recorded, related to unremitted earnings that are indefinitely reinvested are not material. 
+ Our liquidity requirements are significant, primarily due to our debt service requirements. As of December 31, 2022, we had $625 million of indebtedness associated with ATI&#x2019;s Term Loan, $400 million of indebtedness associated with ATI&#x2019;s 4.75% Senior Notes due October 2027 (&#x201c;4.75% Senior Notes&#x201d;), $500 million of indebtedness associated with ATI&#x2019;s 5.875% Senior Notes due June 2029 (&#x201c;5.875% Senior Notes&#x201d;) and $1,000 million of indebtedness associated with ATI&#x2019;s 3.75% Senior Notes due January 2031 (&#x201c;3.75% Senior Notes&#x201d; and, together with the 4.75% Senior Notes and 5.875% Senior Notes, the &#x201c;Senior Notes&#x201d;). Short-term and long-term debt service liquidity requirements consist of $2 million of minimum required quarterly principal payments on ATI&#x2019;s Term Loan through its maturity date of March 2026 and periodic interest payments on ATI&#x2019;s Term Loan and the Senior Notes. There are no required quarterly principal payments on the Senior Notes. Long-term debt service liquidity requirements also consist of the payment in full of any remaining principal balance of ATI&#x2019;s Term Loan and the Senior Notes upon their respective maturity dates. 
+ We made $7 million of principal payments on the Term Loan during each of the years ended December 31, 2022 and 2021. Our ability to make payments on and refinance our indebtedness and to fund planned capital expenditures and growth initiatives will depend on our ability to generate cash in the future. 
+ 41 
+ 
+ Table of Contents 
+ &#160; 
+ The Senior Secured Credit Facility provides for a $650 million Revolving Credit Facility, net of an allowance for up to $75 million in outstanding letter of credit commitments. Throughout the year ended December 31, 2022, we made periodic withdrawals and payments on the Revolving Credit Facility as part of our cash management plans. The maximum amount outstanding at any time during the year ended December 31, 2022 was $75 million. As of December 31, 2022, we had $644 million available under the Revolving Credit Facility, net of $6 million in letters of credit. As of December 31, 2022, we had no amounts outstanding under the Revolving Credit Facility. If we have commitments outstanding on the Revolving Credit Facility at the end of a fiscal quarter, the Senior Secured Credit Facility requires us to maintain a specified maximum first lien net leverage ratio of 5.50x. Additionally, within the terms of the Senior Secured Credit Facility, a first lien net leverage ratio at or below 4.00x results in the elimination of excess cash flow payments on the Senior Secured Credit Facility for the applicable year. As of December 31, 2022, our first lien net leverage ratio was 0.41x. The Senior Secured Credit Facility also provides certain financial incentives based on our first lien net leverage ratio. A first lien net leverage ratio at or below 4.00x and above 3.50x results in a 25 basis point reduction to the applicable margin on the Revolving Credit Facility. A first lien net leverage ratio at or below 3.50x results in an additional 25 basis point reduction to the applicable margin on the Revolving Credit Facility. These reductions remain in effect as long as we achieve a first lien net leverage ratio at or below the related threshold. 
+ In addition, the Credit Agreement includes, among other things, customary restrictions (subject to certain exceptions) on our ability to incur certain indebtedness, grant certain liens, make certain investments, engage in acquisitions, consolidations and mergers, declare or pay certain dividends, and repurchase shares of our common stock. The indentures governing the Senior Notes contain negative covenants restricting or limiting our ability to, among other things, incur or guarantee additional indebtedness, incur liens, pay dividends on, redeem or repurchase our capital stock, make certain investments, permit payment or dividend restrictions on certain of our subsidiaries, sell assets, engage in certain transactions with affiliates, and consolidate or merge or sell all or substantially all of our assets. As of December 31, 2022, we were in compliance with all covenants under the Senior Secured Credit Facility and indentures governing the Senior Notes. 
+ Our credit ratings are reviewed by Moody&#x2019;s Investors Service (&#x201c;Moody&#x2019;s&#x201d;) and Fitch Ratings (&#x201c;Fitch&#x201d;). As of December 31, 2022, our credit ratings from both Moody's and Fitch are shown in the table below: 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ December 31, 2022 
+ 
+ 
+ Credit Ratings 
+ &#160; 
+ Moody's 
+ &#160; 
+ Fitch 
+ 
+ 
+ Corporate Credit 
+ &#160; 
+ Ba1 
+ &#160; 
+ BB+ 
+ 
+ 
+ Term Loan 
+ &#160; 
+ Baa2 
+ &#160; 
+ BBB- 
+ 
+ 
+ 4.75% Senior Notes 
+ &#160; 
+ Ba2 
+ &#160; 
+ BB+ 
+ 
+ 
+ 5.875% Senior Notes 
+ &#160; 
+ Ba2 
+ &#160; 
+ BB+ 
+ 
+ 
+ 3.75% Senior Notes 
+ &#160; 
+ Ba2 
+ &#160; 
+ BB+ 
+ 
+ 
+ We anticipate that our capital expenditures in 2023 will be lower than 2022 and expect increased cash income taxes as a result of lower deductions in 2023 related to our intangible assets. 
+ Our current stock repurchase program was originally authorized by the Board of Directors in 2016. On February 24, 2022, the Board of Directors authorized us to repurchase an additional $1,000 million of our common stock, bringing the total amount authorized under the Repurchase Program to $4,000 million. During 2022, we repurchased approximately $278 million of our common stock under the Repurchase Program. All of the repurchase transactions during 2022 were settled in cash during the same period. As of December 31, 2022, we had approximately $1,035 million available under the Repurchase Program. 
+ 42 
+ 
+ Table of Contents 
+ &#160; 
+ The following table shows our sources and uses of funds for the years ended December 31, 2022, 2021 and 2020 (in millions): 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ Years ended December 31, 
+ &#160; 
+ 
+ 
+ Statement of Cash Flows Data 
+ &#160; 
+ 2022 
+ &#160; 
+ &#160; 
+ 2021 
+ &#160; 
+ &#160; 
+ 2020 
+ &#160; 
+ 
+ 
+ Cash flows provided by operating activities 
+ &#160; 
+ $ 
+ 657 
+ &#160; 
+ &#160; 
+ $ 
+ 635 
+ &#160; 
+ &#160; 
+ $ 
+ 561 
+ &#160; 
+ 
+ 
+ Cash flows used for investing activities 
+ &#160; 
+ &#160; 
+ (183 
+ ) 
+ &#160; 
+ &#160; 
+ (212 
+ ) 
+ &#160; 
+ &#160; 
+ (111 
+ ) 
+ 
+ 
+ Cash flows used for financing activities 
+ &#160; 
+ &#160; 
+ (367 
+ ) 
+ &#160; 
+ &#160; 
+ (604 
+ ) 
+ &#160; 
+ &#160; 
+ (335 
+ ) 
+ 
+ 
+ &#160; 
+ Generally, cash provided by operating activities has been adequate to fund our operations. We have significant liquidity, including $232 million of cash and cash equivalents and $644 million available under the Revolving Credit Facility, net of $6 million in letters of credit, as of December 31, 2022. At this time, we believe cash provided by operating activities, cash and cash equivalents and borrowing capacity under the Revolving Credit Facility will be sufficient to meet our known and anticipated cash requirements for the next twelve months and thereafter. 
+ Cash provided by operating activities 
+ Operating activities for the year ended December 31, 2022 generated $657 million of cash compared to $635 million for the year ended December 31, 2021. The increase was principally driven by higher gross profit, partially offset by higher cash incentive compensation payments, higher cash income taxes and higher cash interest payments. 
+ Cash used for investing activities 
+ Investing activities for the year ended December 31, 2022 used $183 million of cash compared to $212 million for the year ended December 31, 2021. The decrease was principally driven by a $41 million investment in marketable securities in 2021 that did not reoccur in 2022 and an $8 million decrease in capital expenditures, partially offset by $23 million in cash paid for business acquisitions during 2022 compared to none in 2021. 
+ Cash used for financing activities 
+ Financing activities for the year ended December 31, 2022 used $367 million of cash compared to $604 million for the year ended December 31, 2021. The decrease was principally driven by $278 million of stock repurchases in 2022 compared to $513 million of stock repurchases in 2021 under the Repurchase Program. 
+ Critical Accounting Estimates 
+ The preparation of the consolidated financial statements in accordance with GAAP requires management to make estimates and assumptions that affect the reported amounts of some assets and liabilities and, in some instances, the reported amounts of net sales and expenses during the applicable reporting period. Differences between actual amounts and estimates are recorded in the period identified. Estimates can require a significant amount of judgment, and a different set of judgments could result in changes to our reported results. A summary of our critical accounting estimates is included below. 
+ 43 
+ 
+ Table of Contents 
+ &#160; 
+ Revenue Recognition 
+ Revenue recognition contains uncertainties because it requires management to make assumptions and to apply judgment to estimate the amount of sales incentives and provision for government price reductions. Distributor and customer sales incentives, consisting of allowances and other rebates, are estimated at the time of sale based upon history and experience and are recorded as a reduction to net sales. Incentive programs are generally product specific or region specific. Some factors used in estimating the cost of incentives include the number of transmissions that will be affected by the incentive program and the rate of acceptance of any incentive program. If the actual number of affected transmissions differs from this estimate, or if a different mix of incentives is actually paid, the impact on net sales would be recorded in the period that the change was identified. Assuming our current mix of sales incentives, a 10% change in sales incentives would correspondingly change our earnings by approximately $10 million. 
+ Under the terms of certain previous U.S. government contracts, there were price reduction clauses and provisions for potential price reductions which are estimated at the time of sale based upon history and experience, and finalized after completion of U.S. government audits. Given our current price reduction reserve for government contracts, a 10% adjustment in our price reduction reserve would correspondingly change our earnings by approximately $5 million. Since 2014, Allison contracts with the U.S. Government have generally been firm, fixed price contracts and therefore have not required re-calculation of pricing based on cost principles. 
+ Further information is provided in &#34;Note 2. Summary of Significant Accounting Policies&#x201d; of Notes to Consolidated Financial Statements included in Part II, Item 8., of this Annual Report on Form 10-K. 
+ Goodwill and Other Intangible Assets 
+ We have elected to perform our annual impairment tests for goodwill and indefinite-lived intangible assets on October 31 of every year using a multi-step impairment test. In Step 0, we have the option to evaluate various qualitative factors to determine the likelihood of impairment. If we determine that the fair value is more likely than not less than the carrying value, then we are required to perform Step 1. If we do not elect to perform Step 0, we can voluntarily proceed directly to Step 1. In Step 1, we perform a quantitative analysis to compare the fair value to our carrying value. If the fair value exceeds the carrying value, no impairment is recorded, and we are not required to perform further testing. If the carrying value exceeds fair value, we would record an impairment loss equal to the difference. 
+ A qualitative assessment contains uncertainties because it requires management to make assumptions and to apply judgment to assess business changes, economic outlook, financial trends and forecasts, growth rates, credit ratings, equity ratings, discount rates, industry data and other relevant qualitative factors. 
+ A quantitative analysis contains uncertainties because it is performed utilizing a discounted cash flow model which includes key assumptions, such as financial forecasts; net sales growth derived from market information, industry reports, marketing programs and future new product introductions; operating margin improvements derived from cost reduction programs and fixed cost leverage driven by higher sales volumes; and a risk-adjusted discount rate. 
+ Goodwill represents the excess of purchase price paid over the fair value of net assets acquired. In accordance with the Financial Accounting Standards Board&#x2019;s (&#x201c;FASB&#x201d;) authoritative accounting guidance on goodwill, we do not amortize goodwill but rather evaluate it for impairment on an annual basis, or more often if events or circumstances change that could cause goodwill to become impaired. Goodwill is tested for impairment at the reporting unit level, which is the same as our one operating and reportable segment. We do not aggregate any components into our reporting unit. 
+ 44 
+ 
+ Table of Contents 
+ &#160; 
+ Goodwill impairment testing for 2022 was performed using the Step 0 analysis by assessing certain qualitative trends and factors. These trends and factors were compared to, and based on, the assumptions used in prior years. After reviewing the various qualitative factors mentioned above, our 2022 annual goodwill impairment test indicated that the fair value for the reporting unit more likely than not exceeded its carrying value, indicating no impairment. 
+ Other intangible assets have both indefinite and finite useful lives. Intangible assets with indefinite useful lives are not amortized but are tested annually for impairment, or more often if events or circumstances change that could cause intangible assets with indefinite useful lives to become impaired. After reviewing the various qualitative factors mentioned above, our annual 2022 indefinite-lived intangible assets impairment tests, as of October 31, 2022, indicated that the fair value of our indefinite-lived intangible assets more likely than not exceeded their respective carrying values, indicating no impairment. 
+ Intangible assets with finite lives are amortized over their estimated useful lives and reviewed for impairment when circumstances change that would create a triggering event. Customer relationships are amortized over the life in which expected benefits are to be consumed. The other remaining finite life intangibles are amortized on a straight-line basis over their useful lives. We evaluate the remaining useful life of the other intangible assets on a periodic basis to determine whether events or circumstances warrant a revision to the remaining useful life. Assumptions and estimates about future values and remaining useful lives of our intangible and other long-lived assets are complex and subjective. Such assumptions and estimates can be affected by a variety of factors, including external factors such as industry and economic trends, and internal factors, such as changes in our business strategy and internal forecasts. Although management believes the historical assumptions and estimates are reasonable and appropriate, different assumptions and estimates could materially impact our reported financial results. Further information is provided in &#34;Note 6. Goodwill and Other Intangible Assets&#x201d; of Notes to Consolidated Financial Statements included in Part II, Item 8., of this Annual Report on Form 10-K. 
+ Impairment of Long-Lived Assets 
+ The carrying value of long-lived assets is evaluated whenever events or circumstances indicate that the carrying value of a long-lived asset may not be recoverable. Events or circumstances that would result in an impairment review primarily include a significant change in the use of an asset, or the planned sale or disposal of an asset. The asset would be considered impaired when there is no future use planned for the asset or the future net undiscounted cash flows generated by the asset or asset group are less than its carrying value. An impairment loss would be recognized based on the amount by which the carrying value exceeds fair value. 
+ Assumptions and estimates used to determine cash flows in the evaluation of impairment and the fair values used to determine the impairment are subject to a degree of judgment and complexity. Any changes to the assumptions and estimates resulting from changes in actual results or market conditions from those anticipated may affect the carrying value of long-lived assets and could result in an impairment charge. 
+ 45 
+ 
+ Table of Contents 
+ &#160; 
+ Warranty 
+ Provisions for estimated expenses related to product warranties are made at the time products are sold. Warranty claims arise when a transmission fails while in service during the relevant warranty period. The warranty reserve is adjusted in Selling, general and administrative expense based on our current and historical warranty claims paid and associated repair costs. These estimates are established using historical information including the nature, frequency, and average cost of warranty claims and are adjusted as actual information becomes available. From time to time, we may initiate a specific field action program. As a result of the uncertainty surrounding the nature and frequency of specific field action programs, the liability for such programs is recorded when we commit to an action. We review and assess the liability for these programs on a quarterly basis. We also assess our ability to recover certain costs from our suppliers and record a receivable from the supplier when we believe a recovery is probable. Warranty costs may differ from those estimated if actual claim rates are higher or lower than our historical rates. Further information is provided in &#34;Note 10. Product Warranty Liabilities&#x201d; of Notes to Consolidated Financial Statements included in Part II, Item 8., of this Annual Report on Form 10-K which contains a summary of the activity in our warranty liability account for 2022, 2021 and 2020, including adjustments to pre-existing warranties. 
+ Pension and Post-retirement Benefit Plans 
+ Pension and OPEB costs are based upon various actuarial assumptions and methodologies as prescribed by authoritative accounting guidance. These assumptions include discount rates, expected return on plan assets, health care cost trend rates, inflation, rate of compensation increases, population demographics, mortality rates and other factors. We review all actuarial assumptions on an annual basis. 
+ A change in the discount rate can have a significant impact on determining our benefit obligations. Our current discount rate is determined by matching the plans&#x2019; projected cash flows to a yield curve based on long-term, fixed income debt instruments available as of the measurement date of December 31, 2022. The effect of a one percentage point decrease in the assumed discount rate would result in an increase in the December 31, 2022 defined benefit pension plans obligation of approximately $17 million. Similarly, a one percentage point decrease in the assumed discount rate would result in an increase in the December 31, 2022 OPEB obligation of approximately $8 million. 
+ Further information is provided in &#34;Note 15. Employee Benefit Plans&#x201d; of Notes to Consolidated Financial Statements included in Part II, Item 8., of this Annual Report on Form 10-K, which contains our review on various actuarial assumptions. 
+ Income Taxes 
+ Income taxes are accounted for under the asset and liability method. Deferred tax assets and liabilities are recognized for the expected future tax consequences attributable to temporary differences between the financial statement carrying amounts of existing assets and liabilities and their respective tax bases. The future tax benefits associated with operating loss and tax credit carryforwards are recognized as deferred tax assets. Deferred tax assets and liabilities are measured using enacted tax rates expected to apply to taxable income in the years in which those temporary differences are expected to be recovered or settled. When releasing income tax effects from accumulated other comprehensive loss, we utilize the portfolio securities approach. 
+ As of December 31, 2022, our U.S. federal income tax deductions related to our intangible assets were approximately $200 million in 2022 and are expected to be approximately $10 million in 2023 and approximately $10 million in the aggregate through 2034. Excluding our intangible asset deductions, our expected tax payments would have increased by approximately $40 million for the year ended December 31, 2022. 
+ 46 
+ 
+ Table of Contents 
+ &#160; 
+ The need to establish a valuation allowance against the deferred tax assets is assessed at least quarterly based on a more-likely-than-not realization threshold, in accordance with the FASB authoritative accounting guidance on income taxes. Appropriate consideration is given to all positive and negative evidence related to that realization. This assessment considers, among other matters, the nature, frequency and severity of recent losses, forecasts of future profitability, the duration of statutory carryforward periods, and experience with tax attributes expiring unused and tax planning alternatives. The weight given to these considerations depends upon the degree to which they can be objectively verified. 
+ Further information on income taxes is provided in &#34;Note 16. Income Taxes&#x201d; of Notes to Consolidated Financial Statements included in Part II, Item 8., of this Annual Report on Form 10-K. 
+ Business Combinations 
+ We use the acquisition method to account for business combinations. The assets acquired and liabilities assumed are recorded at their respective estimated fair value at the date of acquisition. Any excess purchase price over the fair values of the acquired net assets is recorded as goodwill. Determining the fair values of assets acquired and liabilities assumed requires management's judgment and includes the use of estimates with respect to timing and amount of future cash flows, market rate assumptions, actuarial assumptions, appropriate discount rates and other relevant factors. 
+ Recently Adopted Accounting Pronouncements 
+ Refer to &#34;Note 2. Summary of Significant Accounting Policies&#x201d; in Part II, Item 8., of this Annual Report on Form 10-K. 
+ 47 
+ 
+ Table of Contents 
+ &#160; 
+ ITEM 7A. Quantitative and Qualita tive Disclosures About Market Risk 
+ Our exposure to market risk consists of changes in interest rates, foreign currency rate fluctuations and movements in commodity prices. 
+ Interest Rate Risk 
+ Our principal interest rate exposure relates to outstanding amounts under our Senior Secured Credit Facility. Our Senior Secured Credit Facility provides for variable rate borrowings of up to $650 million, including $644 million under our Revolving Credit Facility, net of $6 million of letters of credit. As of December 31, 2022, we held interest rate swap contracts that, in the aggregate, effectively hedge $500 million of the variable rate debt associated with the Term Loan at weighted average London Interbank Offered Rate (&#x201c;LIBOR&#x201d;) fixed rates of 3.04% and 2.82% through September 2025. A one-eighth percent increase or decrease in assumed interest rates for the Senior Secured Credit Facility, if fully drawn as of December 31, 2022, would have an impact of approximately $1 million on interest expense per year. As of December 31, 2022, we had no outstanding borrowings against the Revolving Credit Facility. 
+ The United Kingdom's Financial Conduct Authority has announced the intent to phase out LIBOR by June 2023. We plan to elect an alternative reference rate acceptable under reference rate reform guidance and do not expect the phase out to materially impact our financial statements, liquidity or access to capital markets. 
+ Refer to &#34;Note 8. Debt&#x201d; and &#34;Note 9. Derivatives&#x201d; of Notes to Consolidated Financial Statements included in Part II, Item 8., of this Annual Report on Form 10-K. 
+ Exchange Rate Risk 
+ While our net sales and costs are denominated primarily in U.S. Dollars, net sales, costs, assets and liabilities are generated in other currencies including Brazilian Real, British Pound, Canadian Dollar, Chinese Yuan Renminbi, Euro, Hungarian Forint, Indian Rupee and Japanese Yen. The expansion of our business outside North America may further increase the risk that cash flows resulting from these activities may be adversely affected by changes in currency exchange rates. 
+ Assuming current levels of foreign currency transactions, a 10% aggregate increase or decrease in the Chinese Yuan Renminbi, Euro, Indian Rupee, and Japanese Yen would correspondingly change our earnings, net of tax, by an estimated $4 million per year. We believe our other direct exposure to foreign currencies is immaterial. 
+ Commodity Price Risk 
+ We are subject to changes in our cost of sales caused by movements in underlying commodity prices. As of December 31, 2022, approximately 66% of our cost of sales consisted of purchased components with significant raw material content. A substantial portion of the purchased parts are made of aluminum and steel. The cost of aluminum parts includes an adjustment factor on future purchases for fluctuations in aluminum prices based on accepted industry indices. In addition, a substantial amount of steel-based contracts also includes an index-based component. As our costs change, we are able to pass through a portion of the changes in commodity prices to certain of our customers according to our LTAs. We historically have not entered into long-term purchase contracts related to the purchase of aluminum and steel. 
+ 48 
+ 
+ Table of Contents 
+ &#160; 
+ Assuming current levels of commodity purchases, a 10% variation in the price of aluminum and steel would correspondingly change our earnings by approximately $9 million and $12 million per year, respectively. 
+ Many of our LTAs have incorporated a cost-sharing arrangement related to potential future commodity price fluctuations. For purposes of the sensitivity analysis above, the impact of these cost sharing arrangements has not been included. 
+ 49 
+ 
+ Table of Contents 
+ &#160; 
+ ITEM 8. Financial Statemen ts and Supplementary Data 
+ &#160; 
+ INDEX TO CONSOLIDATED FINANCIAL STATEMENTS 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ Page 
+ 
+ 
+ Report of Independent Registered Public Accounting Firm (PCAOB: ID 238 ) 
+ 51 
+ 
+ 
+ Consolidated Balance Sheets 
+ 53 
+ 
+ 
+ Consolidated Statements of Comprehensive Income 
+ 54 
+ 
+ 
+ Consolidated Statements of Cash Flows 
+ 55 
+ 
+ 
+ Consolidated Statements of Stockholders' Equity 
+ 56 
+ 
+ 
+ Notes to Consolidated Financial Statements 
+ 57 
+ 
+ 
+ &#160; 
+ 50 
+ 
+ Table of Contents 
+ &#160; 
+ &#160; 
+ Report of Independent Registered Public Accounting Firm 
+ &#160; 
+ To the Board of Directors and Stockholders of Allison Transmission Holdings, Inc. 
+ &#160; 
+ &#160; 
+ Opinions on the Financial Statements and Internal Control over Financial Reporting 
+ &#160; 
+ We have audited the accompanying consolidated balance sheets of Allison Transmission Holdings, Inc. and its subsidiaries (the &#x201c;Company&#x201d;) as of December 31, 2022 and 2021, and the related consolidated statements of comprehensive income, of stockholders&#x2019; equity and of cash flows for each of the three years in the period ended December 31, 2022, including the related notes and financial statement schedule listed in the index appearing under Item 15(a)(2) (collectively referred to as the &#x201c;consolidated financial statements&#x201d;). We also have audited the Company's internal control over financial reporting as of December 31, 2022, based on criteria established in Internal Control - Integrated Framework (2013) issued by the Committee of Sponsoring Organizations of the Treadway Commission (COSO). 
+ &#160; 
+ In our opinion, the consolidated financial statements referred to above present fairly, in all material respects, the financial position of the Company as of December 31, 2022 and 2021, and the results of its operations and its cash flows for each of the three years in the period ended December 31, 2022 in conformity with accounting principles generally accepted in the United States of America. Also in our opinion, the Company maintained, in all material respects, effective internal control over financial reporting as of December 31, 2022, based on criteria established in Internal Control - Integrated Framework (2013) issued by the COSO. 
+ &#160; 
+ Basis for Opinions 
+ &#160; 
+ The Company's management is responsible for these consolidated financial statements, for maintaining effective internal control over financial reporting, and for its assessment of the effectiveness of internal control over financial reporting, included in Management&#x2019;s Report on Internal Control over Financial Reporting appearing under Item 9A. Our responsibility is to express opinions on the Company&#x2019;s consolidated financial statements and on the Company's internal control over financial reporting based on our audits. We are a public accounting firm registered with the Public Company Accounting Oversight Board (United States) (PCAOB) and are required to be independent with respect to the Company in accordance with the U.S. federal securities laws and the applicable rules and regulations of the Securities and Exchange Commission and the PCAOB. 
+ &#160; 
+ We conducted our audits in accordance with the standards of the PCAOB. Those standards require that we plan and perform the audits to obtain reasonable assurance about whether the consolidated financial statements are free of material misstatement, whether due to error or fraud, and whether effective internal control over financial reporting was maintained in all material respects. 
+ &#160; 
+ Our audits of the consolidated financial statements included performing procedures to assess the risks of material misstatement of the consolidated financial statements, whether due to error or fraud, and performing procedures that respond to those risks. Such procedures included examining, on a test basis, evidence regarding the amounts and disclosures in the consolidated financial statements. Our audits also included evaluating the accounting principles used and significant estimates made by management, as well as evaluating the overall presentation of the consolidated financial statements. Our audit of internal control over financial reporting included obtaining an understanding of internal control over financial reporting, assessing the risk that a material weakness exists, and testing and evaluating the design and operating effectiveness of internal control based on the assessed risk. Our audits also included performing such other procedures as we considered necessary in the circumstances. We believe that our audits provide a reasonable basis for our opinions. 
+ &#160; 
+ 51 
+ 
+ Table of Contents 
+ &#160; 
+ Definition and Limitations of Internal Control over Financial Reporting 
+ &#160; 
+ A company&#x2019;s internal control over financial reporting is a process designed to provide reasonable assurance regarding the reliability of financial reporting and the preparation of financial statements for external purposes in accordance with generally accepted accounting principles. A company&#x2019;s internal control over financial reporting includes those policies and procedures that (i) pertain to the maintenance of records that, in reasonable detail, accurately and fairly reflect the transactions and dispositions of the assets of the company; (ii) provide reasonable assurance that transactions are recorded as necessary to permit preparation of financial statements in accordance with generally accepted accounting principles, and that receipts and expenditures of the company are being made only in accordance with authorizations of management and directors of the company; and (iii) provide reasonable assurance regarding prevention or timely detection of unauthorized acquisition, use, or disposition of the company&#x2019;s assets that could have a material effect on the financial statements. 
+ &#160; 
+ Because of its inherent limitations, internal control over financial reporting may not prevent or detect misstatements. Also, projections of any evaluation of effectiveness to future periods are subject to the risk that controls may become inadequate because of changes in conditions, or that the degree of compliance with the policies or procedures may deteriorate. 
+ &#160; 
+ Critical Audit Matters 
+ &#160; 
+ The critical audit matter communicated below is a matter arising from the current period audit of the consolidated financial statements that was communicated or required to be communicated to the audit committee and that (i) relates to accounts or disclosures that are material to the consolidated financial statements and (ii) involved our especially challenging, subjective, or complex judgments. The communication of critical audit matters does not alter in any way our opinion on the consolidated financial statements, taken as a whole, and we are not, by communicating the critical audit matter below, providing a separate opinion on the critical audit matter or on the accounts or disclosures to which it relates. 
+ &#160; 
+ Product Warranty Liabilities 
+ &#160; 
+ As described in Notes 2 and 10 to the consolidated financial statements, the Company&#x2019;s consolidated product warranty liability balance was $57 million as of December 31, 2022. Management makes provisions for the estimated product warranty liabilities at the time the products are sold. These estimates are established using historical information including the nature, frequency, and average cost of warranty claims and are adjusted as actual information becomes available. 
+ &#160; 
+ The principal considerations for our determination that performing procedures relating to the product warranty liabilities is a critical audit matter are (i) the significant judgment by management when determining the product warranty liability estimate; (ii) the high degree of auditor judgment, subjectivity, and effort in performing procedures and evaluating audit evidence relating to the significant assumptions related to the frequency and average cost of warranty claims; and (iii) the audit effort involved the use of professionals with specialized skill and knowledge. 
+ &#160; 
+ Addressing the matter involved performing procedures and evaluating audit evidence in connection with forming our overall opinion on the consolidated financial statements. These procedures included testing the effectiveness of controls relating to management&#x2019;s process for developing the estimate, significant assumptions, and inputs used to estimate product warranty liabilities. These procedures also included, among others, (i) testing the completeness and accuracy of historical warranty claims data used in the estimate and (ii) professionals with specialized skill and knowledge were used to assist in evaluating the reasonableness of the frequency and average cost of warranty claims assumptions. 
+ &#160; 
+ &#160; 
+ /s/ PricewaterhouseCoopers LLP 
+ Indianapolis, Indiana 
+ February 16, 2023 
+ &#160; 
+ We have served as the Company&#x2019;s auditor since 2008. 
+ &#160; 
+ 52 
+ 
+ Table of Contents 
+ &#160; 
+ Allison Transmission Holdings, Inc. 
+ Consolidated B alance Sheets 
+ (dollars in millions, except share data) 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ December 31, 2022 
+ &#160; 
+ &#160; 
+ December 31, 2021 
+ &#160; 
+ 
+ 
+ ASSETS 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Current Assets 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Cash and cash equivalents 
+ &#160; 
+ $ 
+ 232 
+ &#160; 
+ &#160; 
+ $ 
+ 127 
+ &#160; 
+ 
+ 
+ Accounts receivable - net of allowance for doubtful accounts of $ 5 &#160;and $ 3 , respectively 
+ &#160; 
+ &#160; 
+ 363 
+ &#160; 
+ &#160; 
+ &#160; 
+ 301 
+ &#160; 
+ 
+ 
+ Inventories 
+ &#160; 
+ &#160; 
+ 224 
+ &#160; 
+ &#160; 
+ &#160; 
+ 204 
+ &#160; 
+ 
+ 
+ Other current assets 
+ &#160; 
+ &#160; 
+ 47 
+ &#160; 
+ &#160; 
+ &#160; 
+ 39 
+ &#160; 
+ 
+ 
+ Total Current Assets 
+ &#160; 
+ &#160; 
+ 866 
+ &#160; 
+ &#160; 
+ &#160; 
+ 671 
+ &#160; 
+ 
+ 
+ Property, plant and equipment, net 
+ &#160; 
+ &#160; 
+ 763 
+ &#160; 
+ &#160; 
+ &#160; 
+ 706 
+ &#160; 
+ 
+ 
+ Intangible assets, net 
+ &#160; 
+ &#160; 
+ 878 
+ &#160; 
+ &#160; 
+ &#160; 
+ 917 
+ &#160; 
+ 
+ 
+ Goodwill 
+ &#160; 
+ &#160; 
+ 2,075 
+ &#160; 
+ &#160; 
+ &#160; 
+ 2,064 
+ &#160; 
+ 
+ 
+ Marketable securities 
+ &#160; 
+ &#160; 
+ 22 
+ &#160; 
+ &#160; 
+ &#160; 
+ 46 
+ &#160; 
+ 
+ 
+ Other non-current assets 
+ &#160; 
+ &#160; 
+ 67 
+ &#160; 
+ &#160; 
+ &#160; 
+ 53 
+ &#160; 
+ 
+ 
+ TOTAL ASSETS 
+ &#160; 
+ $ 
+ 4,671 
+ &#160; 
+ &#160; 
+ $ 
+ 4,457 
+ &#160; 
+ 
+ 
+ LIABILITIES 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Current Liabilities 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Accounts payable 
+ &#160; 
+ $ 
+ 195 
+ &#160; 
+ &#160; 
+ $ 
+ 179 
+ &#160; 
+ 
+ 
+ Product warranty liability 
+ &#160; 
+ &#160; 
+ 33 
+ &#160; 
+ &#160; 
+ &#160; 
+ 33 
+ &#160; 
+ 
+ 
+ Current portion of long-term debt 
+ &#160; 
+ &#160; 
+ 6 
+ &#160; 
+ &#160; 
+ &#160; 
+ 6 
+ &#160; 
+ 
+ 
+ Deferred revenue 
+ &#160; 
+ &#160; 
+ 38 
+ &#160; 
+ &#160; 
+ &#160; 
+ 37 
+ &#160; 
+ 
+ 
+ Other current liabilities 
+ &#160; 
+ &#160; 
+ 208 
+ &#160; 
+ &#160; 
+ &#160; 
+ 204 
+ &#160; 
+ 
+ 
+ Total Current Liabilities 
+ &#160; 
+ &#160; 
+ 480 
+ &#160; 
+ &#160; 
+ &#160; 
+ 459 
+ &#160; 
+ 
+ 
+ Product warranty liability 
+ &#160; 
+ &#160; 
+ 24 
+ &#160; 
+ &#160; 
+ &#160; 
+ 20 
+ &#160; 
+ 
+ 
+ Deferred revenue 
+ &#160; 
+ &#160; 
+ 93 
+ &#160; 
+ &#160; 
+ &#160; 
+ 99 
+ &#160; 
+ 
+ 
+ Long-term debt 
+ &#160; 
+ &#160; 
+ 2,501 
+ &#160; 
+ &#160; 
+ &#160; 
+ 2,504 
+ &#160; 
+ 
+ 
+ Deferred income taxes 
+ &#160; 
+ &#160; 
+ 536 
+ &#160; 
+ &#160; 
+ &#160; 
+ 514 
+ &#160; 
+ 
+ 
+ Other non-current liabilities 
+ &#160; 
+ &#160; 
+ 163 
+ &#160; 
+ &#160; 
+ &#160; 
+ 227 
+ &#160; 
+ 
+ 
+ TOTAL LIABILITIES 
+ &#160; 
+ &#160; 
+ 3,797 
+ &#160; 
+ &#160; 
+ &#160; 
+ 3,823 
+ &#160; 
+ 
+ 
+ Commitments and Contingencies (see Note 18) 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ STOCKHOLDERS&#x2019; EQUITY 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Common stock, $ 0.01 &#160;par value, 1,880,000,000 &#160;shares authorized, &#160;&#160;&#160; 91,788,885 &#160;shares issued and outstanding and 99,262,951 &#160;shares &#160;&#160;&#160;issued and outstanding, respectively 
+ &#160; 
+ &#160; 
+ 1 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1 
+ &#160; 
+ 
+ 
+ Non-voting common stock, $ 0.01 &#160;par value, 20,000,000 &#160;shares &#160;&#160;&#160;authorized, none &#160;issued and outstanding 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Preferred stock, $ 0.01 &#160;par value, 100,000,000 &#160;shares authorized, none &#160;&#160;&#160;issued and outstanding 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Paid in capital 
+ &#160; 
+ &#160; 
+ 1,848 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1,832 
+ &#160; 
+ 
+ 
+ Accumulated deficit 
+ &#160; 
+ &#160; 
+ ( 953 
+ ) 
+ &#160; 
+ &#160; 
+ ( 1,126 
+ ) 
+ 
+ 
+ Accumulated other comprehensive loss, net of tax 
+ &#160; 
+ &#160; 
+ ( 22 
+ ) 
+ &#160; 
+ &#160; 
+ ( 73 
+ ) 
+ 
+ 
+ TOTAL STOCKHOLDERS&#x2019; EQUITY 
+ &#160; 
+ &#160; 
+ 874 
+ &#160; 
+ &#160; 
+ &#160; 
+ 634 
+ &#160; 
+ 
+ 
+ TOTAL LIABILITIES & STOCKHOLDERS&#x2019; EQUITY 
+ &#160; 
+ $ 
+ 4,671 
+ &#160; 
+ &#160; 
+ $ 
+ 4,457 
+ &#160; 
+ 
+ 
+ &#160; 
+ The accompanying notes are an integral part of the consolidated financial statements. 
+ 53 
+ 
+ Table of Contents 
+ &#160; 
+ Allison Transmission Holdings, Inc. 
+ Consolidated Statements of Comprehensive Income 
+ (dollars in millions, except per share data) 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ Years ended December 31, 
+ &#160; 
+ 
+ 
+ &#160; 
+ &#160; 
+ 2022 
+ &#160; 
+ &#160; 
+ 2021 
+ &#160; 
+ &#160; 
+ 2020 
+ &#160; 
+ 
+ 
+ Net sales 
+ &#160; 
+ $ 
+ 2,769 
+ &#160; 
+ &#160; 
+ $ 
+ 2,402 
+ &#160; 
+ &#160; 
+ $ 
+ 2,081 
+ &#160; 
+ 
+ 
+ Cost of sales 
+ &#160; 
+ &#160; 
+ 1,472 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1,257 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1,083 
+ &#160; 
+ 
+ 
+ Gross profit 
+ &#160; 
+ &#160; 
+ 1,297 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1,145 
+ &#160; 
+ &#160; 
+ &#160; 
+ 998 
+ &#160; 
+ 
+ 
+ Selling, general and administrative 
+ &#160; 
+ &#160; 
+ 328 
+ &#160; 
+ &#160; 
+ &#160; 
+ 305 
+ &#160; 
+ &#160; 
+ &#160; 
+ 317 
+ &#160; 
+ 
+ 
+ Engineering &#x2014; research and development 
+ &#160; 
+ &#160; 
+ 185 
+ &#160; 
+ &#160; 
+ &#160; 
+ 171 
+ &#160; 
+ &#160; 
+ &#160; 
+ 147 
+ &#160; 
+ 
+ 
+ Operating income 
+ &#160; 
+ &#160; 
+ 784 
+ &#160; 
+ &#160; 
+ &#160; 
+ 669 
+ &#160; 
+ &#160; 
+ &#160; 
+ 534 
+ &#160; 
+ 
+ 
+ Interest expense, net 
+ &#160; 
+ &#160; 
+ ( 118 
+ ) 
+ &#160; 
+ &#160; 
+ ( 116 
+ ) 
+ &#160; 
+ &#160; 
+ ( 137 
+ ) 
+ 
+ 
+ Other (expense) income, net 
+ &#160; 
+ &#160; 
+ ( 21 
+ ) 
+ &#160; 
+ &#160; 
+ 19 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 4 
+ ) 
+ 
+ 
+ Income before income taxes 
+ &#160; 
+ &#160; 
+ 645 
+ &#160; 
+ &#160; 
+ &#160; 
+ 572 
+ &#160; 
+ &#160; 
+ &#160; 
+ 393 
+ &#160; 
+ 
+ 
+ Income tax expense 
+ &#160; 
+ &#160; 
+ ( 114 
+ ) 
+ &#160; 
+ &#160; 
+ ( 130 
+ ) 
+ &#160; 
+ &#160; 
+ ( 94 
+ ) 
+ 
+ 
+ Net income 
+ &#160; 
+ $ 
+ 531 
+ &#160; 
+ &#160; 
+ $ 
+ 442 
+ &#160; 
+ &#160; 
+ $ 
+ 299 
+ &#160; 
+ 
+ 
+ Basic earnings per share attributable to common &#160;&#160;&#160;stockholders 
+ &#160; 
+ $ 
+ 5.53 
+ &#160; 
+ &#160; 
+ $ 
+ 4.13 
+ &#160; 
+ &#160; 
+ $ 
+ 2.62 
+ &#160; 
+ 
+ 
+ Diluted earnings per share attributable to common &#160;&#160;&#160;stockholders 
+ &#160; 
+ $ 
+ 5.53 
+ &#160; 
+ &#160; 
+ $ 
+ 4.13 
+ &#160; 
+ &#160; 
+ $ 
+ 2.62 
+ &#160; 
+ 
+ 
+ Other comprehensive income (loss), net of tax: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Interest rate swaps 
+ &#160; 
+ &#160; 
+ 39 
+ &#160; 
+ &#160; 
+ &#160; 
+ 22 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 20 
+ ) 
+ 
+ 
+ Pension and OPEB liability adjustment 
+ &#160; 
+ &#160; 
+ 22 
+ &#160; 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 27 
+ ) 
+ 
+ 
+ Foreign currency translation 
+ &#160; 
+ &#160; 
+ ( 10 
+ ) 
+ &#160; 
+ &#160; 
+ ( 8 
+ ) 
+ &#160; 
+ &#160; 
+ 10 
+ &#160; 
+ 
+ 
+ Total other comprehensive income (loss), net of tax 
+ &#160; 
+ &#160; 
+ 51 
+ &#160; 
+ &#160; 
+ &#160; 
+ 16 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 37 
+ ) 
+ 
+ 
+ Comprehensive income, net of tax 
+ &#160; 
+ $ 
+ 582 
+ &#160; 
+ &#160; 
+ $ 
+ 458 
+ &#160; 
+ &#160; 
+ $ 
+ 262 
+ &#160; 
+ 
+ 
+ &#160; 
+ The accompanying notes are an integral part of the consolidated financial statements. 
+ 54 
+ 
+ Table of Contents 
+ &#160; 
+ Allison Transmission Holdings, Inc. 
+ Consolidated Statem ents of Cash Flows 
+ (dollars in millions) 
+ &#160; 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ Years ended December 31, 
+ &#160; 
+ 
+ 
+ &#160; 
+ &#160; 
+ 2022 
+ &#160; 
+ &#160; 
+ 2021 
+ &#160; 
+ &#160; 
+ 2020 
+ &#160; 
+ 
+ 
+ CASH FLOWS FROM OPERATING ACTIVITIES: 
+ &#160; 
+ 
+ 
+ Net income 
+ &#160; 
+ $ 
+ 531 
+ &#160; 
+ &#160; 
+ $ 
+ 442 
+ &#160; 
+ &#160; 
+ $ 
+ 299 
+ &#160; 
+ 
+ 
+ Adjustments to reconcile net income to net cash provided by &#160;&#160;&#160;operating activities: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Depreciation of property, plant and equipment 
+ &#160; 
+ &#160; 
+ 109 
+ &#160; 
+ &#160; 
+ &#160; 
+ 104 
+ &#160; 
+ &#160; 
+ &#160; 
+ 96 
+ &#160; 
+ 
+ 
+ Amortization of intangible assets 
+ &#160; 
+ &#160; 
+ 46 
+ &#160; 
+ &#160; 
+ &#160; 
+ 46 
+ &#160; 
+ &#160; 
+ &#160; 
+ 52 
+ &#160; 
+ 
+ 
+ Unrealized loss (gain) on marketable securities 
+ &#160; 
+ &#160; 
+ 22 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 4 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Stock-based compensation 
+ &#160; 
+ &#160; 
+ 18 
+ &#160; 
+ &#160; 
+ &#160; 
+ 14 
+ &#160; 
+ &#160; 
+ &#160; 
+ 17 
+ &#160; 
+ 
+ 
+ Loss on intercompany foreign exchange 
+ &#160; 
+ &#160; 
+ 6 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ 
+ 
+ Technology-related investments gain 
+ &#160; 
+ &#160; 
+ ( 6 
+ ) 
+ &#160; 
+ &#160; 
+ ( 3 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Amortization of deferred financing costs 
+ &#160; 
+ &#160; 
+ 4 
+ &#160; 
+ &#160; 
+ &#160; 
+ 4 
+ &#160; 
+ &#160; 
+ &#160; 
+ 4 
+ &#160; 
+ 
+ 
+ Deferred income taxes 
+ &#160; 
+ &#160; 
+ ( 4 
+ ) 
+ &#160; 
+ &#160; 
+ 64 
+ &#160; 
+ &#160; 
+ &#160; 
+ 69 
+ &#160; 
+ 
+ 
+ Expenses related to long-term debt refinancing 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 19 
+ &#160; 
+ 
+ 
+ Other 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1 
+ &#160; 
+ 
+ 
+ Changes in assets and liabilities: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Accounts receivable 
+ &#160; 
+ &#160; 
+ ( 70 
+ ) 
+ &#160; 
+ &#160; 
+ ( 78 
+ ) 
+ &#160; 
+ &#160; 
+ 28 
+ &#160; 
+ 
+ 
+ Inventories 
+ &#160; 
+ &#160; 
+ ( 25 
+ ) 
+ &#160; 
+ &#160; 
+ ( 26 
+ ) 
+ &#160; 
+ &#160; 
+ 21 
+ &#160; 
+ 
+ 
+ Accounts payable 
+ &#160; 
+ &#160; 
+ 15 
+ &#160; 
+ &#160; 
+ &#160; 
+ 24 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 4 
+ ) 
+ 
+ 
+ Other assets and liabilities 
+ &#160; 
+ &#160; 
+ 9 
+ &#160; 
+ &#160; 
+ &#160; 
+ 48 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 43 
+ ) 
+ 
+ 
+ Net cash provided by operating activities 
+ &#160; 
+ &#160; 
+ 657 
+ &#160; 
+ &#160; 
+ &#160; 
+ 635 
+ &#160; 
+ &#160; 
+ &#160; 
+ 561 
+ &#160; 
+ 
+ 
+ CASH FLOWS FROM INVESTING ACTIVITIES: 
+ &#160; 
+ 
+ 
+ Additions of long-lived assets 
+ &#160; 
+ &#160; 
+ ( 167 
+ ) 
+ &#160; 
+ &#160; 
+ ( 175 
+ ) 
+ &#160; 
+ &#160; 
+ ( 115 
+ ) 
+ 
+ 
+ Business acquisitions 
+ &#160; 
+ &#160; 
+ ( 23 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 4 
+ &#160; 
+ 
+ 
+ Proceeds from technology-related investments 
+ &#160; 
+ &#160; 
+ 6 
+ &#160; 
+ &#160; 
+ &#160; 
+ 4 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Proceeds from sale of assets 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Investment in equity method investee 
+ &#160; 
+ &#160; 
+ ( 1 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Investment in marketable securities 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 41 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Loans to third parties 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 12 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Repayments from loans to third parties 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 12 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 
+ 
+ Net cash used for investing activities 
+ &#160; 
+ &#160; 
+ ( 183 
+ ) 
+ &#160; 
+ &#160; 
+ ( 212 
+ ) 
+ &#160; 
+ &#160; 
+ ( 111 
+ ) 
+ 
+ 
+ CASH FLOWS FROM FINANCING ACTIVITIES: 
+ &#160; 
+ 
+ 
+ Repurchases of common stock 
+ &#160; 
+ &#160; 
+ ( 278 
+ ) 
+ &#160; 
+ &#160; 
+ ( 513 
+ ) 
+ &#160; 
+ &#160; 
+ ( 225 
+ ) 
+ 
+ 
+ Repayments on revolving credit facility 
+ &#160; 
+ &#160; 
+ ( 95 
+ ) 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 800 
+ ) 
+ 
+ 
+ Borrowings on revolving credit facility 
+ &#160; 
+ &#160; 
+ 95 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 800 
+ &#160; 
+ 
+ 
+ Dividend payments 
+ &#160; 
+ &#160; 
+ ( 80 
+ ) 
+ &#160; 
+ &#160; 
+ ( 81 
+ ) 
+ &#160; 
+ &#160; 
+ ( 78 
+ ) 
+ 
+ 
+ Payments on long-term debt 
+ &#160; 
+ &#160; 
+ ( 7 
+ ) 
+ &#160; 
+ &#160; 
+ ( 7 
+ ) 
+ &#160; 
+ &#160; 
+ ( 1,019 
+ ) 
+ 
+ 
+ Taxes paid related to net share settlement of equity awards 
+ &#160; 
+ &#160; 
+ ( 4 
+ ) 
+ &#160; 
+ &#160; 
+ ( 3 
+ ) 
+ &#160; 
+ &#160; 
+ ( 2 
+ ) 
+ 
+ 
+ Proceeds from exercise of stock options 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ &#160; 
+ &#160; 
+ 3 
+ &#160; 
+ &#160; 
+ &#160; 
+ 2 
+ &#160; 
+ 
+ 
+ Payment of acquisition-related contingent liability 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 3 
+ ) 
+ &#160; 
+ &#160; 
+ ( 3 
+ ) 
+ 
+ 
+ Issuance of long-term debt 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 1,000 
+ &#160; 
+ 
+ 
+ Debt financing fees 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 10 
+ ) 
+ 
+ 
+ Net cash used for financing activities 
+ &#160; 
+ &#160; 
+ ( 367 
+ ) 
+ &#160; 
+ &#160; 
+ ( 604 
+ ) 
+ &#160; 
+ &#160; 
+ ( 335 
+ ) 
+ 
+ 
+ Effect of exchange rate changes on cash 
+ &#160; 
+ &#160; 
+ ( 2 
+ ) 
+ &#160; 
+ &#160; 
+ ( 2 
+ ) 
+ &#160; 
+ &#160; 
+ 3 
+ &#160; 
+ 
+ 
+ Net increase (decrease) in cash and cash equivalents 
+ &#160; 
+ &#160; 
+ 105 
+ &#160; 
+ &#160; 
+ &#160; 
+ ( 183 
+ ) 
+ &#160; 
+ &#160; 
+ 118 
+ &#160; 
+ 
+ 
+ Cash and cash equivalents at beginning of period 
+ &#160; 
+ &#160; 
+ 127 
+ &#160; 
+ &#160; 
+ &#160; 
+ 310 
+ &#160; 
+ &#160; 
+ &#160; 
+ 192 
+ &#160; 
+ 
+ 
+ Cash and cash equivalents at end of period 
+ &#160; 
+ $ 
+ 232 
+ &#160; 
+ &#160; 
+ $ 
+ 127 
+ &#160; 
+ &#160; 
+ $ 
+ 310 
+ &#160; 
+ 
+ 
+ SUPPLEMENTAL DISCLOSURES OF CASH FLOW INFORMATION: 
+ &#160; 
+ 
+ 
+ Cash paid during period for: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Interest 
+ &#160; 
+ $ 
+ 117 
+ &#160; 
+ &#160; 
+ $ 
+ 103 
+ &#160; 
+ &#160; 
+ $ 
+ 136 
+ &#160; 
+ 
+ 
+ Income taxes 
+ &#160; 
+ $ 
+ 102 
+ &#160; 
+ &#160; 
+ $ 
+ 60 
+ &#160; 
+ &#160; 
+ $ 
+ 26 
+ &#160; 
+ 
+ 
+ Non-cash investing activities: 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ &#160; 
+ 
+ 
+ Capital expenditures in liabilities 
+ &#160; 
+ $ 
+ 11 
+ &#160; 
+ &#160; 
+ $ 
+ 9 
+ &#160; 
+ &#160; 
+ $ 
+ 11 
+ &#160; 
+ 
+ 
+ &#160; 
+ The accompanying notes are an integral part of the consolidated financial statements. 
+ 55 
+ 
+ Table of Contents 
+ &#160; 
+ Allison Transmission Holdings, Inc. 
+ Consolidated Statements of Stockholders&#x2019; Equity 
+ (dollars in millions) 
+ &#160; 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &#160; 
+ &#160; 
+ Common Stock 
+ &#160; 
+ Non- voting Common Stock 
+ &#160; 
+ Preferred Stock 
+ &#160; 
+ Paid-in Capital 
+ &#160; 
+ Accumulated Deficit 
+ &#160; 
+ Accumulated Other Comprehensive Loss, net of tax 
+ &#160; 
+ Stockholders&#x2019; Equity 
+ 
+ 
+ Balance at December 31, 2019 
+ &#160; 
+ $ 1 
+ &#160; 
+ $&#x2014; 
+ &#160; 
+ $&#x2014; 
+ &#160; 
+ $ 1,802 
+ &#160; 
+ $( 970 ) 
+ &#160; 
+ $( 52 ) 
+ &#160; 
+ $ 781 
+ 
+ 
+ Stock-based compensation 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 17 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 17 
+ 
+ 
+ Pension and OPEB liability adjustment 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 27 ) 
+ &#160; 
+ ( 27 ) 
+ 
+ 
+ Foreign currency translation adjustment 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 10 
+ &#160; 
+ 10 
+ 
+ 
+ Interest rate swaps 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 20 ) 
+ &#160; 
+ ( 20 ) 
+ 
+ 
+ Issuance of common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 1 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 1 ) 
+ 
+ 
+ Repurchase of common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 225 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 225 ) 
+ 
+ 
+ Dividends on common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 78 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 78 ) 
+ 
+ 
+ Net income 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 299 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 299 
+ 
+ 
+ Balance at December 31, 2020 
+ &#160; 
+ $ 1 
+ &#160; 
+ $&#x2014; 
+ &#160; 
+ $&#x2014; 
+ &#160; 
+ $ 1,818 
+ &#160; 
+ $( 974 ) 
+ &#160; 
+ $( 89 ) 
+ &#160; 
+ $ 756 
+ 
+ 
+ Stock-based compensation 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 14 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 14 
+ 
+ 
+ Pension and OPEB liability adjustment 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 2 
+ &#160; 
+ 2 
+ 
+ 
+ Foreign currency translation adjustment 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 8 ) 
+ &#160; 
+ ( 8 ) 
+ 
+ 
+ Interest rate swaps 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 22 
+ &#160; 
+ 22 
+ 
+ 
+ Repurchase of common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 513 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 513 ) 
+ 
+ 
+ Dividends on common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 81 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 81 ) 
+ 
+ 
+ Net income 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 442 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 442 
+ 
+ 
+ Balance at December 31, 2021 
+ &#160; 
+ $ 1 
+ &#160; 
+ $&#x2014; 
+ &#160; 
+ $&#x2014; 
+ &#160; 
+ $ 1,832 
+ &#160; 
+ $( 1,126 ) 
+ &#160; 
+ $( 73 ) 
+ &#160; 
+ $ 634 
+ 
+ 
+ Stock-based compensation 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 18 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 18 
+ 
+ 
+ Pension and OPEB liability adjustment 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 22 
+ &#160; 
+ 22 
+ 
+ 
+ Foreign currency translation adjustment 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 10 ) 
+ &#160; 
+ ( 10 ) 
+ 
+ 
+ Interest rate swaps 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 39 
+ &#160; 
+ 39 
+ 
+ 
+ Issuance of common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 2 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 2 ) 
+ 
+ 
+ Repurchase of common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 278 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 278 ) 
+ 
+ 
+ Dividends on common stock 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 80 ) 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ ( 80 ) 
+ 
+ 
+ Net income 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 531 
+ &#160; 
+ &#x2014; 
+ &#160; 
+ 531 
+ 
+ 
+ Bala

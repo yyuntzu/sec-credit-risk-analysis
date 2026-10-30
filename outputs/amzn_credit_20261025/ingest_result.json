@@ -1,0 +1,104 @@
+{
+  "ticker": "AMZN",
+  "company_name": "AMAZON COM INC",
+  "cik": "0001018724",
+  "submissions_gcs": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/submissions/20261025/AMZN_submissions_20261025.json",
+  "xbrl_row_counts": {
+    "income_statement": 2453,
+    "balance_sheet": 1808,
+    "cash_flow": 1453
+  },
+  "source_ledger_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API\uff3fupdated \u5206\u6790\u7684\u65e5\u671f\u5340\u9593 8.24.2026/outputs/amzn_credit_20261025/AMZN_source_facts-044w_6o9/AMZN_source_facts.json",
+  "bq_rows": {
+    "raw_income_statement": 2453,
+    "raw_balance_sheet": 1808,
+    "raw_cash_flow": 1453
+  },
+  "latest_10-K_dates": [
+    "2026-02-06",
+    "2025-02-07",
+    "2024-02-02",
+    "2023-02-03",
+    "2022-02-04"
+  ],
+  "latest_10-Q_dates": [
+    "2026-07-31",
+    "2026-04-30",
+    "2025-10-31",
+    "2025-08-01",
+    "2025-05-02"
+  ],
+  "filing_htmls": [
+    {
+      "accession_number": "0001018724-26-000004",
+      "filing_date": "2026-02-06",
+      "filing_type": "10-K",
+      "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872426000004/amzn-20251231.htm",
+      "html_size_kb": 1922.3,
+      "status": "ok"
+    },
+    {
+      "accession_number": "0001018724-25-000004",
+      "filing_date": "2025-02-07",
+      "filing_type": "10-K",
+      "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872425000004/amzn-20241231.htm",
+      "html_size_kb": 1877.4,
+      "status": "ok"
+    },
+    {
+      "accession_number": "0001018724-24-000008",
+      "filing_date": "2024-02-02",
+      "filing_type": "10-K",
+      "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872424000008/amzn-20231231.htm",
+      "html_size_kb": 1899.7,
+      "status": "ok"
+    },
+    {
+      "accession_number": "0001018724-26-000026",
+      "filing_date": "2026-07-31",
+      "filing_type": "10-Q",
+      "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872426000026/amzn-20260630.htm",
+      "html_size_kb": 1554.2,
+      "status": "ok"
+    },
+    {
+      "accession_number": "0001018724-26-000014",
+      "filing_date": "2026-04-30",
+      "filing_type": "10-Q",
+      "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872426000014/amzn-20260331.htm",
+      "html_size_kb": 1212.3,
+      "status": "ok"
+    }
+  ],
+  "html_gcs_uris": {
+    "10-K": [
+      {
+        "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872426000004/amzn-20251231.htm",
+        "filing_date": "2026-02-06",
+        "accession": "0001018724-26-000004"
+      },
+      {
+        "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872425000004/amzn-20241231.htm",
+        "filing_date": "2025-02-07",
+        "accession": "0001018724-25-000004"
+      },
+      {
+        "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872424000008/amzn-20231231.htm",
+        "filing_date": "2024-02-02",
+        "accession": "0001018724-24-000008"
+      }
+    ],
+    "10-Q": [
+      {
+        "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872426000026/amzn-20260630.htm",
+        "filing_date": "2026-07-31",
+        "accession": "0001018724-26-000026"
+      },
+      {
+        "gcs_uri": "gs://sec-filings-raw-focus-heuristic-438521-v4/sec/AMZN/raw_filings/20261025/000101872426000014/amzn-20260331.htm",
+        "filing_date": "2026-04-30",
+        "accession": "0001018724-26-000014"
+      }
+    ]
+  }
+}

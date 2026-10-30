@@ -1,0 +1,19 @@
+{
+  "run_id": "5c040cad0aa041448ab07d2084a95f33",
+  "parent_run_id": "8220dbe6f6354de3a9f190772e1bcc83",
+  "entity": "CNM",
+  "status": "draft",
+  "cloud_status": "published",
+  "final_report_accepted": false,
+  "reconciliations_matched": 8,
+  "outputs": {
+    "report_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/delivery/report.md",
+    "report_data_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/delivery/report.json",
+    "acceptance_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/delivery/acceptance.json",
+    "findings_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/delivery/review_findings.md",
+    "final_report_accepted": false,
+    "technical_validation_passed": true,
+    "rendered_validation_passed": true
+  },
+  "finished_at": "2026-10-28T13:40:26.837351+00:00"
+}

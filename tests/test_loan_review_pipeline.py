@@ -148,7 +148,7 @@ class FullRunnerTests(unittest.TestCase):
             stdout=StringIO()
             with redirect_stdout(stdout):
                 code=runner.run_report_cli(['SYNTHETIC-ONLY','--report-request',str(req),'--source-snapshot',str(snap),'--output-dir',str(root/'report')])
-            self.assertEqual(code,0)
+            self.assertEqual(code,2)  # Technically valid draft is not an accepted delivery.
             receipt=json.loads(stdout.getvalue()); audit=json.loads(Path(receipt['acceptance_path']).read_text())
             self.assertFalse(audit['final_report_accepted']); self.assertTrue(audit['rendered_validation_passed'])
 

@@ -1,0 +1,16 @@
+{
+  "entity": "JAZZ",
+  "execution": "local",
+  "parent_run_id": "85f77cc8b1e94dbc8b9b6fe82bd0ff5f",
+  "final_report_accepted": false,
+  "reconciliations_matched": 6,
+  "outputs": {
+    "report_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/jazz_credit_20261028/reviewed_delivery/report.md",
+    "report_data_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/jazz_credit_20261028/reviewed_delivery/report.json",
+    "acceptance_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/jazz_credit_20261028/reviewed_delivery/acceptance.json",
+    "findings_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/jazz_credit_20261028/reviewed_delivery/review_findings.md",
+    "final_report_accepted": false,
+    "technical_validation_passed": true,
+    "rendered_validation_passed": true
+  }
+}

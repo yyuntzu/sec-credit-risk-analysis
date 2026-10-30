@@ -1,0 +1,43 @@
+{
+  "run_id": "cb693a230d6a4375899263d874d76c72",
+  "entity": "CNM",
+  "execution": "cloud",
+  "source": "snapshot",
+  "status": "draft",
+  "started_at": "2026-10-28T12:18:14.596704+00:00",
+  "final_report_accepted": false,
+  "pipeline_version": "formal-review-integration-v1",
+  "formula_version": "acceptance-v1.0-addendum-2026-10-23",
+  "policy_version": "user-approved-2026-10-24",
+  "source_run_id": null,
+  "cloud_status": "published",
+  "outputs": {
+    "report_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/report.md",
+    "report_data_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/report.json",
+    "acceptance_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/acceptance.json",
+    "findings_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/review_findings.md",
+    "source_inputs_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/source_inputs.json",
+    "missing_data_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/missing_data.csv",
+    "reconciliations_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/reconciliations.csv",
+    "dashboard_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/dashboard.html",
+    "excel_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/loan_review.xlsx"
+  },
+  "stages": {
+    "sources": "passed",
+    "cloud_sources": "passed",
+    "report": "passed",
+    "dashboard": "passed",
+    "excel": "passed",
+    "cloud_publish": "passed"
+  },
+  "acceptance_blockers": [
+    "Required report cells are unavailable or definitions unresolved",
+    "Required analytical coverage remains incomplete",
+    "Reconciliation is incomplete or contains unexplained differences"
+  ],
+  "mode": "annual",
+  "currency": "USD",
+  "scale": "1000000",
+  "finished_at": "2026-10-28T12:18:55.799481+00:00",
+  "manifest_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/cnm_credit_20261028/review_cloud/run_manifest.json"
+}

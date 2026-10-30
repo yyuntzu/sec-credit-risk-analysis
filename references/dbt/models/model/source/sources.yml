@@ -3,8 +3,8 @@ version: 2
 
 sources:
   - name: sec_raw
-    database: focus-heuristic-438521-v4
-    schema: sec_raw       # 你的 BigQuery dataset 名稱
+    database: "{{ env_var('GCP_PROJECT_ID', 'focus-heuristic-438521-v4') }}"
+    schema: "{{ env_var('BQ_DATASET_ID', 'sec_raw') }}"       # 你的 BigQuery dataset 名稱
 
     tables:
       - name: raw_income_statement

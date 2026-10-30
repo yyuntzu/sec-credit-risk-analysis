@@ -1,0 +1,11 @@
+﻿fact_id,科目,期間角色,期間,狀態,原因,必要輸入,待確認定義,原始候選值_未採入正式報表,來源位置
+total_debt:prior_interim,Total debt,prior_interim,FY2025 Q2 YTD,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+total_debt:current_interim,Total debt,current_interim,FY2026 Q2 YTD,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+total_leverage:prior_interim,Total leverage ratio,prior_interim,FY2025 Q2 YTD,not_calculable,Required inputs unavailable,total_debt:prior_interim: missing; ltm_ebitda:prior_interim: sourced,,,
+total_leverage:current_interim,Total leverage ratio,current_interim,FY2026 Q2 YTD,not_calculable,Required inputs unavailable,total_debt:current_interim: missing; ltm_ebitda:current_interim: sourced,,,
+input:capitalized_interest:earlier_fy_end,Capitalized Interest,earlier_fy_end,FY2024,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:capitalized_interest:prior_interim,Capitalized Interest,prior_interim,FY2025 Q2 YTD,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:da:prior_interim,Depreciation & Amortization,prior_interim,FY2025 Q2 YTD,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:capitalized_interest:latest_fy_end,Capitalized Interest,latest_fy_end,FY2025,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:capitalized_interest:current_interim,Capitalized Interest,current_interim,FY2026 Q2 YTD,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:da:current_interim,Depreciation & Amortization,current_interim,FY2026 Q2 YTD,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,

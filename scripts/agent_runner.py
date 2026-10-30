@@ -1,5 +1,6 @@
 """
-agent_runner.py — SEC Credit Analysis Agent v2
+agent_runner.py — formal Loan Review entrypoint with explicit legacy compatibility.
+CLI/HTTP default: review_workflow.run_review(); --legacy opts into the historical path.
 變更重點（相較於 v1）：
   + ingest_ticker() 新增 Step 7：下載 10-K / 10-Q HTML 原文 → 存 GCS
   + 新增 download_filing_html()：從 SEC EDGAR 下載單一 filing HTML
@@ -1140,6 +1141,8 @@ def analyze_ticker(
     report_output_dir: Optional[str] = None,
 ) -> dict:
     """
+    Low-level compatibility API. New integrations should call review_workflow.run_review().
+
     完整分析一支股票。
 
     Args:
@@ -1331,17 +1334,42 @@ def analyze_ticker(
     return output
 
 
-def run_ingestion(tickers: list[str]) -> dict:
-    """Batch entrypoint. Compatible with original main.py interface."""
-    preload_cik_cache(tickers)
+def run_ingestion(tickers: list[str], requests=None, **options) -> dict:
+    """Formal batch entrypoint; each ticker requires its own explicit request."""
+    try:
+        from .review_workflow import run_review
+    except ImportError:
+        from review_workflow import run_review
     summary = {}
     for ticker in tickers:
         try:
-            summary[ticker] = analyze_ticker(ticker)
+            summary[ticker] = run_review(ticker, (requests or {}).get(ticker), **options)
         except Exception as e:
             logger.error(f"Failed: {ticker}: {e}", exc_info=True)
             summary[ticker] = {"status": "error", "error": str(e)}
     return summary
+
+
+def formal_http_review(ticker, body):
+    """Use the same formal workflow as CLI; reject ambiguous/ignored options."""
+    try:
+        from .review_workflow import run_review
+    except ImportError:
+        from review_workflow import run_review
+    if not isinstance(body, dict): raise ValueError('JSON object required')
+    allowed = {'review_request', 'period_request', 'source_request', 'source', 'source_snapshot',
+               'supplements', 'execution', 'html', 'excel', 'source_run_id'}
+    unknown = set(body) - allowed
+    if unknown: raise ValueError('Unsupported options: ' + ', '.join(sorted(unknown)))
+    requests = [body[k] for k in ('review_request', 'period_request', 'source_request') if k in body]
+    if len(requests) != 1: raise ValueError('Provide exactly one review_request object with verified fiscal dates')
+    for key in ('html', 'excel'):
+        if key in body and not isinstance(body[key], bool): raise ValueError(key + ' must be boolean')
+    if not isinstance(body.get('supplements', []), list): raise ValueError('supplements must be an array')
+    return run_review(ticker, requests[0], source=body.get('source', 'snapshot' if 'source_snapshot' in body else 'sec'),
+        snapshot=body.get('source_snapshot'), supplements=tuple(body.get('supplements', ())),
+        execution=body.get('execution', 'local'), html=body.get('html', True), excel=body.get('excel', True),
+        source_run_id=body.get('source_run_id'))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1352,23 +1380,23 @@ if _FLASK_AVAILABLE and app is not None:
 
     @app.route("/run", methods=["POST", "GET"])
     def trigger_ingestion():
-        body    = request.get_json(silent=True) or {}
-        tickers = body.get("tickers", DEFAULT_TICKERS)
-        result  = run_ingestion(tickers)
-        ok      = sum(1 for v in result.values() if v.get("status") == "success")
-        return jsonify({"result": result, "success": ok == len(tickers)}), 200
+        body = request.get_json(silent=True)
+        if not isinstance(body, dict) or set(body) != {'reviews'} or not isinstance(body['reviews'], list) or not body['reviews']:
+            return jsonify({'error': 'Provide a nonempty reviews array with ticker and review_request per item'}), 400
+        results = []
+        for item in body['reviews']:
+            if not isinstance(item, dict) or not isinstance(item.get('ticker'), str):
+                return jsonify({'error': 'Each review requires a ticker string'}), 400
+        for item in body['reviews']:
+            try: results.append(formal_http_review(item['ticker'], {k: v for k, v in item.items() if k != 'ticker'}))
+            except (ValueError, TypeError) as exc: return jsonify({'error': str(exc), 'completed': results}), 400
+        return jsonify({'result': results, 'success': all(r['status'] == 'accepted' for r in results)}), 500 if any(r['status'] == 'failed' for r in results) else 200
 
     @app.route("/analyze/<ticker>", methods=["GET", "POST"])
     def analyze_single(ticker: str):
-        body         = request.get_json(silent=True) or {}
-        generate_html = body.get("html", True)
-        result       = analyze_ticker(ticker.upper(), generate_html=generate_html, period_request=body.get("period_request"))
-        if request.method == "GET" and "html_path" in result:
-            p = Path(result["html_path"])
-            if p.exists():
-                return Response(p.read_text(encoding="utf-8"), mimetype="text/html")
-        code = 200 if result.get("status") == "success" else 500
-        return jsonify(result), code
+        try: result = formal_http_review(ticker.upper(), request.get_json(silent=True))
+        except (ValueError, TypeError) as exc: return jsonify({'error': str(exc)}), 400
+        return jsonify(result), 500 if result['status'] == 'failed' else 200
 
     @app.route("/memo/<ticker>", methods=["GET"])
     def get_memo(ticker: str):
@@ -1435,7 +1463,7 @@ def run_report_cli(argv: list[str]) -> Optional[int]:
         print(json.dumps({"status": "error", "error": str(exc)}, ensure_ascii=False), file=sys.stderr)
         return 1
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0 if result.get('technical_validation_passed') else 1
+    return 0 if result.get('final_report_accepted') else 2 if result.get('technical_validation_passed') else 1
 
 
 def run_period_cli(argv: list[str]) -> Optional[int]:
@@ -1461,6 +1489,14 @@ def run_period_cli(argv: list[str]) -> Optional[int]:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and '--legacy' not in sys.argv and not any(a.split('=')[0] == '--source-request' for a in sys.argv):
+        try:
+            from .review_workflow import cli
+        except ImportError:
+            from review_workflow import cli
+        sys.exit(cli(sys.argv[1:]))
+    if '--legacy' in sys.argv:
+        sys.argv.remove('--legacy')
     report_exit = run_report_cli(sys.argv[1:])
     if report_exit is not None:
         sys.exit(report_exit)

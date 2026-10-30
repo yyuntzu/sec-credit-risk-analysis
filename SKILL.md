@@ -7,12 +7,24 @@ description: >
   "run credit analysis for [TICKER]", "produce credit memo for [company]",
   "幫我寫 [TICKER] 的信用報告", "give me [COMPANY] credit analysis",
   "walmart credit analysis", "COST credit", "WMT financials".
-  DATA SOURCE IS ALWAYS SEC EDGAR via scripts/agent_runner.py — never web search,
-  never Moody's, never S&P websites. All financial data must come from
-  the local pipeline (XBRL → BigQuery → credit_memo_writer).
+  Use scripts/agent_runner.py with an explicit verified fiscal request.
+  Formal Loan Review is the default; SEC, auditable snapshots and the validated
+  workbook adapter feed the formal contract. BigQuery/dbt are optional cloud mode.
+  Never substitute unverified web numbers or ratings for financial source evidence.
 ---
 
 # SEC Credit Risk Analysis Skill
+
+## Current execution contract
+
+Read [formal integration instructions](references/loan-review-integration.md)
+before execution. The default CLI/HTTP/Shell workflow is now formal Loan Review,
+with required fiscal request, shared report/HTML/Excel outputs, optional cloud
+staging/publication, and exit codes 0 accepted / 2 draft / 1 execution failure.
+Historical ticker-only commands and mandatory-BQ/LLM descriptions below apply
+only to the retained legacy workflow, which requires explicit `--legacy` and a
+verified `--period-request`. They must not override this current routing contract.
+Source-only staging remains explicitly selected with `--source-request`.
 
 ## Why This Skill Exists
 

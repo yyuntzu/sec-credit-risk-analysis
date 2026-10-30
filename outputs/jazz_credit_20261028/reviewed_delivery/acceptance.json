@@ -1,0 +1,504 @@
+{
+  "technical_validation_passed": true,
+  "calculation_fact_ids_verified": [
+    "revenue:pct:fy_t_minus_1",
+    "revenue:pct:fy_t",
+    "cost_of_revenue:pct:fy_t_minus_1",
+    "cost_of_revenue:pct:fy_t",
+    "gross_profit:pct:fy_t_minus_1",
+    "gross_profit:pct:fy_t",
+    "operating_expense:pct:fy_t_minus_1",
+    "operating_expense:pct:fy_t",
+    "operating_income:pct:fy_t_minus_1",
+    "operating_income:pct:fy_t",
+    "interest_expense:pct:fy_t_minus_1",
+    "interest_expense:pct:fy_t",
+    "pretax_profit:pct:fy_t_minus_1",
+    "pretax_profit:pct:fy_t",
+    "income_tax:pct:fy_t_minus_1",
+    "income_tax:pct:fy_t",
+    "net_income:pct:fy_t_minus_1",
+    "net_income:pct:fy_t",
+    "cash_change:fy_t_minus_3",
+    "cash_change:fy_t_minus_2",
+    "cash_change:fy_t_minus_1",
+    "current_ratio:fy_t_minus_3",
+    "current_ratio:fy_t_minus_2",
+    "current_ratio:fy_t_minus_1",
+    "quick_ratio:fy_t_minus_3",
+    "quick_ratio:fy_t_minus_2",
+    "quick_ratio:fy_t_minus_1",
+    "cash_flow_ratio:fy_t_minus_3",
+    "cash_flow_ratio:fy_t_minus_2",
+    "cash_flow_ratio:fy_t_minus_1",
+    "debt_ratio:fy_t_minus_3",
+    "debt_ratio:fy_t_minus_2",
+    "debt_ratio:fy_t_minus_1",
+    "debt_ratio:fy_t",
+    "ltm_ebitda:fy_t_minus_3",
+    "ltm_ebitda:fy_t_minus_2",
+    "ltm_ebitda:fy_t_minus_1",
+    "ltm_ebitda:fy_t",
+    "total_leverage:fy_t_minus_3",
+    "total_leverage:fy_t_minus_2",
+    "total_leverage:fy_t_minus_1",
+    "total_leverage:fy_t",
+    "gross_margin:fy_t_minus_3",
+    "operating_margin:fy_t_minus_3",
+    "pretax_margin:fy_t_minus_3",
+    "revenue_growth:fy_t_minus_2",
+    "gross_margin:fy_t_minus_2",
+    "operating_margin:fy_t_minus_2",
+    "pretax_margin:fy_t_minus_2",
+    "operating_margin_change:fy_t_minus_2",
+    "revenue_growth:fy_t_minus_1",
+    "gross_margin:fy_t_minus_1",
+    "operating_margin:fy_t_minus_1",
+    "pretax_margin:fy_t_minus_1",
+    "operating_margin_change:fy_t_minus_1",
+    "revenue_growth:fy_t",
+    "gross_margin:fy_t",
+    "operating_margin:fy_t",
+    "pretax_margin:fy_t",
+    "operating_margin_change:fy_t"
+  ],
+  "final_report_accepted": false,
+  "substantive_data_ready": false,
+  "rendered_validation_passed": true,
+  "source_limitations": [],
+  "acceptance_blockers": [
+    "Required report cells are unavailable or definitions unresolved",
+    "Required analytical coverage remains incomplete",
+    "Reconciliation is incomplete or contains unexplained differences"
+  ],
+  "status_counts": {
+    "sourced": 63,
+    "not_calculable": 12,
+    "calculated": 42,
+    "missing": 8,
+    "conflict": 1
+  },
+  "missing_or_pending": [
+    {
+      "fact_id": "ending_cash:fy_t",
+      "metric": "ending_cash",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "conflict",
+      "reason": "Sources/versions/definitions disagree; no approved selection policy applied",
+      "evidence_ids": [
+        "sec:2db0153b42d48bdd74feb659e04d9e9756831c9dafd2deb562c3ffe3d460831e",
+        "sec:489e834888c2d97b08a9a359eb1ddaacd84facf561d2b7bde4222b6d270d9e09",
+        "sec:9f2fa4b4363c49c30c9123ba17fddc2e50f95e7dc16a1c46b3202c003332420f"
+      ]
+    },
+    {
+      "fact_id": "cash_change:fy_t",
+      "metric": "cash_change",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Reviewed same-basis cash reconciliation required; no automatic cash bridge",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "current_ratio:fy_t",
+      "metric": "current_ratio",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:fy_t",
+      "metric": "quick_ratio",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_flow_ratio:fy_t",
+      "metric": "cash_flow_ratio",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t_minus_3",
+      "metric": "interest_coverage",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t_minus_2",
+      "metric": "interest_coverage",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t_minus_1",
+      "metric": "interest_coverage",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t",
+      "metric": "interest_coverage",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t_minus_3",
+      "metric": "debt_service",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t_minus_2",
+      "metric": "debt_service",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t_minus_1",
+      "metric": "debt_service",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t",
+      "metric": "debt_service",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t_minus_3",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t_minus_2",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t_minus_1",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t_minus_3",
+      "metric": "dscr",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t_minus_2",
+      "metric": "dscr",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t_minus_1",
+      "metric": "dscr",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t",
+      "metric": "dscr",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    }
+  ],
+  "missing_inputs": [
+    {
+      "fact_id": "input:capitalized_interest:fy_t_minus_3",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t_minus_3",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:capitalized_interest:fy_t_minus_2",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t_minus_2",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:capitalized_interest:fy_t_minus_1",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t_minus_1",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:capitalized_interest:fy_t",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:current_assets:fy_t",
+      "metric": "current_assets",
+      "period_role": "fy_t",
+      "status": "conflict",
+      "reason": "Sources/versions/definitions disagree; no approved selection policy applied",
+      "evidence_ids": [
+        "sec:69901c59ba0e3fd36bb72970f5ec285e08a2cda2549b11855e7d3ab0cb69405f",
+        "sec:753a62dbd742a8acbb1d112460843f9636dcd6dd1b1494f00ad7cae3315cf092",
+        "sec:fc8eecac6c695573552efd973e403c5e5c23fd439bab127176667b0347518b25"
+      ]
+    },
+    {
+      "fact_id": "input:current_liabilities:fy_t",
+      "metric": "current_liabilities",
+      "period_role": "fy_t",
+      "status": "conflict",
+      "reason": "Sources/versions/definitions disagree; no approved selection policy applied",
+      "evidence_ids": [
+        "sec:07bb8b8e33ee295e5ee1d1f0b0d796c6993f5dde70a6ae5f6f76c8a68bd8f3b8",
+        "sec:6e60a0de1beffbb57dc6b783beaf14284caa2e443e2b36ae72ed5e1654bcea3b",
+        "sec:80dd649e36b69b43e1baa1087d785812fa8ce84f304e01eb701b216c05ed7fe2"
+      ]
+    }
+  ],
+  "incomplete_narratives": [
+    {
+      "table": "ratios",
+      "topic": "liquidity",
+      "reason": "Required inputs unavailable"
+    },
+    {
+      "table": "ratios",
+      "topic": "cash_flow_ratio",
+      "reason": "Required inputs unavailable"
+    },
+    {
+      "table": "ratios",
+      "topic": "interest_coverage",
+      "reason": "Required inputs unavailable"
+    },
+    {
+      "table": "leverage",
+      "topic": "debt_service",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03"
+    },
+    {
+      "table": "leverage",
+      "topic": "dscr",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure; Unresolved definitions: DEC-03"
+    }
+  ],
+  "reconciliations": [
+    {
+      "kind": "cash_bridge",
+      "period_role": "fy_t_minus_3",
+      "period": "FY2022（參考基期）",
+      "status": "matched",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000000",
+      "calculated_value": "290.034",
+      "reported_value": "290.034",
+      "difference": "0.000",
+      "evidence_ids": [
+        "review:cash:fy_t_minus_3",
+        "review:statement:fy_t_minus_3"
+      ],
+      "reason": "Complete source bridge including reported FX -6.222 million",
+      "source_locators": [
+        "https://www.sec.gov/Archives/edgar/data/1232524/000123252423000015/jazz-20221231.htm"
+      ]
+    },
+    {
+      "kind": "balance_sheet_equation",
+      "period_role": "fy_t_minus_3",
+      "period": "FY2022（參考基期）",
+      "status": "matched",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000000",
+      "calculated_value": "10835.255",
+      "reported_value": "10835.255",
+      "difference": "0.000",
+      "evidence_ids": [
+        "review:equity:fy_t_minus_3",
+        "review:statement:fy_t_minus_3"
+      ],
+      "reason": "Sum of source liability rows plus full consolidated equity",
+      "source_locators": [
+        "https://www.sec.gov/Archives/edgar/data/1232524/000123252423000015/jazz-20221231.htm"
+      ]
+    },
+    {
+      "kind": "cash_bridge",
+      "period_role": "fy_t_minus_2",
+      "period": "FY2023",
+      "status": "matched",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000000",
+      "calculated_value": "624.828",
+      "reported_value": "624.828",
+      "difference": "0.000",
+      "evidence_ids": [
+        "review:cash:fy_t_minus_2",
+        "review:statement:fy_t_minus_2"
+      ],
+      "reason": "Complete source bridge including reported FX 1.137 million",
+      "source_locators": [
+        "https://www.sec.gov/Archives/edgar/data/1232524/000123252424000015/jazz-20231231.htm"
+      ]
+    },
+    {
+      "kind": "balance_sheet_equation",
+      "period_role": "fy_t_minus_2",
+      "period": "FY2023",
+      "status": "matched",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000000",
+      "calculated_value": "11393.359",
+      "reported_value": "11393.359",
+      "difference": "0.000",
+      "evidence_ids": [
+        "review:equity:fy_t_minus_2",
+        "review:statement:fy_t_minus_2"
+      ],
+      "reason": "Sum of source liability rows plus full consolidated equity",
+      "source_locators": [
+        "https://www.sec.gov/Archives/edgar/data/1232524/000123252424000015/jazz-20231231.htm"
+      ]
+    },
+    {
+      "kind": "cash_bridge",
+      "period_role": "fy_t_minus_1",
+      "period": "FY2024",
+      "status": "matched",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000000",
+      "calculated_value": "906.554",
+      "reported_value": "906.554",
+      "difference": "0.000",
+      "evidence_ids": [
+        "review:cash:fy_t_minus_1",
+        "review:statement:fy_t_minus_1"
+      ],
+      "reason": "Complete source bridge including reported FX -1.675 million",
+      "source_locators": [
+        "https://www.sec.gov/Archives/edgar/data/1232524/000123252425000011/jazz-20241231.htm"
+      ]
+    },
+    {
+      "kind": "balance_sheet_equation",
+      "period_role": "fy_t_minus_1",
+      "period": "FY2024",
+      "status": "matched",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000000",
+      "calculated_value": "12012.257",
+      "reported_value": "12012.257",
+      "difference": "0.000",
+      "evidence_ids": [
+        "review:equity:fy_t_minus_1",
+        "review:statement:fy_t_minus_1"
+      ],
+      "reason": "Sum of source liability rows plus full consolidated equity",
+      "source_locators": [
+        "https://www.sec.gov/Archives/edgar/data/1232524/000123252425000011/jazz-20241231.htm"
+      ]
+    }
+  ]
+}

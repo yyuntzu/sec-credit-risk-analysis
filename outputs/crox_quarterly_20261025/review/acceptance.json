@@ -1,0 +1,323 @@
+{
+  "technical_validation_passed": true,
+  "calculation_fact_ids_verified": [
+    "revenue:pct:prior_interim",
+    "revenue:pct:current_interim",
+    "cost_of_revenue:pct:prior_interim",
+    "cost_of_revenue:pct:current_interim",
+    "gross_profit:pct:prior_interim",
+    "gross_profit:pct:current_interim",
+    "operating_expense:pct:prior_interim",
+    "operating_expense:pct:current_interim",
+    "operating_income:pct:prior_interim",
+    "operating_income:pct:current_interim",
+    "interest_expense:pct:prior_interim",
+    "interest_expense:pct:current_interim",
+    "pretax_profit:pct:prior_interim",
+    "pretax_profit:pct:current_interim",
+    "income_tax:pct:prior_interim",
+    "income_tax:pct:current_interim",
+    "net_income:pct:prior_interim",
+    "net_income:pct:current_interim",
+    "current_ratio:earlier_fy_end",
+    "current_ratio:prior_interim",
+    "current_ratio:latest_fy_end",
+    "current_ratio:current_interim",
+    "debt_ratio:earlier_fy_end",
+    "debt_ratio:prior_interim",
+    "debt_ratio:latest_fy_end",
+    "debt_ratio:current_interim",
+    "total_leverage:earlier_fy_end",
+    "total_leverage:prior_interim",
+    "total_leverage:latest_fy_end",
+    "total_leverage:current_interim",
+    "gross_margin:prior_interim",
+    "operating_margin:prior_interim",
+    "pretax_margin:prior_interim",
+    "revenue_growth:current_interim",
+    "gross_margin:current_interim",
+    "operating_margin:current_interim",
+    "pretax_margin:current_interim",
+    "operating_margin_change:current_interim"
+  ],
+  "final_report_accepted": false,
+  "substantive_data_ready": false,
+  "rendered_validation_passed": true,
+  "source_limitations": [],
+  "acceptance_blockers": [
+    "Required report cells are unavailable or definitions unresolved",
+    "Reconciliation is incomplete or contains unexplained differences"
+  ],
+  "status_counts": {
+    "sourced": 30,
+    "calculated": 30,
+    "not_calculable": 4
+  },
+  "missing_or_pending": [
+    {
+      "fact_id": "quick_ratio:earlier_fy_end",
+      "metric": "quick_ratio",
+      "period_role": "earlier_fy_end",
+      "start": null,
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:prior_interim",
+      "metric": "quick_ratio",
+      "period_role": "prior_interim",
+      "start": null,
+      "end": "2025-06-30",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:latest_fy_end",
+      "metric": "quick_ratio",
+      "period_role": "latest_fy_end",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:current_interim",
+      "metric": "quick_ratio",
+      "period_role": "current_interim",
+      "start": null,
+      "end": "2026-06-30",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    }
+  ],
+  "missing_inputs": [
+    {
+      "fact_id": "input:capitalized_interest:earlier_fy_end",
+      "metric": "capitalized_interest",
+      "period_role": "earlier_fy_end",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:quick_assets:earlier_fy_end",
+      "metric": "quick_assets",
+      "period_role": "earlier_fy_end",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:capitalized_interest:prior_interim",
+      "metric": "capitalized_interest",
+      "period_role": "prior_interim",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:quick_assets:prior_interim",
+      "metric": "quick_assets",
+      "period_role": "prior_interim",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:capitalized_interest:latest_fy_end",
+      "metric": "capitalized_interest",
+      "period_role": "latest_fy_end",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:quick_assets:latest_fy_end",
+      "metric": "quick_assets",
+      "period_role": "latest_fy_end",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:capitalized_interest:current_interim",
+      "metric": "capitalized_interest",
+      "period_role": "current_interim",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:quick_assets:current_interim",
+      "metric": "quick_assets",
+      "period_role": "current_interim",
+      "status": "missing",
+      "reason": "No matching source in the reviewed inputs; not a claim of non-disclosure",
+      "evidence_ids": []
+    }
+  ],
+  "incomplete_narratives": [],
+  "reconciliations": [
+    {
+      "kind": "cash_bridge",
+      "period_role": "earlier_fy_end",
+      "period": "FY2024",
+      "status": "not_calculable",
+      "reason": "完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項",
+      "required_input_ids": [
+        "input:beginning_cash:earlier_fy_end",
+        "input:ending_cash:earlier_fy_end",
+        "input:cfo:earlier_fy_end",
+        "input:cfi:earlier_fy_end",
+        "input:cff:earlier_fy_end"
+      ],
+      "unavailable_input_ids": [
+        "input:beginning_cash:earlier_fy_end",
+        "input:ending_cash:earlier_fy_end",
+        "input:cfo:earlier_fy_end",
+        "input:cfi:earlier_fy_end",
+        "input:cff:earlier_fy_end"
+      ],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    },
+    {
+      "kind": "balance_sheet_equation",
+      "period_role": "earlier_fy_end",
+      "period": "FY2024",
+      "status": "not_calculable",
+      "reason": "資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益",
+      "required_input_ids": [
+        "input:total_liabilities:earlier_fy_end",
+        "input:net_worth:earlier_fy_end"
+      ],
+      "unavailable_input_ids": [],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    },
+    {
+      "kind": "cash_bridge",
+      "period_role": "prior_interim",
+      "period": "FY2025 Q2",
+      "status": "not_calculable",
+      "reason": "完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項",
+      "required_input_ids": [
+        "input:beginning_cash:prior_interim",
+        "input:ending_cash:prior_interim",
+        "input:cfo:prior_interim",
+        "input:cfi:prior_interim",
+        "input:cff:prior_interim"
+      ],
+      "unavailable_input_ids": [
+        "input:beginning_cash:prior_interim",
+        "input:ending_cash:prior_interim",
+        "input:cfo:prior_interim",
+        "input:cfi:prior_interim",
+        "input:cff:prior_interim"
+      ],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    },
+    {
+      "kind": "balance_sheet_equation",
+      "period_role": "prior_interim",
+      "period": "FY2025 Q2",
+      "status": "not_calculable",
+      "reason": "資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益",
+      "required_input_ids": [
+        "input:total_liabilities:prior_interim",
+        "input:net_worth:prior_interim"
+      ],
+      "unavailable_input_ids": [],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    },
+    {
+      "kind": "cash_bridge",
+      "period_role": "latest_fy_end",
+      "period": "FY2025",
+      "status": "not_calculable",
+      "reason": "完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項",
+      "required_input_ids": [
+        "input:beginning_cash:latest_fy_end",
+        "input:ending_cash:latest_fy_end",
+        "input:cfo:latest_fy_end",
+        "input:cfi:latest_fy_end",
+        "input:cff:latest_fy_end"
+      ],
+      "unavailable_input_ids": [
+        "input:beginning_cash:latest_fy_end",
+        "input:ending_cash:latest_fy_end",
+        "input:cfo:latest_fy_end",
+        "input:cfi:latest_fy_end",
+        "input:cff:latest_fy_end"
+      ],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    },
+    {
+      "kind": "balance_sheet_equation",
+      "period_role": "latest_fy_end",
+      "period": "FY2025",
+      "status": "not_calculable",
+      "reason": "資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益",
+      "required_input_ids": [
+        "input:total_liabilities:latest_fy_end",
+        "input:net_worth:latest_fy_end"
+      ],
+      "unavailable_input_ids": [],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    },
+    {
+      "kind": "cash_bridge",
+      "period_role": "current_interim",
+      "period": "FY2026 Q2",
+      "status": "not_calculable",
+      "reason": "完整現金／受限制現金口徑、FX及其他調節未核實；不得反推未知項",
+      "required_input_ids": [
+        "input:beginning_cash:current_interim",
+        "input:ending_cash:current_interim",
+        "input:cfo:current_interim",
+        "input:cfi:current_interim",
+        "input:cff:current_interim"
+      ],
+      "unavailable_input_ids": [
+        "input:beginning_cash:current_interim",
+        "input:ending_cash:current_interim",
+        "input:cfo:current_interim",
+        "input:cfi:current_interim",
+        "input:cff:current_interim"
+      ],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    },
+    {
+      "kind": "balance_sheet_equation",
+      "period_role": "current_interim",
+      "period": "FY2026 Q2",
+      "status": "not_calculable",
+      "reason": "資產與權益／非控制權益完整組成未核實；Net Worth不能自動代理所有權益",
+      "required_input_ids": [
+        "input:total_liabilities:current_interim",
+        "input:net_worth:current_interim"
+      ],
+      "unavailable_input_ids": [],
+      "calculated_value": null,
+      "reported_value": null,
+      "difference": null
+    }
+  ]
+}

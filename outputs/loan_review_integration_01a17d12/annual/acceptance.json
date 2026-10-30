@@ -1,0 +1,1522 @@
+{
+  "technical_validation_passed": true,
+  "calculation_fact_ids_verified": [
+    "revenue:pct:fy_t_minus_1",
+    "revenue:pct:fy_t",
+    "cost_of_revenue:pct:fy_t_minus_1",
+    "cost_of_revenue:pct:fy_t",
+    "gross_profit:pct:fy_t_minus_1",
+    "gross_profit:pct:fy_t",
+    "operating_income:pct:fy_t_minus_1",
+    "operating_income:pct:fy_t",
+    "pretax_profit:pct:fy_t_minus_1",
+    "pretax_profit:pct:fy_t",
+    "income_tax:pct:fy_t_minus_1",
+    "income_tax:pct:fy_t",
+    "net_income:pct:fy_t_minus_1",
+    "net_income:pct:fy_t",
+    "current_ratio:fy_t_minus_3",
+    "current_ratio:fy_t_minus_2",
+    "current_ratio:fy_t_minus_1",
+    "current_ratio:fy_t",
+    "gross_margin:fy_t_minus_3",
+    "operating_margin:fy_t_minus_3",
+    "pretax_margin:fy_t_minus_3",
+    "revenue_growth:fy_t_minus_2",
+    "gross_margin:fy_t_minus_2",
+    "operating_margin:fy_t_minus_2",
+    "pretax_margin:fy_t_minus_2",
+    "operating_margin_change:fy_t_minus_2",
+    "revenue_growth:fy_t_minus_1",
+    "gross_margin:fy_t_minus_1",
+    "operating_margin:fy_t_minus_1",
+    "pretax_margin:fy_t_minus_1",
+    "operating_margin_change:fy_t_minus_1",
+    "revenue_growth:fy_t",
+    "gross_margin:fy_t",
+    "operating_margin:fy_t",
+    "pretax_margin:fy_t",
+    "operating_margin_change:fy_t"
+  ],
+  "final_report_accepted": false,
+  "substantive_data_ready": false,
+  "rendered_validation_passed": true,
+  "source_limitations": [
+    "User e-loan workpaper; SEC source and CIK not independently verified",
+    "Source publication date unknown; review date does not prove historical as-of availability",
+    "Cash flow periods/bridge and company-specific definitions remain subject to review"
+  ],
+  "acceptance_blockers": [
+    "User e-loan workpaper; SEC source and CIK not independently verified",
+    "Source publication date unknown; review date does not prove historical as-of availability",
+    "Cash flow periods/bridge and company-specific definitions remain subject to review",
+    "Required report cells are unavailable or definitions unresolved",
+    "Required analytical coverage remains incomplete",
+    "Reconciliation is incomplete or contains unexplained differences"
+  ],
+  "status_counts": {
+    "not_calculable": 64,
+    "sourced": 28,
+    "calculated": 18,
+    "missing": 16
+  },
+  "missing_or_pending": [
+    {
+      "fact_id": "operating_expense:fy_t_minus_3",
+      "metric": "operating_expense",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Operating Expense 包含／排除COGS及完整範圍未核實；原值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D96"
+      ]
+    },
+    {
+      "fact_id": "operating_expense:fy_t_minus_2",
+      "metric": "operating_expense",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Operating Expense 包含／排除COGS及完整範圍未核實；原值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I96"
+      ]
+    },
+    {
+      "fact_id": "operating_expense:fy_t_minus_1",
+      "metric": "operating_expense",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Operating Expense 包含／排除COGS及完整範圍未核實；原值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M96"
+      ]
+    },
+    {
+      "fact_id": "operating_expense:pct:fy_t_minus_1",
+      "metric": "operating_expense",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "operating_expense:fy_t",
+      "metric": "operating_expense",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Operating Expense 包含／排除COGS及完整範圍未核實；原值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R96"
+      ]
+    },
+    {
+      "fact_id": "operating_expense:pct:fy_t",
+      "metric": "operating_expense",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_expense:fy_t_minus_3",
+      "metric": "interest_expense",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D106"
+      ]
+    },
+    {
+      "fact_id": "interest_expense:fy_t_minus_2",
+      "metric": "interest_expense",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I106"
+      ]
+    },
+    {
+      "fact_id": "interest_expense:fy_t_minus_1",
+      "metric": "interest_expense",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M106"
+      ]
+    },
+    {
+      "fact_id": "interest_expense:pct:fy_t_minus_1",
+      "metric": "interest_expense",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_expense:fy_t",
+      "metric": "interest_expense",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R106"
+      ]
+    },
+    {
+      "fact_id": "interest_expense:pct:fy_t",
+      "metric": "interest_expense",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "beginning_cash:fy_t_minus_3",
+      "metric": "beginning_cash",
+      "period_role": "fy_t_minus_3",
+      "start": null,
+      "end": "2021-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D129"
+      ]
+    },
+    {
+      "fact_id": "beginning_cash:fy_t_minus_2",
+      "metric": "beginning_cash",
+      "period_role": "fy_t_minus_2",
+      "start": null,
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I129"
+      ]
+    },
+    {
+      "fact_id": "beginning_cash:fy_t_minus_1",
+      "metric": "beginning_cash",
+      "period_role": "fy_t_minus_1",
+      "start": null,
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M129"
+      ]
+    },
+    {
+      "fact_id": "beginning_cash:fy_t",
+      "metric": "beginning_cash",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R129"
+      ]
+    },
+    {
+      "fact_id": "cfo:fy_t_minus_3",
+      "metric": "cfo",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D159"
+      ]
+    },
+    {
+      "fact_id": "cfo:fy_t_minus_2",
+      "metric": "cfo",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I159"
+      ]
+    },
+    {
+      "fact_id": "cfo:fy_t_minus_1",
+      "metric": "cfo",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M159"
+      ]
+    },
+    {
+      "fact_id": "cfo:fy_t",
+      "metric": "cfo",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R159"
+      ]
+    },
+    {
+      "fact_id": "cfi:fy_t_minus_3",
+      "metric": "cfi",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D173"
+      ]
+    },
+    {
+      "fact_id": "cfi:fy_t_minus_2",
+      "metric": "cfi",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I173"
+      ]
+    },
+    {
+      "fact_id": "cfi:fy_t_minus_1",
+      "metric": "cfi",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M173"
+      ]
+    },
+    {
+      "fact_id": "cfi:fy_t",
+      "metric": "cfi",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R173"
+      ]
+    },
+    {
+      "fact_id": "cff:fy_t_minus_3",
+      "metric": "cff",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D189"
+      ]
+    },
+    {
+      "fact_id": "cff:fy_t_minus_2",
+      "metric": "cff",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I189"
+      ]
+    },
+    {
+      "fact_id": "cff:fy_t_minus_1",
+      "metric": "cff",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M189"
+      ]
+    },
+    {
+      "fact_id": "cff:fy_t",
+      "metric": "cff",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R189"
+      ]
+    },
+    {
+      "fact_id": "ending_cash:fy_t_minus_3",
+      "metric": "ending_cash",
+      "period_role": "fy_t_minus_3",
+      "start": null,
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D194"
+      ]
+    },
+    {
+      "fact_id": "ending_cash:fy_t_minus_2",
+      "metric": "ending_cash",
+      "period_role": "fy_t_minus_2",
+      "start": null,
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I194"
+      ]
+    },
+    {
+      "fact_id": "ending_cash:fy_t_minus_1",
+      "metric": "ending_cash",
+      "period_role": "fy_t_minus_1",
+      "start": null,
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M194"
+      ]
+    },
+    {
+      "fact_id": "ending_cash:fy_t",
+      "metric": "ending_cash",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "CF區未重列期間；上方IS期間是否同樣適用及現金定義尚未核實，候選數值保留於來源清單",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R194"
+      ]
+    },
+    {
+      "fact_id": "cash_change:fy_t_minus_3",
+      "metric": "cash_change",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Reviewed same-basis cash reconciliation required; no automatic cash bridge",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_change:fy_t_minus_2",
+      "metric": "cash_change",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Reviewed same-basis cash reconciliation required; no automatic cash bridge",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_change:fy_t_minus_1",
+      "metric": "cash_change",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Reviewed same-basis cash reconciliation required; no automatic cash bridge",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_change:fy_t",
+      "metric": "cash_change",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Reviewed same-basis cash reconciliation required; no automatic cash bridge",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:fy_t_minus_3",
+      "metric": "quick_ratio",
+      "period_role": "fy_t_minus_3",
+      "start": null,
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:fy_t_minus_2",
+      "metric": "quick_ratio",
+      "period_role": "fy_t_minus_2",
+      "start": null,
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:fy_t_minus_1",
+      "metric": "quick_ratio",
+      "period_role": "fy_t_minus_1",
+      "start": null,
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "quick_ratio:fy_t",
+      "metric": "quick_ratio",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_flow_ratio:fy_t_minus_3",
+      "metric": "cash_flow_ratio",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_flow_ratio:fy_t_minus_2",
+      "metric": "cash_flow_ratio",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_flow_ratio:fy_t_minus_1",
+      "metric": "cash_flow_ratio",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "cash_flow_ratio:fy_t",
+      "metric": "cash_flow_ratio",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_ratio:fy_t_minus_3",
+      "metric": "debt_ratio",
+      "period_role": "fy_t_minus_3",
+      "start": null,
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_ratio:fy_t_minus_2",
+      "metric": "debt_ratio",
+      "period_role": "fy_t_minus_2",
+      "start": null,
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_ratio:fy_t_minus_1",
+      "metric": "debt_ratio",
+      "period_role": "fy_t_minus_1",
+      "start": null,
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_ratio:fy_t",
+      "metric": "debt_ratio",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t_minus_3",
+      "metric": "interest_coverage",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t_minus_2",
+      "metric": "interest_coverage",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t_minus_1",
+      "metric": "interest_coverage",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "interest_coverage:fy_t",
+      "metric": "interest_coverage",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_debt:fy_t_minus_3",
+      "metric": "total_debt",
+      "period_role": "fy_t_minus_3",
+      "start": null,
+      "end": "2022-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_debt:fy_t_minus_2",
+      "metric": "total_debt",
+      "period_role": "fy_t_minus_2",
+      "start": null,
+      "end": "2023-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_debt:fy_t_minus_1",
+      "metric": "total_debt",
+      "period_role": "fy_t_minus_1",
+      "start": null,
+      "end": "2024-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_debt:fy_t",
+      "metric": "total_debt",
+      "period_role": "fy_t",
+      "start": null,
+      "end": "2025-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t_minus_3",
+      "metric": "debt_service",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t_minus_2",
+      "metric": "debt_service",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t_minus_1",
+      "metric": "debt_service",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "debt_service:fy_t",
+      "metric": "debt_service",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ltm_ebitda:fy_t_minus_3",
+      "metric": "ltm_ebitda",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Verified Standard EBITDA basis required",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ltm_ebitda:fy_t_minus_2",
+      "metric": "ltm_ebitda",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Verified Standard EBITDA basis required",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ltm_ebitda:fy_t_minus_1",
+      "metric": "ltm_ebitda",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Verified Standard EBITDA basis required",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ltm_ebitda:fy_t",
+      "metric": "ltm_ebitda",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Verified Standard EBITDA basis required",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_basis:fy_t_minus_3",
+      "metric": "ebitda_basis",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_basis:fy_t_minus_2",
+      "metric": "ebitda_basis",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_basis:fy_t_minus_1",
+      "metric": "ebitda_basis",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_basis:fy_t",
+      "metric": "ebitda_basis",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_leverage:fy_t_minus_3",
+      "metric": "total_leverage",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_leverage:fy_t_minus_2",
+      "metric": "total_leverage",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_leverage:fy_t_minus_1",
+      "metric": "total_leverage",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "total_leverage:fy_t",
+      "metric": "total_leverage",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t_minus_3",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t_minus_2",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t_minus_1",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "ebitda_interest:fy_t",
+      "metric": "ebitda_interest",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "not_calculable",
+      "reason": "Required inputs unavailable",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t_minus_3",
+      "metric": "dscr",
+      "period_role": "fy_t_minus_3",
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t_minus_2",
+      "metric": "dscr",
+      "period_role": "fy_t_minus_2",
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t_minus_1",
+      "metric": "dscr",
+      "period_role": "fy_t_minus_1",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "dscr:fy_t",
+      "metric": "dscr",
+      "period_role": "fy_t",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03",
+      "evidence_ids": []
+    }
+  ],
+  "missing_inputs": [
+    {
+      "fact_id": "input:quick_assets:fy_t_minus_3",
+      "metric": "quick_assets",
+      "period_role": "fy_t_minus_3",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:net_worth:fy_t_minus_3",
+      "metric": "net_worth",
+      "period_role": "fy_t_minus_3",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D70"
+      ]
+    },
+    {
+      "fact_id": "input:capitalized_interest:fy_t_minus_3",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t_minus_3",
+      "status": "missing",
+      "reason": "原始儲存格空白／無可用數值",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:D120"
+      ]
+    },
+    {
+      "fact_id": "input:quick_assets:fy_t_minus_2",
+      "metric": "quick_assets",
+      "period_role": "fy_t_minus_2",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:net_worth:fy_t_minus_2",
+      "metric": "net_worth",
+      "period_role": "fy_t_minus_2",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I70"
+      ]
+    },
+    {
+      "fact_id": "input:capitalized_interest:fy_t_minus_2",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t_minus_2",
+      "status": "missing",
+      "reason": "原始儲存格空白／無可用數值",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:I120"
+      ]
+    },
+    {
+      "fact_id": "input:quick_assets:fy_t_minus_1",
+      "metric": "quick_assets",
+      "period_role": "fy_t_minus_1",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:net_worth:fy_t_minus_1",
+      "metric": "net_worth",
+      "period_role": "fy_t_minus_1",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M70"
+      ]
+    },
+    {
+      "fact_id": "input:capitalized_interest:fy_t_minus_1",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t_minus_1",
+      "status": "missing",
+      "reason": "原始儲存格空白／無可用數值",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:M120"
+      ]
+    },
+    {
+      "fact_id": "input:quick_assets:fy_t",
+      "metric": "quick_assets",
+      "period_role": "fy_t",
+      "status": "missing",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露",
+      "evidence_ids": []
+    },
+    {
+      "fact_id": "input:net_worth:fy_t",
+      "metric": "net_worth",
+      "period_role": "fy_t",
+      "status": "not_calculable",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R70"
+      ]
+    },
+    {
+      "fact_id": "input:capitalized_interest:fy_t",
+      "metric": "capitalized_interest",
+      "period_role": "fy_t",
+      "status": "missing",
+      "reason": "原始儲存格空白／無可用數值",
+      "evidence_ids": [
+        "workbook:05762549de4ad1aacf1c06b458b70e142b9bc3658d3ece370a8a2ccea010e52b:R120"
+      ]
+    }
+  ],
+  "incomplete_narratives": [
+    {
+      "table": "income",
+      "topic": "interest_expense",
+      "reason": "Approved policy; company-specific source definition not yet verified; candidate retained"
+    },
+    {
+      "table": "ratios",
+      "topic": "cash_flow_ratio",
+      "reason": "Required inputs unavailable"
+    },
+    {
+      "table": "ratios",
+      "topic": "debt_ratio",
+      "reason": "Required inputs unavailable"
+    },
+    {
+      "table": "ratios",
+      "topic": "interest_coverage",
+      "reason": "Required inputs unavailable"
+    },
+    {
+      "table": "leverage",
+      "topic": "ltm_ebitda",
+      "reason": "Verified Standard EBITDA basis required"
+    },
+    {
+      "table": "leverage",
+      "topic": "debt_service",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03"
+    },
+    {
+      "table": "leverage",
+      "topic": "dscr",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露; Unresolved definitions: DEC-03"
+    },
+    {
+      "table": "leverage",
+      "topic": "total_debt",
+      "reason": "既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露"
+    },
+    {
+      "table": "leverage",
+      "topic": "total_leverage",
+      "reason": "Required inputs unavailable"
+    }
+  ],
+  "reconciliations": [
+    {
+      "kind": "cash_end_minus_begin_vs_reported_change",
+      "period": "2022-01-01~2022-12-31",
+      "column": "D",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D194",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D129",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D191"
+      ],
+      "reason": "底稿列示數值的算術差額；CF期間與同口徑仍待SEC現金及受限制現金附註核實，不宣稱財報錯誤",
+      "status": "unexplained_difference",
+      "calculated_value": "13232",
+      "reported_value": "13200",
+      "difference": "32",
+      "tolerance": "0"
+    },
+    {
+      "kind": "cash_complete_bridge",
+      "period": "2022-01-01~2022-12-31",
+      "column": "D",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D190",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D191"
+      ],
+      "reason": "FX空白不是0；其他調節項與CF期間未核實，不反推未知項",
+      "status": "not_calculable",
+      "calculated_value": null,
+      "reported_value": "13200",
+      "difference": null
+    },
+    {
+      "kind": "three_activity_subtotal_vs_reported_change",
+      "period": "2022-01-01~2022-12-31",
+      "column": "D",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D191"
+      ],
+      "reason": "僅為三類已列活動小計的殘差，非完整現金勾稽；FX與其他項目未知",
+      "status": "matched",
+      "calculated_value": "13200",
+      "reported_value": "13200",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "printed_balance_sheet_equation",
+      "period": "2022-01-01~2022-12-31",
+      "column": "D",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D62",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D70",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D39"
+      ],
+      "reason": "僅核對原表列示總額；不核准DEC-02 Net Worth／租賃／合併定義",
+      "status": "matched",
+      "calculated_value": "12678900.0",
+      "reported_value": "12678900.0",
+      "difference": "0.0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "CF-01_source_ratio",
+      "period": "2022-01-01~2022-12-31",
+      "column": "D",
+      "unit": "percent",
+      "currency": null,
+      "scale": "1",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D10; /Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D40",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D197"
+      ],
+      "reason": "比率以小數儲存；來源顯示精度0.01百分點，差額為計算－來源",
+      "status": "within_precision",
+      "calculated_value": "1.807545902373488580385132109",
+      "reported_value": "1.8075",
+      "difference": "0.000045902373488580385132109",
+      "tolerance": "0.00005"
+    },
+    {
+      "kind": "cash_end_minus_begin_vs_reported_change",
+      "period": "2023-01-01~2023-12-31",
+      "column": "I",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I194",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I129",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I191"
+      ],
+      "reason": "底稿列示數值的算術差額；CF期間與同口徑仍待SEC現金及受限制現金附註核實，不宣稱財報錯誤",
+      "status": "unexplained_difference",
+      "calculated_value": "-69100",
+      "reported_value": "-73000",
+      "difference": "3900",
+      "tolerance": "0"
+    },
+    {
+      "kind": "cash_complete_bridge",
+      "period": "2023-01-01~2023-12-31",
+      "column": "I",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I190",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I191"
+      ],
+      "reason": "FX空白不是0；其他調節項與CF期間未核實，不反推未知項",
+      "status": "not_calculable",
+      "calculated_value": null,
+      "reported_value": "-73000",
+      "difference": null
+    },
+    {
+      "kind": "three_activity_subtotal_vs_reported_change",
+      "period": "2023-01-01~2023-12-31",
+      "column": "I",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I191"
+      ],
+      "reason": "僅為三類已列活動小計的殘差，非完整現金勾稽；FX與其他項目未知",
+      "status": "matched",
+      "calculated_value": "-73000",
+      "reported_value": "-73000",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "prior_end_vs_current_opening",
+      "period": "2023-01-01~2023-12-31",
+      "column": "I",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!D194",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I129"
+      ],
+      "reason": "跨期現金定義與限制現金待核；差額採前期末－本期期初",
+      "status": "matched",
+      "calculated_value": "204100",
+      "reported_value": "204100",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "printed_balance_sheet_equation",
+      "period": "2023-01-01~2023-12-31",
+      "column": "I",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I62",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I70",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I39"
+      ],
+      "reason": "僅核對原表列示總額；不核准DEC-02 Net Worth／租賃／合併定義",
+      "status": "matched",
+      "calculated_value": "12078000.0",
+      "reported_value": "12078000.0",
+      "difference": "0.0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "CF-01_source_ratio",
+      "period": "2023-01-01~2023-12-31",
+      "column": "I",
+      "unit": "percent",
+      "currency": null,
+      "scale": "1",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I10; /Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I40",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I197"
+      ],
+      "reason": "比率以小數儲存；來源顯示精度0.01百分點，差額為計算－來源",
+      "status": "within_precision",
+      "calculated_value": "1.525494276795005202913631634",
+      "reported_value": "1.5255",
+      "difference": "-0.000005723204994797086368366",
+      "tolerance": "0.00005"
+    },
+    {
+      "kind": "cash_end_minus_begin_vs_reported_change",
+      "period": "2024-01-01~2024-12-31",
+      "column": "M",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M194",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M129",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M191"
+      ],
+      "reason": "底稿列示數值的算術差額；CF期間與同口徑仍待SEC現金及受限制現金附註核實，不宣稱財報錯誤",
+      "status": "matched",
+      "calculated_value": "-3000",
+      "reported_value": "-3000",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "cash_complete_bridge",
+      "period": "2024-01-01~2024-12-31",
+      "column": "M",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M190",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M191"
+      ],
+      "reason": "FX空白不是0；其他調節項與CF期間未核實，不反推未知項",
+      "status": "not_calculable",
+      "calculated_value": null,
+      "reported_value": "-3000",
+      "difference": null
+    },
+    {
+      "kind": "three_activity_subtotal_vs_reported_change",
+      "period": "2024-01-01~2024-12-31",
+      "column": "M",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M191"
+      ],
+      "reason": "僅為三類已列活動小計的殘差，非完整現金勾稽；FX與其他項目未知",
+      "status": "matched",
+      "calculated_value": "-3000",
+      "reported_value": "-3000",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "prior_end_vs_current_opening",
+      "period": "2024-01-01~2024-12-31",
+      "column": "M",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!I194",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M129"
+      ],
+      "reason": "跨期現金定義與限制現金待核；差額採前期末－本期期初",
+      "status": "unexplained_difference",
+      "calculated_value": "135000",
+      "reported_value": "147000",
+      "difference": "-12000",
+      "tolerance": "0"
+    },
+    {
+      "kind": "printed_balance_sheet_equation",
+      "period": "2024-01-01~2024-12-31",
+      "column": "M",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M62",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M70",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M39"
+      ],
+      "reason": "僅核對原表列示總額；不核准DEC-02 Net Worth／租賃／合併定義",
+      "status": "matched",
+      "calculated_value": "11468000.0",
+      "reported_value": "11468000.0",
+      "difference": "0.0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "CF-01_source_ratio",
+      "period": "2024-01-01~2024-12-31",
+      "column": "M",
+      "unit": "percent",
+      "currency": null,
+      "scale": "1",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M10; /Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M40",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M197"
+      ],
+      "reason": "比率以小數儲存；來源顯示精度0.01百分點，差額為計算－來源",
+      "status": "within_precision",
+      "calculated_value": "1.656449553001277139208173691",
+      "reported_value": "1.6564",
+      "difference": "0.000049553001277139208173691",
+      "tolerance": "0.00005"
+    },
+    {
+      "kind": "cash_end_minus_begin_vs_reported_change",
+      "period": "2025-01-01~2025-12-31",
+      "column": "R",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R194",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R129",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R191"
+      ],
+      "reason": "底稿列示數值的算術差額；CF期間與同口徑仍待SEC現金及受限制現金附註核實，不宣稱財報錯誤",
+      "status": "matched",
+      "calculated_value": "136000",
+      "reported_value": "136000",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "cash_complete_bridge",
+      "period": "2025-01-01~2025-12-31",
+      "column": "R",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R190",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R191"
+      ],
+      "reason": "FX空白不是0；其他調節項與CF期間未核實，不反推未知項",
+      "status": "not_calculable",
+      "calculated_value": null,
+      "reported_value": "136000",
+      "difference": null
+    },
+    {
+      "kind": "three_activity_subtotal_vs_reported_change",
+      "period": "2025-01-01~2025-12-31",
+      "column": "R",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R159",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R173",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R189",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R191"
+      ],
+      "reason": "僅為三類已列活動小計的殘差，非完整現金勾稽；FX與其他項目未知",
+      "status": "matched",
+      "calculated_value": "136000",
+      "reported_value": "136000",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "prior_end_vs_current_opening",
+      "period": "2025-01-01~2025-12-31",
+      "column": "R",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!M194",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R129"
+      ],
+      "reason": "跨期現金定義與限制現金待核；差額採前期末－本期期初",
+      "status": "matched",
+      "calculated_value": "144000",
+      "reported_value": "144000",
+      "difference": "0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "printed_balance_sheet_equation",
+      "period": "2025-01-01~2025-12-31",
+      "column": "R",
+      "unit": "money",
+      "currency": "USD",
+      "scale": "1000",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R62",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R70",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R39"
+      ],
+      "reason": "僅核對原表列示總額；不核准DEC-02 Net Worth／租賃／合併定義",
+      "status": "matched",
+      "calculated_value": "10846000.0",
+      "reported_value": "10846000.0",
+      "difference": "0.0",
+      "tolerance": "0"
+    },
+    {
+      "kind": "CF-01_source_ratio",
+      "period": "2025-01-01~2025-12-31",
+      "column": "R",
+      "unit": "percent",
+      "currency": null,
+      "scale": "1",
+      "source_locators": [
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R10; /Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R40",
+        "/Users/yuntzuyu/Downloads/e-loan/Year/E-loan YYYY_Nexstar 2025.xls#Report1!R197"
+      ],
+      "reason": "比率以小數儲存；來源顯示精度0.01百分點，差額為計算－來源",
+      "status": "within_precision",
+      "calculated_value": "2.071729957805907172995780591",
+      "reported_value": "2.0717",
+      "difference": "0.000029957805907172995780591",
+      "tolerance": "0.00005"
+    }
+  ]
+}

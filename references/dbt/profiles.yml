@@ -4,8 +4,8 @@ sec_credit:                        # 對應 dbt_project.yml 裡的 profile: 'sec
     prod:
       type: bigquery
       method: oauth                # Mac 本地用 gcloud 認證，不需要 key 檔
-      project: focus-heuristic-438521-v4
-      dataset: sec_raw
-      location: US
+      project: "{{ env_var('GCP_PROJECT_ID', 'focus-heuristic-438521-v4') }}"
+      dataset: "{{ env_var('BQ_DATASET_ID', 'sec_raw') }}"
+      location: "{{ env_var('BQ_LOCATION', 'US') }}"
       threads: 4
       timeout_seconds: 300

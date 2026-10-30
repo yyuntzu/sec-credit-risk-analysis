@@ -1,0 +1,22 @@
+{
+  "dim_company": {
+    "exists": true,
+    "row_count": 2
+  },
+  "dim_filing": {
+    "exists": true,
+    "row_count": 37
+  },
+  "fct_credit_kpis": {
+    "exists": true,
+    "row_count": 27
+  },
+  "fct_covenant_status": {
+    "exists": true,
+    "row_count": 0
+  },
+  "fct_financial_statement_line_items": {
+    "exists": true,
+    "row_count": 720
+  }
+}

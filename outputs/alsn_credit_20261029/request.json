@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "mode": "annual",
+  "entity": "ALSN",
+  "cik": "0001411207",
+  "scope": "entity-wide",
+  "currency": "USD",
+  "scale": "1000000",
+  "as_of": "2026-10-29",
+  "periods": [
+    {
+      "role": "fy_t_minus_3",
+      "label": "FY2022 (reference)",
+      "fiscal_year": 2022,
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "ltm_start": "2022-01-01",
+      "evidence_ids": [
+        "calendar:fy_t_minus_3"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "fy_t_minus_2",
+      "label": "FY2023",
+      "fiscal_year": 2023,
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "ltm_start": "2023-01-01",
+      "evidence_ids": [
+        "calendar:fy_t_minus_2"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "fy_t_minus_1",
+      "label": "FY2024",
+      "fiscal_year": 2024,
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "ltm_start": "2024-01-01",
+      "evidence_ids": [
+        "calendar:fy_t_minus_1"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "fy_t",
+      "label": "FY2025",
+      "fiscal_year": 2025,
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "ltm_start": "2025-01-01",
+      "evidence_ids": [
+        "calendar:fy_t"
+      ],
+      "quarter": null,
+      "reason": ""
+    }
+  ],
+  "evidence": [
+    {
+      "id": "calendar:fy_t_minus_3",
+      "entity": "ALSN",
+      "scope": "entity-wide",
+      "source_id": "0000950170-23-002967",
+      "version": "0000950170-23-002967",
+      "document_date": "2023-02-16",
+      "locator": "https://www.sec.gov/Archives/edgar/data/1411207/000095017023002967/alsn-20221231.htm; fiscal-year cover and annual sales interval",
+      "kind": "calendar",
+      "period_roles": [
+        "fy_t_minus_3"
+      ],
+      "content": "[{\"start\": \"2022-01-01\", \"end\": \"2022-12-31\", \"val\": 2769000000, \"accn\": \"0000950170-23-002967\", \"fy\": 2022, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2023-02-16\"}, {\"start\": \"2022-01-01\", \"end\": \"2022-12-31\", \"val\": 2769000000, \"accn\": \"0000950170-24-015192\", \"fy\": 2023, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2024-02-14\"}, {\"start\": \"2022-01-01\", \"end\": \"2022-12-31\", \"val\": 2769000000, \"accn\": \"0000950170-25-019379\", \"fy\": 2024, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2025-02-13\", \"frame\": \"CY2022\"}]",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar:fy_t_minus_2",
+      "entity": "ALSN",
+      "scope": "entity-wide",
+      "source_id": "0000950170-24-015192",
+      "version": "0000950170-24-015192",
+      "document_date": "2024-02-14",
+      "locator": "https://www.sec.gov/Archives/edgar/data/1411207/000095017024015192/alsn-20231231.htm; fiscal-year cover and annual sales interval",
+      "kind": "calendar",
+      "period_roles": [
+        "fy_t_minus_2"
+      ],
+      "content": "[{\"start\": \"2023-01-01\", \"end\": \"2023-12-31\", \"val\": 3035000000, \"accn\": \"0000950170-24-015192\", \"fy\": 2023, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2024-02-14\"}, {\"start\": \"2023-01-01\", \"end\": \"2023-12-31\", \"val\": 3035000000, \"accn\": \"0000950170-25-019379\", \"fy\": 2024, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2025-02-13\"}, {\"start\": \"2023-01-01\", \"end\": \"2023-12-31\", \"val\": 3035000000, \"accn\": \"0001193125-26-065627\", \"fy\": 2025, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2026-02-24\", \"frame\": \"CY2023\"}]",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar:fy_t_minus_1",
+      "entity": "ALSN",
+      "scope": "entity-wide",
+      "source_id": "0000950170-25-019379",
+      "version": "0000950170-25-019379",
+      "document_date": "2025-02-13",
+      "locator": "https://www.sec.gov/Archives/edgar/data/1411207/000095017025019379/alsn-20241231.htm; fiscal-year cover and annual sales interval",
+      "kind": "calendar",
+      "period_roles": [
+        "fy_t_minus_1"
+      ],
+      "content": "[{\"start\": \"2024-01-01\", \"end\": \"2024-12-31\", \"val\": 3225000000, \"accn\": \"0000950170-25-019379\", \"fy\": 2024, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2025-02-13\"}, {\"start\": \"2024-01-01\", \"end\": \"2024-12-31\", \"val\": 3225000000, \"accn\": \"0001193125-26-065627\", \"fy\": 2025, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2026-02-24\", \"frame\": \"CY2024\"}]",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar:fy_t",
+      "entity": "ALSN",
+      "scope": "entity-wide",
+      "source_id": "0001193125-26-065627",
+      "version": "0001193125-26-065627",
+      "document_date": "2026-02-24",
+      "locator": "https://www.sec.gov/Archives/edgar/data/1411207/000119312526065627/alsn-20251231.htm; fiscal-year cover and annual sales interval",
+      "kind": "calendar",
+      "period_roles": [
+        "fy_t"
+      ],
+      "content": "[{\"start\": \"2025-01-01\", \"end\": \"2025-12-31\", \"val\": 3010000000, \"accn\": \"0001193125-26-065627\", \"fy\": 2025, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2026-02-24\", \"frame\": \"CY2025\"}]",
+      "purpose": "borrower"
+    }
+  ]
+}

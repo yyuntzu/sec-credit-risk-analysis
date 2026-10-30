@@ -1,0 +1,183 @@
+{
+  "schema_version": "requested-date-review-1",
+  "final_report_accepted": false,
+  "branch": "master",
+  "currency": "USD",
+  "scale": 1000000,
+  "periods": [
+    {
+      "label": "FY2024",
+      "year": 2024,
+      "end": "2024-12-31",
+      "values": {
+        "revenue": "637959",
+        "cost": "326288",
+        "operating_income": "68593",
+        "interest": "2406",
+        "tax": "9265",
+        "net_income": "59248",
+        "da": "52795",
+        "cfo": "115877",
+        "gross_profit": "311671",
+        "operating_expense": "243078",
+        "pretax": "68513",
+        "standard_ebitda": "123714",
+        "current_assets": "190867",
+        "current_liabilities": "179431",
+        "assets": "624894",
+        "equity": "285970",
+        "cash": "78779",
+        "liabilities": "338924",
+        "current_ratio": "1.063734806137178079596056423",
+        "debt_ratio": "1.185173269923418540406336329",
+        "ltm_ebitda": "123714"
+      }
+    },
+    {
+      "label": "Q1 2025 YTD (3 months)",
+      "year": 2025,
+      "end": "2025-03-31",
+      "values": {
+        "revenue": "155667",
+        "cost": "76976",
+        "operating_income": "18405",
+        "interest": "541",
+        "tax": "4553",
+        "net_income": "17127",
+        "da": "14262",
+        "cfo": "17015",
+        "gross_profit": "78691",
+        "operating_expense": "60286",
+        "pretax": "21680",
+        "standard_ebitda": "36483",
+        "current_assets": "184645",
+        "current_liabilities": "176171",
+        "assets": "643256",
+        "equity": "305867",
+        "cash": "66207",
+        "liabilities": "337389",
+        "current_ratio": "1.048100992785418712500922399",
+        "debt_ratio": "1.103057865019763491975270297",
+        "ltm_ebitda": "134971"
+      }
+    },
+    {
+      "label": "FY2025",
+      "year": 2025,
+      "end": "2025-12-31",
+      "values": {
+        "revenue": "716924",
+        "cost": "356414",
+        "operating_income": "79975",
+        "interest": "2274",
+        "tax": "19087",
+        "net_income": "77670",
+        "da": "65756",
+        "cfo": "139514",
+        "gross_profit": "360510",
+        "operating_expense": "280535",
+        "pretax": "96757",
+        "standard_ebitda": "164787",
+        "current_assets": "229083",
+        "current_liabilities": "218005",
+        "assets": "818042",
+        "equity": "411065",
+        "cash": "86810",
+        "liabilities": "406977",
+        "current_ratio": "1.050815348271828627783766427",
+        "debt_ratio": "0.9900551007748166348387724569",
+        "ltm_ebitda": "164787"
+      }
+    },
+    {
+      "label": "Q2 2026 YTD (6 months)",
+      "year": 2026,
+      "end": "2026-06-30",
+      "values": {
+        "revenue": "382125",
+        "cost": "183241",
+        "operating_income": "51313",
+        "interest": "2114",
+        "tax": "27759",
+        "net_income": "92902",
+        "da": "38933",
+        "cfo": "71419",
+        "gross_profit": "198884",
+        "operating_expense": "147571",
+        "pretax": "120661",
+        "standard_ebitda": "161708",
+        "current_assets": "249264",
+        "current_liabilities": "241274",
+        "assets": "1095689",
+        "equity": "551620",
+        "cash": "78213",
+        "liabilities": "544069",
+        "current_ratio": "1.033115876555285691786102108",
+        "debt_ratio": "0.9863112287444255103150719698",
+        "ltm_ebitda": "253427"
+      }
+    }
+  ],
+  "income_rows": [
+    [
+      "Net sales",
+      "revenue"
+    ],
+    [
+      "Cost of sales",
+      "cost"
+    ],
+    [
+      "Implied gross profit",
+      "gross_profit"
+    ],
+    [
+      "Operating expense excluding cost of sales",
+      "operating_expense"
+    ],
+    [
+      "Operating income",
+      "operating_income"
+    ],
+    [
+      "Gross interest expense",
+      "interest"
+    ],
+    [
+      "Income before taxes",
+      "pretax"
+    ],
+    [
+      "Income tax expense",
+      "tax"
+    ],
+    [
+      "Net income",
+      "net_income"
+    ]
+  ],
+  "income_notes": [
+    "Matched-period context: H1 2026 revenue was $382,125.00m, up 18.17% against H1 2025, not against the requested Q1 2025 column. The filing attributes growth to AWS customer usage and higher retail unit volumes, third-party seller activity, advertising and subscriptions.",
+    "Implied gross margin was 52.05% versus 51.21% in H1 2025. This is revenue less cost of sales, not an Amazon-reported gross-profit subtotal; AWS infrastructure costs also appear elsewhere in operating expenses, limiting interpretation.",
+    "H1 operating margin increased from 11.62% to 13.43%. MD&A identifies AWS growth and retail operating leverage; continued infrastructure investment remains a material expense and funding requirement.",
+    "H1 interest expense increased from $1,057.00m to $2,114.00m. The filing attributes the increase to debt, including new Notes issuances, and finance leases.",
+    "H1 2026 pre-tax earnings include material non-cash Anthropic investment valuation and reclassification gains. Standard EBITDA retains these gains under the selected Net Income + Interest + Taxes + D&A definition; it should not be read as recurring cash earnings."
+  ],
+  "ratio_notes": [
+    "Current ratio changed from 1.05x at December 2025 to 1.03x at June 2026. Quick ratio remains pending verification of unrestricted cash, liquid securities and eligible net receivables; it is not substituted with current assets less inventory.",
+    "Debt ratio below means total liabilities divided by consolidated equity. Total liabilities are derived from assets less equity and checked against the consolidated balance-sheet structure."
+  ],
+  "leverage_notes": [
+    "Total debt and leverage remain pending full reconciliation of borrowings, finance leases and financing obligations. Operating leases are excluded under the previously approved policy; the legacy mart borrowing subtotal is not presented as complete debt.",
+    "The filing reports H1 2026 cash capital expenditure of $96.3bn versus $71.4bn operating cash flow, alongside substantial strategic investment outflows and new borrowing. Credit implication: investment spending is absorbing operating cash generation and increasing reliance on financing. These MD&A amounts are rounded source disclosures.",
+    "Standard EBITDA is calculated for exact LTM windows using prior FY + current YTD - prior comparable YTD for interim dates. It includes non-cash investment gains and has not been substituted with adjusted EBITDA or operating income."
+  ],
+  "source": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/amzn-20260630.htm",
+  "limitations": [
+    "Non-comparable requested interim lengths",
+    "Quick assets pending verification",
+    "Total debt and leverage pending lease and financing obligation reconciliation",
+    "Legacy report queries rejected older rows missing CIK",
+    "dbt run failed; existing marts are not proof of this run acceptance"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "mode": "quarterly",
+  "entity": "CROX",
+  "cik": "0001334036",
+  "scope": "entity-wide",
+  "currency": "USD",
+  "scale": "1000000",
+  "as_of": "2026-10-25",
+  "periods": [
+    {
+      "role": "earlier_fy_end",
+      "label": "FY2024",
+      "fiscal_year": 2024,
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "ltm_start": "2024-01-01",
+      "evidence_ids": [
+        "calendar-earlier_fy_end"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "prior_interim",
+      "label": "FY2025 Q2",
+      "fiscal_year": 2025,
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "ltm_start": "2024-07-01",
+      "evidence_ids": [
+        "calendar-prior_interim"
+      ],
+      "quarter": 2,
+      "reason": ""
+    },
+    {
+      "role": "latest_fy_end",
+      "label": "FY2025",
+      "fiscal_year": 2025,
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "ltm_start": "2025-01-01",
+      "evidence_ids": [
+        "calendar-latest_fy_end"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "current_interim",
+      "label": "FY2026 Q2",
+      "fiscal_year": 2026,
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "ltm_start": "2025-07-01",
+      "evidence_ids": [
+        "calendar-current_interim"
+      ],
+      "quarter": 2,
+      "reason": ""
+    }
+  ],
+  "evidence": [
+    {
+      "id": "calendar-earlier_fy_end",
+      "entity": "CROX",
+      "scope": "entity-wide",
+      "source_id": "0001334036-25-000009",
+      "version": "0001334036-25-000009",
+      "document_date": "2025-02-13",
+      "locator": "SEC companyfacts: RevenueFromContractWithCustomerExcludingAssessedTax exact fiscal/YTD interval",
+      "kind": "calendar",
+      "period_roles": [
+        "earlier_fy_end"
+      ],
+      "content": "[{\"start\": \"2024-01-01\", \"end\": \"2024-12-31\", \"val\": 4102108000, \"accn\": \"0001334036-25-000009\", \"fy\": 2024, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2025-02-13\"}, {\"start\": \"2024-01-01\", \"end\": \"2024-12-31\", \"val\": 4102108000, \"accn\": \"0001334036-26-000006\", \"fy\": 2025, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2026-02-12\", \"frame\": \"CY2024\"}]",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar-prior_interim",
+      "entity": "CROX",
+      "scope": "entity-wide",
+      "source_id": "0001334036-25-000085",
+      "version": "0001334036-25-000085",
+      "document_date": "2025-08-07",
+      "locator": "SEC companyfacts: RevenueFromContractWithCustomerExcludingAssessedTax exact fiscal/YTD interval",
+      "kind": "calendar",
+      "period_roles": [
+        "prior_interim"
+      ],
+      "content": "[{\"start\": \"2025-01-01\", \"end\": \"2025-06-30\", \"val\": 2086706000, \"accn\": \"0001334036-25-000085\", \"fy\": 2025, \"fp\": \"Q2\", \"form\": \"10-Q\", \"filed\": \"2025-08-07\"}, {\"start\": \"2025-01-01\", \"end\": \"2025-06-30\", \"val\": 2086706000, \"accn\": \"0001334036-26-000052\", \"fy\": 2026, \"fp\": \"Q2\", \"form\": \"10-Q\", \"filed\": \"2026-07-30\"}]",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar-latest_fy_end",
+      "entity": "CROX",
+      "scope": "entity-wide",
+      "source_id": "0001334036-26-000006",
+      "version": "0001334036-26-000006",
+      "document_date": "2026-02-12",
+      "locator": "SEC companyfacts: RevenueFromContractWithCustomerExcludingAssessedTax exact fiscal/YTD interval",
+      "kind": "calendar",
+      "period_roles": [
+        "latest_fy_end"
+      ],
+      "content": "[{\"start\": \"2025-01-01\", \"end\": \"2025-12-31\", \"val\": 4040647000, \"accn\": \"0001334036-26-000006\", \"fy\": 2025, \"fp\": \"FY\", \"form\": \"10-K\", \"filed\": \"2026-02-12\", \"frame\": \"CY2025\"}]",
+      "purpose": "borrower"
+    },
+    {
+      "id": "calendar-current_interim",
+      "entity": "CROX",
+      "scope": "entity-wide",
+      "source_id": "0001334036-26-000052",
+      "version": "0001334036-26-000052",
+      "document_date": "2026-07-30",
+      "locator": "SEC companyfacts: RevenueFromContractWithCustomerExcludingAssessedTax exact fiscal/YTD interval",
+      "kind": "calendar",
+      "period_roles": [
+        "current_interim"
+      ],
+      "content": "[{\"start\": \"2026-01-01\", \"end\": \"2026-06-30\", \"val\": 2100925000, \"accn\": \"0001334036-26-000052\", \"fy\": 2026, \"fp\": \"Q2\", \"form\": \"10-Q\", \"filed\": \"2026-07-30\"}]",
+      "purpose": "borrower"
+    }
+  ]
+}

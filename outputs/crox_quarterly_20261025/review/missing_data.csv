@@ -1,0 +1,13 @@
+﻿fact_id,科目,期間角色,期間,狀態,原因,必要輸入,待確認定義,原始候選值_未採入正式報表,來源位置
+quick_ratio:earlier_fy_end,Quick ratio,earlier_fy_end,FY2024,not_calculable,Required inputs unavailable,input:quick_assets:earlier_fy_end: missing; input:current_liabilities:earlier_fy_end: sourced,,,
+quick_ratio:prior_interim,Quick ratio,prior_interim,FY2025 Q2,not_calculable,Required inputs unavailable,input:quick_assets:prior_interim: missing; input:current_liabilities:prior_interim: sourced,,,
+quick_ratio:latest_fy_end,Quick ratio,latest_fy_end,FY2025,not_calculable,Required inputs unavailable,input:quick_assets:latest_fy_end: missing; input:current_liabilities:latest_fy_end: sourced,,,
+quick_ratio:current_interim,Quick ratio,current_interim,FY2026 Q2,not_calculable,Required inputs unavailable,input:quick_assets:current_interim: missing; input:current_liabilities:current_interim: sourced,,,
+input:capitalized_interest:earlier_fy_end,Capitalized Interest,earlier_fy_end,FY2024,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:quick_assets:earlier_fy_end,Quick Assets,earlier_fy_end,FY2024,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:capitalized_interest:prior_interim,Capitalized Interest,prior_interim,FY2025 Q2,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:quick_assets:prior_interim,Quick Assets,prior_interim,FY2025 Q2,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:capitalized_interest:latest_fy_end,Capitalized Interest,latest_fy_end,FY2025,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:quick_assets:latest_fy_end,Quick Assets,latest_fy_end,FY2025,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:capitalized_interest:current_interim,Capitalized Interest,current_interim,FY2026 Q2,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,
+input:quick_assets:current_interim,Quick Assets,current_interim,FY2026 Q2,missing,No matching source in the reviewed inputs; not a claim of non-disclosure,,,,

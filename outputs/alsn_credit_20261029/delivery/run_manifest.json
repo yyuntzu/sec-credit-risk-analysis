@@ -1,0 +1,16 @@
+{
+  "entity": "ALSN",
+  "execution": "local",
+  "parent_run_id": "4702c3ddb3204baa8fc37748c2a77a96",
+  "final_report_accepted": false,
+  "reconciliations_matched": 8,
+  "outputs": {
+    "report_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/alsn_credit_20261029/delivery/report.md",
+    "report_data_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/alsn_credit_20261029/delivery/report.json",
+    "acceptance_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/alsn_credit_20261029/delivery/acceptance.json",
+    "findings_path": "/Users/yuntzuyu/financial_dashborad_automation_with_API＿updated 分析的日期區間 8.24.2026/outputs/alsn_credit_20261029/delivery/review_findings.md",
+    "final_report_accepted": false,
+    "technical_validation_passed": true,
+    "rendered_validation_passed": true
+  }
+}

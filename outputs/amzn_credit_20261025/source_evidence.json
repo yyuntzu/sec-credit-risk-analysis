@@ -1,0 +1,1334 @@
+{
+  "financial": [
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "637959",
+      "fact_ids": [
+        "sec:a84f24d23a65bf194462c92cf5242a3adb99257d00b8e7fea045df2417b2302c",
+        "sec:91bdc089638e8dbe5617c4f34f679182006f41686af1f93441f707decac9c884"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "326288",
+      "fact_ids": [
+        "sec:6296d15b417a0ba37b0d4431472ef7a7460f6131288fcfcccd5177dd898c6f1e",
+        "sec:9851f35234bb2735b5d6ff198746b2e705cffcae0582f2efb84e0e3dfce1e153"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "68593",
+      "fact_ids": [
+        "sec:47bd854584c2b8027a593d9813f06378deb779f98fcd0ea7378a28048ad3264a",
+        "sec:7f6aeff663b760072d6de90db847a742a9d24c0e6cea61a3b55a0d62d53c2264"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "2406",
+      "fact_ids": [
+        "sec:dd899a18b1429c5cf022f5441a74e201e16a49a13b3594a1429c37f93fe5279b",
+        "sec:e2654572b782d14382c800ecdba6fc9712570b511fd701d9808a6153acb71108"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "9265",
+      "fact_ids": [
+        "sec:35184ff7af39ef081d1d4cfd968311db4b5c4d60f142f87ca41d9271456b63e3",
+        "sec:5f6b5d5cb5987e188097318e43c00e55a043eb026d6a08efb613ab41eb3ff51c"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "59248",
+      "fact_ids": [
+        "sec:3614e42e22ebb58a3b1afbfc0120793a0dcf5f95d7e36158f8b91fadb46cd33f",
+        "sec:e059d468e473bcbb48f068429ab01ff92820082074e25d9a7a1d85167edd8809"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "52795",
+      "fact_ids": [
+        "sec:66b73b98dbd1fcbaec5d698653819c070417df3cee570644a7b06b84d4a873f5",
+        "sec:e71e82487064c097e7c1577d34bdc1121faef19e8f8b83c4b1cd42a918f1bf06"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "115877",
+      "fact_ids": [
+        "sec:f5f52baf12116e97a5b7c5a96cc427c14c6df0dcda1495ea17c23f292cfdbc84",
+        "sec:33fc04c473f8239bf4123f62e4bbd6aa088849c3e9dda2162ef95321cdb2be0b"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "AssetsCurrent",
+      "start": null,
+      "end": "2024-12-31",
+      "value": "190867",
+      "fact_ids": [
+        "sec:5180775278ebd517cb7d62877c631b70d4c732aaf1e3674f65cc31fbd86c4616",
+        "sec:5f1b402141ff578fe7ae10fd9e946c248c574bb80463280fdf77cb802b3bbba4",
+        "sec:b45aca348758bcc383e36e5b6ee3de2780ad65d70b471c4e853f07b17d958d39",
+        "sec:b01f9c2cf9e67e40544a670e06c817683ba65d0a6a5147dc0c833412664fceb9",
+        "sec:6d77debf6f05663bdd173f988084b6dce3c821326a6235f551e5fb87aa5eb079"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/0001018724-25-000123-index.html"
+      ]
+    },
+    {
+      "tag": "LiabilitiesCurrent",
+      "start": null,
+      "end": "2024-12-31",
+      "value": "179431",
+      "fact_ids": [
+        "sec:53c7fa97703335d97e15595e9024e9af2ecaae72fedbfccb54842eb62ed2a6df",
+        "sec:3bc8c98525efa98240d3627910b16c8bffca8f10f05a75b8193fcb53ea453f60",
+        "sec:0ba7e003586969231bd7c7f1c4df27bf418e449a92963aedfa9ee659fb955251",
+        "sec:fa0bc305585cf8bf0e31e72a95214d60914408c35c5e2180b65d5346d6f631b6",
+        "sec:99eff87712b42c7c66ff358af70eba6c74293180cf09c1163f22ac9652eb5041"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/0001018724-25-000123-index.html"
+      ]
+    },
+    {
+      "tag": "Assets",
+      "start": null,
+      "end": "2024-12-31",
+      "value": "624894",
+      "fact_ids": [
+        "sec:d5ce51c974673edd571ad24de1a9fc5a6148dfbd298d419110ec8ef9bba3ee1b",
+        "sec:6fc153eb849940c61c00e85d3f74481e4561b27aebb3327ff5277f86e8ac38aa",
+        "sec:e907f723e73be2167cdde769656d56e5a55a9217ee39bffa349900d10c68ee96",
+        "sec:a02b945fb3b9b82da4273b78bcb67b8ca59466e228e3d8d21b80d81fb4cdf55b",
+        "sec:aaaa12f98f7378e2de43376c2ce882bbf15d26d1b5ed9811eba1a76e9dc3f6d6"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/0001018724-25-000123-index.html"
+      ]
+    },
+    {
+      "tag": "StockholdersEquity",
+      "start": null,
+      "end": "2024-12-31",
+      "value": "285970",
+      "fact_ids": [
+        "sec:cfcf3eea1d014372545ce41cb406be61f4e07686d52f8ccb880f9f5c91e21716",
+        "sec:34fa11b80ec31c7c075ccdb449e736d835d129b59a73fc886098aa77ad772d9c",
+        "sec:e1c07d9d5e4cce9f275031195853b30b362aeca5fa178a94161b15f2756a9635",
+        "sec:80e8a3e2b235d594e8424c6423c5cee6ee6dffcf61fa036b71b31bff7d48a560",
+        "sec:91e9b7c46f52a4091500335ce06bb0132de29e369da179caf1c94de2c9fbbfa1",
+        "sec:23b283191095746281b607678ed0f76954880861867d99554be5470f8001d94d",
+        "sec:57942896c0bb03574f422733fee8a081ce27bce2f912c53a7642ed55f592f0ff"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/0001018724-25-000123-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "CashAndCashEquivalentsAtCarryingValue",
+      "start": null,
+      "end": "2024-12-31",
+      "value": "78779",
+      "fact_ids": [
+        "sec:8dc5a5df72c492c865a5469da64ed51283de7316579fde248571533c4ac1a9fe",
+        "sec:5c36e4b672f61dad0902267c6e7fbf33de6aed6e988aa27f1e6397ba445a0845",
+        "sec:091dbd974bea230d308ed0e96ab2b8a27fdceafabbdb47dabd7e7bb04d65fad3",
+        "sec:56d73a5c10077de4d8f5aa3e1f2be056ca5745acdcbaf803df4327bf1aa4fb40",
+        "sec:9d71867b1b0c3675e4bb0cc3df17df09f7a4966363abb8e58b43a08e736b4059"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000123/0001018724-25-000123-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "155667",
+      "fact_ids": [
+        "sec:daaf780d78b3328a0efadaa7b9003f5509c741ede7744214b4ded1bedcf4a53d",
+        "sec:62e47c853b354d1633a267500647797ce730d4495824b4099fb47dd17407d965"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "76976",
+      "fact_ids": [
+        "sec:256b3c4d64091db5f478fe5020d17960826420fd7a74042040e209bedf64a51f",
+        "sec:ea8af140f5e12007fc85690ee73cdd90256956b979ba17355e6fdc4bcb4bd5f7"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "18405",
+      "fact_ids": [
+        "sec:1f5b70f4f50f2fc727b4ba51e649c2a718078c04dfa596eab4ffd6cbff3b82ea",
+        "sec:daedb7df2dc57a03c51da03d37522d3ae297a1913cab72098c22a00be6f4be5a"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "541",
+      "fact_ids": [
+        "sec:f200af11895f8a68213969e5b5566b8b4974e8d5c387dec002fc04a9c764e357",
+        "sec:da6c541a651e66b4f6ef06778880b79d7d22dc07bcc60932387c7f50780c22cd"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "4553",
+      "fact_ids": [
+        "sec:ee72f0f6011f5422f14f41d64d0ce807e71a830934dbdcfc62f2c0f18d87bbd3",
+        "sec:6a151b8de867a762febf5c644856d4829ee969e55dce073da7e1b14f9d90e9dd"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "17127",
+      "fact_ids": [
+        "sec:cb1ea7c69b4cbda6280d85dce9c405285e51f3ca4814653a44d4cad08649eabe",
+        "sec:f663f445283b4eff7d4c817bcdfad97d5c98f5cc8dc039e962d1941fdf80b1ad"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "14262",
+      "fact_ids": [
+        "sec:c388129de56737780c6fab09575c17bc15edf6e8435ef0b07a211858f2891237",
+        "sec:ba8078f3e6c1e90bfd4492b62665607771fd1f14ec300654c67be1762515a6c1"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "value": "17015",
+      "fact_ids": [
+        "sec:cd4d70c5687caadc02fe6351a2c37fc77c4b604636e3b5b61c4ae30403af4c0f",
+        "sec:c299994c684f85bca78b7638942002c934004368434a36e9914240527ae3e603"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "AssetsCurrent",
+      "start": null,
+      "end": "2025-03-31",
+      "value": "184645",
+      "fact_ids": [
+        "sec:da303d939a7a12ec2ccf7c9243498bf48b327ee837d2f5c2a6aa75be71230281"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "LiabilitiesCurrent",
+      "start": null,
+      "end": "2025-03-31",
+      "value": "176171",
+      "fact_ids": [
+        "sec:45456e344955d2a6f2db31a179a5be036f78125f48893b093a9c8c04ac34862a"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "Assets",
+      "start": null,
+      "end": "2025-03-31",
+      "value": "643256",
+      "fact_ids": [
+        "sec:68487a1ef827f02e7ddba8739c6a92930313de0b11510a45156fc75ab3182e49"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "StockholdersEquity",
+      "start": null,
+      "end": "2025-03-31",
+      "value": "305867",
+      "fact_ids": [
+        "sec:6dcea22d3101bfd96cf513afb4a9ff1cf8db44b904324a46dac4a26b09b17030",
+        "sec:cd2992867727cba8070bc75bf1a0be270bec34fcd44c5ec3fa28604ceae4d7c2",
+        "sec:a23ad8b5440ae2cb495dcf2811c24031b84f3c1dff78d6ede42683359e6602a4",
+        "sec:00fe489e32081572bf13778cd8236cae10a83ee29b5cb596aefaea3f091993a7"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "CashAndCashEquivalentsAtCarryingValue",
+      "start": null,
+      "end": "2025-03-31",
+      "value": "66207",
+      "fact_ids": [
+        "sec:0db0b4650cc0548cb97152c9444ac6da67e6a41b7ee255a8d62c4d85e16cc879"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "637959",
+      "fact_ids": [
+        "sec:a84f24d23a65bf194462c92cf5242a3adb99257d00b8e7fea045df2417b2302c",
+        "sec:91bdc089638e8dbe5617c4f34f679182006f41686af1f93441f707decac9c884"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "326288",
+      "fact_ids": [
+        "sec:6296d15b417a0ba37b0d4431472ef7a7460f6131288fcfcccd5177dd898c6f1e",
+        "sec:9851f35234bb2735b5d6ff198746b2e705cffcae0582f2efb84e0e3dfce1e153"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "68593",
+      "fact_ids": [
+        "sec:47bd854584c2b8027a593d9813f06378deb779f98fcd0ea7378a28048ad3264a",
+        "sec:7f6aeff663b760072d6de90db847a742a9d24c0e6cea61a3b55a0d62d53c2264"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "2406",
+      "fact_ids": [
+        "sec:dd899a18b1429c5cf022f5441a74e201e16a49a13b3594a1429c37f93fe5279b",
+        "sec:e2654572b782d14382c800ecdba6fc9712570b511fd701d9808a6153acb71108"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "9265",
+      "fact_ids": [
+        "sec:35184ff7af39ef081d1d4cfd968311db4b5c4d60f142f87ca41d9271456b63e3",
+        "sec:5f6b5d5cb5987e188097318e43c00e55a043eb026d6a08efb613ab41eb3ff51c"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "59248",
+      "fact_ids": [
+        "sec:3614e42e22ebb58a3b1afbfc0120793a0dcf5f95d7e36158f8b91fadb46cd33f",
+        "sec:e059d468e473bcbb48f068429ab01ff92820082074e25d9a7a1d85167edd8809"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "52795",
+      "fact_ids": [
+        "sec:66b73b98dbd1fcbaec5d698653819c070417df3cee570644a7b06b84d4a873f5",
+        "sec:e71e82487064c097e7c1577d34bdc1121faef19e8f8b83c4b1cd42a918f1bf06"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "value": "115877",
+      "fact_ids": [
+        "sec:f5f52baf12116e97a5b7c5a96cc427c14c6df0dcda1495ea17c23f292cfdbc84",
+        "sec:33fc04c473f8239bf4123f62e4bbd6aa088849c3e9dda2162ef95321cdb2be0b"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/0001018724-25-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "143313",
+      "fact_ids": [
+        "sec:20857123756b63e050d74ab8bf34cec753ad79e744f023ea08e3934ee4e7e685",
+        "sec:3d62c6fc1caab9d14ef32536868d9c1d0711338f7e46f4fae183427b0be5ac0f"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/0001018724-24-000083-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "72633",
+      "fact_ids": [
+        "sec:ecb0342b6942e7e23f4d01376a38d8a874da2770c9b1deecf0ad465ce0db2980",
+        "sec:4d9fdca8744917465d6c9e61c12f7f34869bd11e217db65f84b50589f842a8fb"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/0001018724-24-000083-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "15307",
+      "fact_ids": [
+        "sec:9a9c0c5dfbd57086c8bcf4133595dfcd9a08bfac24d15a9a74448de14343f359",
+        "sec:49794306a546133a58cb310d5e13b1eb58c9b9b128531364820715281fe88dbe"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/0001018724-24-000083-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "644",
+      "fact_ids": [
+        "sec:cec253d769f34b22e045a8b226c80289efc07a0a2b283f7bdabe7cfa95662f6b"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "2467",
+      "fact_ids": [
+        "sec:6587018119db5e07ea519ed72044befa98c8c877a51bb063717ab662c070b250",
+        "sec:622ed8c9cfc94469154307c58aaa9729b9dfc186d877083a4fe89491f49e11fd"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/0001018724-24-000083-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "10431",
+      "fact_ids": [
+        "sec:1f0000bb9fd19b0b4f4cdd5d883e00abecb7677961259b0e814383f3003a0fce",
+        "sec:654eaae06d7f5d29a4ebc3cdeb8fca0f260ecd6a46a7fde50d9285b43bc914cd"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/0001018724-24-000083-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "11684",
+      "fact_ids": [
+        "sec:50ad681c258b7a87c37b2071fc36b41e27510321584138e53fa4ce06cc32c32f",
+        "sec:e98480b661107a0ceabf1b97bf26fb987f074b786e1938386ef38e4054b1938f"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/0001018724-24-000083-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "value": "18989",
+      "fact_ids": [
+        "sec:9a0a695c09aeba5fb9a61cd1d5e378cede674264b519cdc76619c281afea9a92",
+        "sec:143286cf07db1ac3d0176242e9c75c4436b3c09fd765355fa66e9ec3de9cb00d"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872424000083/0001018724-24-000083-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000036/0001018724-25-000036-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "716924",
+      "fact_ids": [
+        "sec:12dab852b4d9e68f0f51d680497193f9b3451df2d2bfd0a064f1d8be192845d5"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "356414",
+      "fact_ids": [
+        "sec:8cf5b66753487275ec182f6b97a5a602ceb260ac30eb952498939db694ee5570"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "79975",
+      "fact_ids": [
+        "sec:54005999cf071ef68759efdece6a1420e882861403566922cc73407effa12266"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "2274",
+      "fact_ids": [
+        "sec:e21904d8f2d5235bf48810b4d30132c3c3d00c06e955b9f2dcbb54bac0b50bb6"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "19087",
+      "fact_ids": [
+        "sec:79f27d8b57b25c8d5adec1e51e370488fa206c6f356178c6b1d46007611c08ef"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "77670",
+      "fact_ids": [
+        "sec:5f8fef4a6b883f003e7e98e382eeea8f3ffdb4b00e1026d7ca3d4e71bd74bde4"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "65756",
+      "fact_ids": [
+        "sec:5d9bb3c4fc4d69f7eb7996aab74fb5a3d3bcf1dc5a2bfec2f0a9e23069f3f346"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "139514",
+      "fact_ids": [
+        "sec:63450b4ee1ddebc2b2373b3c22b418c5e11cf9ba0c6810db5cceaea7402bcf78"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "AssetsCurrent",
+      "start": null,
+      "end": "2025-12-31",
+      "value": "229083",
+      "fact_ids": [
+        "sec:2bb797c06fff834f57df354a8031edfad062a6d6e1366d18a2108fbb2e96ad35",
+        "sec:d3bf8440ab754d58516705a27ff37b73f713419c6e193983c72fd84d944ef8ee",
+        "sec:69b1d3eb672c7afbba8d8da07bbc47fea70a296968d840e1468527027709b573"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "LiabilitiesCurrent",
+      "start": null,
+      "end": "2025-12-31",
+      "value": "218005",
+      "fact_ids": [
+        "sec:ed8ac305e5c7a1dc3cb80941d7de34fa6ea6416a53df36d85df7fa0320193051",
+        "sec:bc9bb3338134418c600f3d1d2a9603ec4d279b96f43fa253197f996936c77627",
+        "sec:4419692ea9571c1b96c487e953352dd81440b645d3f0a37f8f6d9adc9fbbdd14"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "Assets",
+      "start": null,
+      "end": "2025-12-31",
+      "value": "818042",
+      "fact_ids": [
+        "sec:16724d18530f10bcb58dc3a0405f5cb7790bf7d51a944c297af241402ae532e1",
+        "sec:be0b9c13cd707af1204aa33056b8e6d83f5bfbadab13e15ca41471274acf3cc6",
+        "sec:e38b12123b992353d6d36bf1fe6c9b3f4fb65a2c6da2b82bbfd3adabebf82f2f"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "StockholdersEquity",
+      "start": null,
+      "end": "2025-12-31",
+      "value": "411065",
+      "fact_ids": [
+        "sec:78e407868cd4f1503ec84a1fbc490814df5e1b969844a54622f6e7f45d3ab799",
+        "sec:5d400b539de743fed1cdf452a3fd6a7f04a50abd166342337b2cee9fc1a7c9de",
+        "sec:9bdf3f9819f845be1fc2c67a0bcb8811a98586a41fba8e33bf3072fd8f843189"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "CashAndCashEquivalentsAtCarryingValue",
+      "start": null,
+      "end": "2025-12-31",
+      "value": "86810",
+      "fact_ids": [
+        "sec:e7f162bf3cc861a87f544909764880943e85b64cb617ab0ad3b2770b538dc8e2",
+        "sec:805e60746dbac795343c0fa5e903e84d239b201ff86cef339a6db538bb62a782",
+        "sec:7f336ffa4004328cf991be635afdb5f29fe19123534ffc93d9e6e2d464378ee9"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000014/0001018724-26-000014-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "382125",
+      "fact_ids": [
+        "sec:e708ac347db35c1c2e2e83222d9468b9f8e17204b9322aa23bfedd97a0e6195e"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "183241",
+      "fact_ids": [
+        "sec:8c3f25a723bc00022f92e68317bea57c209649ddf1905487d9c3c09c597ceb28"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "51313",
+      "fact_ids": [
+        "sec:878230503a879a8b795185717661c50da95402b0e45edba086c4aa41136af03a"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "2114",
+      "fact_ids": [
+        "sec:eac8b62537bf501dcd0a67bad2409decc6013a97b9f7971108c0951e219d1354"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "27759",
+      "fact_ids": [
+        "sec:33402915482d436249daf6c1ce908f439c3cfcdc7a4ba6718585e3491bcbf0e2"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "92902",
+      "fact_ids": [
+        "sec:c2bac25644b43f5037e69701b25bb943675af887190f6a5febafa0d8b6b08a98"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "38933",
+      "fact_ids": [
+        "sec:d1fb0c7aa6d81fe8bd84d231396204df49ea9210f030d891ca8b6cb5608b7d57"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2026-01-01",
+      "end": "2026-06-30",
+      "value": "71419",
+      "fact_ids": [
+        "sec:c3ed79334ee854f13342d4aa2a6886c8b48187fa84b5dd90f108c2d533fdf0e2"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "AssetsCurrent",
+      "start": null,
+      "end": "2026-06-30",
+      "value": "249264",
+      "fact_ids": [
+        "sec:e3bf082ff4dcc4ffcb9fabd9b226f15647696b1db12d5808099e67d07bfc391e"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "LiabilitiesCurrent",
+      "start": null,
+      "end": "2026-06-30",
+      "value": "241274",
+      "fact_ids": [
+        "sec:4cab8f8a6f9cf9056ba2844d172f0accda2c6e1fda37e48ca22e8e92a0db4b10"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "Assets",
+      "start": null,
+      "end": "2026-06-30",
+      "value": "1095689",
+      "fact_ids": [
+        "sec:26fca84ca921fe7677bf6d6d5e0a3d911b33f95eaeda6f2f1eeca8afe082ae2a"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "StockholdersEquity",
+      "start": null,
+      "end": "2026-06-30",
+      "value": "551620",
+      "fact_ids": [
+        "sec:73425ddcdae516738941878b88222d6163b30fcbbe5183e08a72cf6b9e00abdc"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "CashAndCashEquivalentsAtCarryingValue",
+      "start": null,
+      "end": "2026-06-30",
+      "value": "78213",
+      "fact_ids": [
+        "sec:e17c63966919388e2a36992559e141913b0aac187eea96e1b1adf47f8ad135ec"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "716924",
+      "fact_ids": [
+        "sec:12dab852b4d9e68f0f51d680497193f9b3451df2d2bfd0a064f1d8be192845d5"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "356414",
+      "fact_ids": [
+        "sec:8cf5b66753487275ec182f6b97a5a602ceb260ac30eb952498939db694ee5570"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "79975",
+      "fact_ids": [
+        "sec:54005999cf071ef68759efdece6a1420e882861403566922cc73407effa12266"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "2274",
+      "fact_ids": [
+        "sec:e21904d8f2d5235bf48810b4d30132c3c3d00c06e955b9f2dcbb54bac0b50bb6"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "19087",
+      "fact_ids": [
+        "sec:79f27d8b57b25c8d5adec1e51e370488fa206c6f356178c6b1d46007611c08ef"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "77670",
+      "fact_ids": [
+        "sec:5f8fef4a6b883f003e7e98e382eeea8f3ffdb4b00e1026d7ca3d4e71bd74bde4"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "65756",
+      "fact_ids": [
+        "sec:5d9bb3c4fc4d69f7eb7996aab74fb5a3d3bcf1dc5a2bfec2f0a9e23069f3f346"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "value": "139514",
+      "fact_ids": [
+        "sec:63450b4ee1ddebc2b2373b3c22b418c5e11cf9ba0c6810db5cceaea7402bcf78"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/0001018724-26-000004-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "323369",
+      "fact_ids": [
+        "sec:a6114099babb584876b30e9ccd1984bfc167060377b78e3f4b2b625929eb179c",
+        "sec:5f22b77e4c896da304d73dd1c5c1aed7c5d7cca90d54d4e3c36fdbc7fa7a6893"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "157785",
+      "fact_ids": [
+        "sec:9d13d43380b1bcc6a1d1c5d04498cb1ac2d63f2e2569ad22853dca18f895d5fe",
+        "sec:c1ea70c26783c5859062b0fec0c26ecfca79b2149f54b74e1368ee6cdb2c4dfd"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "37576",
+      "fact_ids": [
+        "sec:801ab919855c7fb26da0d0433aea38a8936af21c509460dd9ba92e4cf899af6f",
+        "sec:4aafcd753b5a9d994af55d30a571ec2a63a9582a386b80561f67f08f2df09f30"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "1057",
+      "fact_ids": [
+        "sec:1a34acec5579aae3245c6cf4a0b43e62605837e9cb0b7463de877ffac039d239",
+        "sec:02648bca154b89f38e50aa498edec1d316bb1af25cee075b5466e1fb3baad4be"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "7231",
+      "fact_ids": [
+        "sec:d4bddc7edcd8acb1e2b879326a16ea78858e81900a8be0952bf491f6d34c4994",
+        "sec:dcff6ca10d786721667eb051e7010b372d577b9bbeb755ae308348e29a8d19b3"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "35291",
+      "fact_ids": [
+        "sec:9caf6b281e520c165713e83057db3883ded0ef89dde55c15441e4c5dd8f2161f",
+        "sec:2e6b178d9c5e9bb31517979eb1eed6f590527b814eda1048c9d489b85b8613e2"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "29489",
+      "fact_ids": [
+        "sec:a5aa722dd668dfe2efdb84bbc100a4eaf94f416a6e4fb345ec31cf182ca64ec4",
+        "sec:3a4b91c6ab2a0a16243ccef7f2236b686eaba4ea8d4b387dd34902ac6218aa88"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "49530",
+      "fact_ids": [
+        "sec:ef33f1d1049a54f998e3ee5e6875837fe701efd71fb50a627d41398f70f7c174",
+        "sec:596eb5b9ab654382646f56e5a3cebc56fe5f17202858106c3dee7d2b3c820fb0"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "323369",
+      "fact_ids": [
+        "sec:a6114099babb584876b30e9ccd1984bfc167060377b78e3f4b2b625929eb179c",
+        "sec:5f22b77e4c896da304d73dd1c5c1aed7c5d7cca90d54d4e3c36fdbc7fa7a6893"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "CostOfGoodsAndServicesSold",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "157785",
+      "fact_ids": [
+        "sec:9d13d43380b1bcc6a1d1c5d04498cb1ac2d63f2e2569ad22853dca18f895d5fe",
+        "sec:c1ea70c26783c5859062b0fec0c26ecfca79b2149f54b74e1368ee6cdb2c4dfd"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "OperatingIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "37576",
+      "fact_ids": [
+        "sec:801ab919855c7fb26da0d0433aea38a8936af21c509460dd9ba92e4cf899af6f",
+        "sec:4aafcd753b5a9d994af55d30a571ec2a63a9582a386b80561f67f08f2df09f30"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "InterestExpenseNonoperating",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "1057",
+      "fact_ids": [
+        "sec:1a34acec5579aae3245c6cf4a0b43e62605837e9cb0b7463de877ffac039d239",
+        "sec:02648bca154b89f38e50aa498edec1d316bb1af25cee075b5466e1fb3baad4be"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "IncomeTaxExpenseBenefit",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "7231",
+      "fact_ids": [
+        "sec:d4bddc7edcd8acb1e2b879326a16ea78858e81900a8be0952bf491f6d34c4994",
+        "sec:dcff6ca10d786721667eb051e7010b372d577b9bbeb755ae308348e29a8d19b3"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "NetIncomeLoss",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "35291",
+      "fact_ids": [
+        "sec:9caf6b281e520c165713e83057db3883ded0ef89dde55c15441e4c5dd8f2161f",
+        "sec:2e6b178d9c5e9bb31517979eb1eed6f590527b814eda1048c9d489b85b8613e2"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "DepreciationDepletionAndAmortization",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "29489",
+      "fact_ids": [
+        "sec:a5aa722dd668dfe2efdb84bbc100a4eaf94f416a6e4fb345ec31cf182ca64ec4",
+        "sec:3a4b91c6ab2a0a16243ccef7f2236b686eaba4ea8d4b387dd34902ac6218aa88"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    },
+    {
+      "tag": "NetCashProvidedByUsedInOperatingActivities",
+      "start": "2025-01-01",
+      "end": "2025-06-30",
+      "value": "49530",
+      "fact_ids": [
+        "sec:ef33f1d1049a54f998e3ee5e6875837fe701efd71fb50a627d41398f70f7c174",
+        "sec:596eb5b9ab654382646f56e5a3cebc56fe5f17202858106c3dee7d2b3c820fb0"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000026/0001018724-26-000026-index.html",
+        "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000086/0001018724-25-000086-index.html"
+      ]
+    }
+  ],
+  "narrative": [
+    {
+      "pattern": "Cash capital expenditures were",
+      "offset": 119156,
+      "excerpt": "imarily by purchases, sales, and maturities of marketable securities and cash capital expenditures. Cash capital expenditures were $31.4 billion and $53.1 billion during Q2 2025 and Q2 2026, and $55.6 billion and $96.3 billion for the six months ended June 30, 2025 and 2026, which primarily reflect investments in technology infrastructure (the majority of which is to support AWS business growth) and in additional capacity to support our fulfillment network, both of which we expect to increase in 2026. We made cash payments, net of acquired cash, related to acquisition and other investment activity of $1.7 billion and $24.4 billion during Q2 2025 and Q2 2026, and $1.7 billion and $39.8 billion for the six months ended June 30, 2025 and 2026. In Q2 2025, we invested $1.3 billion in convertible notes from Anthropic. We invested $28.7 billion in OpenAI\u2019s Series C Preferred Stock for the six months ended June 30, 2026, including $13.7 billion invested in Q2 2026. Subsequent to June 30, 2026, we funded 27 Table of Contents the remaining Commitment Amount of $21.3 billion. In Q2 2026, we also invested $10.0 billion in Anthropic nonvoting preferred stock. Cash provided by (used in) financing activities was $(2.5) billion and $10.1 billion for Q2 2025 and Q2 2026, and $(2.6) billion and $62.9 billion for the six months ended June 30, 2025 and 2026. Cash inflows from financing activities resulted from proceeds from short-term debt, and other and long-term debt of $2.1 billion and $22.9 billion for Q2 2025 and Q2 2026, and $4.7 billion and $82.4 billion for the six months ended June 30, 2025 and 2026. We expect to undertake additional financing activities in 2026. Cash outflows from financing activities resulted from payments of short-term debt, and other, long-term debt, finance leases, and financing obligations of $4.6 billion and $12.8 billion for Q2 2025 and Q2 2026, and $7.2 billion and $19.5 billion for the six months ended June 30, 2025 and 2026. Property and equipment acquired under finance leases was $937 million and $563 million during Q2 2025 and Q2 2026, and $991",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "Interest expense was",
+      "offset": 142383,
+      "excerpt": "revailing rates, which vary depending on the geographies and currencies in which they are invested. Interest expense was $516 million and $1.3 billion during Q2 2025 and Q2 2026, and $1.1 billion and $2.1 billion for the six months ended June 30, 2025 and 2026, and was primarily related to debt, including new issuances of Notes, and finance leases. See Item 1 of Part I, \u201cFinancial Statements \u2014 Note 3 \u2014 Leases and Note 5 \u2014 Debt\u201d for additional information. Other Income (Expense), Net Other income (expense), net was $1.1 billion and $53.4 billion during Q2 2025 and Q2 2026, and $3.9 billion and $69.1 billion for the six months ended June 30, 2025 and 2026. The primary components of other income (expense), net are related to equity securities valuations and adjustments, equity warrant valuations, foreign currency, and reclassification adjustments for gains (losses) on available-for-sale debt securities. The net gain of $1.1 billion in Q2 2025 is primarily from equity warrant valuations. The net gain of $3.9 billion for the six months ended June 30, 2025 is primarily from the reclassification adjustment for the gain on available-for-sale debt securities from the portion of our convertible notes investments in Anthropic that were converted to nonvoting preferred stock during the three months ended March 31, 2025. The net gain of $53.4 billion in Q2 2026 and $69.1 billion for the six months ended June 30, 2026 is primarily from upward adjustments for observable changes in price relating to our nonvoting preferred stock in Anthropic and the reclassification adjustment for the gains on available-for-sale debt securities from the portions of our convertible notes investments in Anthropic that were converted to nonvoting preferred stock during the three months ended March 31, 2026. Income Taxes Our income tax provision for the six months ended June 30, 2025 was $7.2 billion, which included $753 million of net discrete tax benefits primarily attributable to excess tax benefits from stock-based compensation. Our income tax provision for the six months ended June 30, 2026 was ",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "Other Income \\(Expense\\), Net",
+      "offset": 142972,
+      "excerpt": "illion and $69.1 billion for the six months ended June 30, 2025 and 2026. The primary components of other income (expense), net are related to equity securities valuations and adjustments, equity warrant valuations, foreign currency, and reclassification adjustments for gains (losses) on available-for-sale debt securities. The net gain of $1.1 billion in Q2 2025 is primarily from equity warrant valuations. The net gain of $3.9 billion for the six months ended June 30, 2025 is primarily from the reclassification adjustment for the gain on available-for-sale debt securities from the portion of our convertible notes investments in Anthropic that were converted to nonvoting preferred stock during the three months ended March 31, 2025. The net gain of $53.4 billion in Q2 2026 and $69.1 billion for the six months ended June 30, 2026 is primarily from upward adjustments for observable changes in price relating to our nonvoting preferred stock in Anthropic and the reclassification adjustment for the gains on available-for-sale debt securities from the portions of our convertible notes investments in Anthropic that were converted to nonvoting preferred stock during the three months ended March 31, 2026. Income Taxes Our income tax provision for the six months ended June 30, 2025 was $7.2 billion, which included $753 million of net discrete tax benefits primarily attributable to excess tax benefits from stock-based compensation. Our income tax provision for the six months ended June 30, 2026 was $27.8 billion, which included $15.9 billion of net discrete tax expense primarily attributable to the upward adjustments to our investments in Anthropic. See Item 1 of Part I, \u201cFinancial Statements \u2014 Note 7 \u2014 Income Taxes\u201d for additional information. Non-GAAP Financial Measures Regulation G, Conditions for Use of Non-GAAP Financial Measures, and other SEC regulations define and prescribe the conditions for use of certain non-GAAP financial information. Free cash flow and the effect of foreign exchange rates on our consolidated statements of operations meet the definition of non-GAAP",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "Other Income \\(Expense\\), Net",
+      "offset": 152966,
+      "excerpt": "exchange rates would result in losses of $400 million, $795 million, and $1.6 billion, recorded to \u201cOther income (expense), net.\u201d Our foreign currency-denominated unsecured senior notes create exposure to changes in foreign exchange rates. As of June 30, 2026, we have designated $20.7 billion of our Euro- and Canadian Dollar-denominated Notes as net investment hedges to mitigate foreign currency exposures related to the translation of our investments in foreign operations to U.S. dollars. Foreign currency unrealized gains and losses on these notes are included in \u201cAccumulated other comprehensive income (loss)\u201d until the foreign operations are sold or substantially liquidated, at which point these amounts and any translation adjustment of the foreign operations are reclassified to our consolidated statements of operations. See Item 2 of Part I, \u201cManagement\u2019s Discussion and Analysis of Financial Condition and Results of Operations \u2014 Results of Operations \u2014 Effect of Foreign Exchange Rates\u201d for additional information on the effect on reported results of changes in foreign exchange rates. Equity Investment Risk As of June 30, 2026, our recorded value in equity, equity warrant, and convertible debt investments in public and private companies was $229.7 billion. Our equity and equity warrant investments in publicly traded companies represent $7.4 billion of our investments as of June 30, 2026, and are recorded at fair value, which is subject to market price volatility. We record our equity warrant investments in private companies at fair value and adjust our equity investments in private companies, which primarily relate to our equity investments in Anthropic and OpenAI, for observable price changes or impairments. We record our available-for-sale convertible debt investments in private companies at fair value, which primarily relate to Anthropic. Valuations of private companies are inherently more complex due to the lack of readily available market data. The current global economic conditions provide additional uncertainty. As such, we believe that market sensitivities",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "AWS sales increased",
+      "offset": 129017,
+      "excerpt": "026, but increased International net sales by $2.4 billion for the six months ended June 30, 2026 . AWS sales increased 37% in Q2 2026, and 33% for the six months ended June 30, 2026 compared to the comparable prior year periods. The sales growth primarily reflects increased customer usage, partially offset by pricing changes primarily driven by long-term customer contracts. Operating Expenses Information about operating expenses is as follows (in millions): Three Months Ended June 30, Six Months Ended June 30, 2025 2026 2025 2026 Operating Expenses: Cost of sales $ 80,809 $ 95,778 $ 157,785 $ 183,241 Fulfillment 25,976 29,633 50,569 56,922 Technology and infrastructure 27,166 33,158 50,160 62,725 Sales and marketing 11,416 11,698 21,179 22,012 General and administrative 2,965 2,788 5,593 5,375 Other operating expense (income), net 199 90 507 537 Total operating expenses $ 148,531 $ 173,145 $ 285,793 $ 330,812 Year-over-year Percentage Growth (Decline): Cost of sales 10 % 19 % 8 % 16 % Fulfillment 10 14 10 13 Technology and infrastructure 22 22 17 25 Sales and marketing 9 2 5 4 General and administrative (3) (6) (3) (4) Other operating expense (income), net 108 (54) 56 6 Percent of Net Sales: Cost of sales 48.2 % 47.7 % 48.8 % 48.0 % Fulfillment 15.5 14.8 15.6 14.9 Technology and infrastructure 16.2 16.5 15.5 16.4 Sales and marketing 6.8 5.8 6.5 5.8 General and administrative 1.8 1.4 1.7 1.4 Other operating expense (income), net 0.1 \u2014 0.2 0.1 Cost of Sales Cost of sales primarily consists of the purchase price of consumer products, inbound and outbound shipping costs, including costs related to sortation and delivery centers and where we are the transportation service provider, and digital media content costs where we record revenue gross, including video and music. The increase in cost of sales in Q2 2026 and for the six months ended June 30, 2026, compared to the comparable prior year periods, is primarily due to increased product and shipping costs resulting from increased sales, partially offset by operational efficiencies. Cost of sales in Q2 2026 includes ta",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "North America sales increased",
+      "offset": 127754,
+      "excerpt": "the effect of foreign exchange rates on sales growth, see \u201cEffect of Foreign Exchange Rates\u201d below. North America sales increased 16% in Q2 2026, and 14% for the six months ended June 30, 2026 compared to the comparable prior year periods. The sales growth primarily reflects increased unit sales, including sales by third-party sellers, advertising sales, and subscription services. Increased unit sales were driven largely by our continued focus on price, selection, and 29 Table of Contents convenience for our customers, including from our fast shipping offers. Changes in foreign exchange rates increased North America net sales by $139 million for Q2 2026, and by $485 million for the six months ended June 30, 2026. International sales increased 15% in Q2 2026, and 17% for the six months ended June 30, 2026 compared to the comparable prior year periods. The sales growth primarily reflects increased unit sales, including sales by third-party sellers, advertising sales, and subscription services. Increased unit sales were driven largely by our continued focus on price, selection, and convenience for our customers, including from our fast shipping offers. Changes in foreign exchange rates did not significantly impact International net sales for Q2 2026, but increased International net sales by $2.4 billion for the six months ended June 30, 2026 . AWS sales increased 37% in Q2 2026, and 33% for the six months ended June 30, 2026 compared to the comparable prior year periods. The sales growth primarily reflects increased customer usage, partially offset by pricing changes primarily driven by long-term customer contracts. Operating Expenses Information about operating expenses is as follows (in millions): Three Months Ended June 30, Six Months Ended June 30, 2025 2026 2025 2026 Operating Expenses: Cost of sales $ 80,809 $ 95,778 $ 157,785 $ 183,241 Fulfillment 25,976 29,633 50,569 56,922 Technology and infrastructure 27,166 33,158 50,160 62,725 Sales and marketing 11,416 11,698 21,179 22,012 General and administrative 2,965 2,788 5,593 5,375 Other operating expense (income",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "Free Cash Flow",
+      "offset": 146189,
+      "excerpt": "nd does not represent the residual cash flow available for discretionary expenditures. For example, free cash flow does not incorporate the portion of payments representing principal reductions of debt or cash payments for business acquisitions. Additionally, our mix of property 33 Table of Contents and equipment acquisitions with cash or other financing options may change over time. Therefore, we believe it is important to view free cash flow only as a complement to our entire consolidated statements of cash flows. Effect of Foreign Exchange Rates Information regarding the effect of foreign exchange rates, versus the U.S. Dollar, on our net sales, operating expenses, and operating income is provided to show reported period operating results had the foreign exchange rates remained the same as those in effect in the comparable prior year period. The effect on our net sales, operating expenses, and operating income from changes in our foreign exchange rates versus the U.S. Dollar is as follows (in millions): Three Months Ended June 30, Six Months Ended June 30, 2025 2026 2025 2026 As Reported Exchange Rate Effect (1) At Prior Year Rates (2) As Reported Exchange Rate Effect (1) At Prior Year Rates (2) As Reported Exchange Rate Effect (1) At Prior Year Rates (2) As Reported Exchange Rate Effect (1) At Prior Year Rates (2) Net sales $ 167,702 $ (1,515) $ 166,187 $ 200,606 $ (75) $ 200,531 $ 323,369 $ (75) $ 323,294 $ 382,125 $ (2,952) $ 379,173 Operating expenses 148,531 (1,362) 147,169 173,145 (180) 172,965 285,793 131 285,924 330,812 (3,090) 327,722 Operating income 19,171 (153) 19,018 27,461 105 27,566 37,576 (206) 37,370 51,313 138 51,451 ___________________ (1) Represents the change in reported amounts resulting from changes in foreign exchange rates from those in effect in the comparable prior year period for operating results. (2) Represents the outcome that would have resulted had foreign exchange rates in the reported period been the same as those in effect in the comparable prior year period for operating results. 34 Table of Contents Guidance We provided gui",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "Free Cash Flow",
+      "offset": 146522,
+      "excerpt": "cash or other financing options may change over time. Therefore, we believe it is important to view free cash flow only as a complement to our entire consolidated statements of cash flows. Effect of Foreign Exchange Rates Information regarding the effect of foreign exchange rates, versus the U.S. Dollar, on our net sales, operating expenses, and operating income is provided to show reported period operating results had the foreign exchange rates remained the same as those in effect in the comparable prior year period. The effect on our net sales, operating expenses, and operating income from changes in our foreign exchange rates versus the U.S. Dollar is as follows (in millions): Three Months Ended June 30, Six Months Ended June 30, 2025 2026 2025 2026 As Reported Exchange Rate Effect (1) At Prior Year Rates (2) As Reported Exchange Rate Effect (1) At Prior Year Rates (2) As Reported Exchange Rate Effect (1) At Prior Year Rates (2) As Reported Exchange Rate Effect (1) At Prior Year Rates (2) Net sales $ 167,702 $ (1,515) $ 166,187 $ 200,606 $ (75) $ 200,531 $ 323,369 $ (75) $ 323,294 $ 382,125 $ (2,952) $ 379,173 Operating expenses 148,531 (1,362) 147,169 173,145 (180) 172,965 285,793 131 285,924 330,812 (3,090) 327,722 Operating income 19,171 (153) 19,018 27,461 105 27,566 37,576 (206) 37,370 51,313 138 51,451 ___________________ (1) Represents the change in reported amounts resulting from changes in foreign exchange rates from those in effect in the comparable prior year period for operating results. (2) Represents the outcome that would have resulted had foreign exchange rates in the reported period been the same as those in effect in the comparable prior year period for operating results. 34 Table of Contents Guidance We provided guidance on July 30, 2026, in our earnings release furnished on Form 8-K as set forth below. These forward-looking statements reflect Amazon.com\u2019s expectations as of July 30, 2026, and are subject to substantial uncertainty. Our results are inherently unpredictable and may be materially affected by many factors, such as fluctuations i",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "Cost of Sales",
+      "offset": 131160,
+      "excerpt": "ges in foreign exchange rates did not significantly impact cost of sales for Q2 2026, but increased cost of sales by $1.8 billion for the six months ended June 30, 2026. Shipping costs were $23.4 billion and $27.9 billion in Q2 2025 and Q2 2026, and $45.9 billion and $53.6 billion for the six months ended June 30, 2025 and 2026. Shipping costs to receive products from our suppliers are included in our inventory and recognized as cost of sales upon sale of products to our customers. We expect our cost of shipping to continue to increase to the 30 Table of Contents extent our customers accept and use our shipping offers at an increasing rate, we use more expensive shipping methods, and we offer additional services. We seek to mitigate costs of shipping over time in part through achieving higher sales volumes, optimizing our fulfillment network, negotiating better terms with our suppliers, and achieving better operating efficiencies. We believe that offering low prices to our customers is fundamental to our future success, and one way we offer lower prices is through shipping offers. Costs to operate our AWS segment are primarily classified as \u201cTechnology and infrastructure\u201d as we leverage a shared infrastructure that supports both our internal technology requirements and external sales to AWS customers. Fulfillment Fulfillment costs primarily consist of those costs incurred in operating and staffing our North America and International fulfillment centers, physical stores, and customer service centers and payment processing costs. While AWS payment processing and related transaction costs are included in \u201cFulfillment,\u201d AWS costs are primarily classified as \u201cTechnology and infrastructure.\u201d Fulfillment costs as a percentage of net sales may vary due to several factors, such as payment processing and related transaction costs, our level of productivity and accuracy, changes in volume, size, and weight of units received and fulfilled, the extent to which third-party sellers utilize Fulfillment by Amazon services, timing of fulfillment network and physical store expansion",
+      "source": "2026-06-30.htm"
+    },
+    {
+      "pattern": "Cost of Sales",
+      "offset": 131493,
+      "excerpt": "ipping costs to receive products from our suppliers are included in our inventory and recognized as cost of sales upon sale of products to our customers. We expect our cost of shipping to continue to increase to the 30 Table of Contents extent our customers accept and use our shipping offers at an increasing rate, we use more expensive shipping methods, and we offer additional services. We seek to mitigate costs of shipping over time in part through achieving higher sales volumes, optimizing our fulfillment network, negotiating better terms with our suppliers, and achieving better operating efficiencies. We believe that offering low prices to our customers is fundamental to our future success, and one way we offer lower prices is through shipping offers. Costs to operate our AWS segment are primarily classified as \u201cTechnology and infrastructure\u201d as we leverage a shared infrastructure that supports both our internal technology requirements and external sales to AWS customers. Fulfillment Fulfillment costs primarily consist of those costs incurred in operating and staffing our North America and International fulfillment centers, physical stores, and customer service centers and payment processing costs. While AWS payment processing and related transaction costs are included in \u201cFulfillment,\u201d AWS costs are primarily classified as \u201cTechnology and infrastructure.\u201d Fulfillment costs as a percentage of net sales may vary due to several factors, such as payment processing and related transaction costs, our level of productivity and accuracy, changes in volume, size, and weight of units received and fulfilled, the extent to which third-party sellers utilize Fulfillment by Amazon services, timing of fulfillment network and physical store expansion, the extent we utilize fulfillment services provided by third parties, mix of products and services sold, and our ability to affect customer service contacts per unit by implementing improvements in our operations and enhancements to our customer self-service features. Additionally, sales by our sellers have higher payment process",
+      "source": "2026-06-30.htm"
+    }
+  ]
+}

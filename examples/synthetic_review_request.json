@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "mode": "annual",
+  "entity": "SYNTHETIC-ONLY",
+  "cik": "0000000001",
+  "scope": "entity-wide",
+  "currency": "USD",
+  "scale": "1000000",
+  "as_of": "2026-10-20",
+  "periods": [
+    {
+      "role": "fy_t_minus_3",
+      "label": "FY2022",
+      "fiscal_year": 2022,
+      "start": "2022-01-01",
+      "end": "2022-12-31",
+      "ltm_start": "2022-01-01",
+      "evidence_ids": [
+        "calendar"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "fy_t_minus_2",
+      "label": "FY2023",
+      "fiscal_year": 2023,
+      "start": "2023-01-01",
+      "end": "2023-12-31",
+      "ltm_start": "2023-01-01",
+      "evidence_ids": [
+        "calendar"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "fy_t_minus_1",
+      "label": "FY2024",
+      "fiscal_year": 2024,
+      "start": "2024-01-01",
+      "end": "2024-12-31",
+      "ltm_start": "2024-01-01",
+      "evidence_ids": [
+        "calendar"
+      ],
+      "quarter": null,
+      "reason": ""
+    },
+    {
+      "role": "fy_t",
+      "label": "FY2025",
+      "fiscal_year": 2025,
+      "start": "2025-01-01",
+      "end": "2025-12-31",
+      "ltm_start": "2025-01-01",
+      "evidence_ids": [
+        "calendar"
+      ],
+      "quarter": null,
+      "reason": ""
+    }
+  ],
+  "evidence": [
+    {
+      "id": "calendar",
+      "entity": "SYNTHETIC-ONLY",
+      "scope": "entity-wide",
+      "source_id": "fixture-calendar",
+      "version": "v1",
+      "document_date": "2026-01-01",
+      "locator": "calendar table",
+      "kind": "calendar",
+      "period_roles": [
+        "fy_t_minus_3",
+        "fy_t_minus_2",
+        "fy_t_minus_1",
+        "fy_t"
+      ],
+      "content": "Synthetic fiscal calendar",
+      "purpose": "borrower"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "success": false,
+  "error": "panic: panicked at /rustc/31fca3adb283cc9dfd56b49cdee9a96eb9c96ffd/library/std/src/env.rs:162:83:\ncalled `Result::unwrap()` on an `Err` value: \"/Users/yuntzuyu/financial_dashborad_automation_with_API\uff3fupdated \u50e8\\x83\\xA6\u60fe\\x83\\xB0\u70fa\\x83\\xA4\u60f7\\xA5\u60fc\\x83\\xBF\u50ed\\x80\u90f6\\x83\\xB3 8.24.2026/venv/bin/python\"\n",
+  "stdout": ""
+}
