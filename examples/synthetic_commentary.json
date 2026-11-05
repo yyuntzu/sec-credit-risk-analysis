@@ -1,25 +1,6 @@
 {
   "documents": [
     {
-      "id": "mda:fy_t_minus_1",
-      "entity": "SYNTHETIC-ONLY",
-      "cik": "0000000001",
-      "scope": "entity-wide",
-      "source_id": "SYNTHETIC-fy_t_minus_1",
-      "version": "v1",
-      "document_date": "2025-02-01",
-      "source_url": "fixture://fy_t_minus_1",
-      "section": "MD&A",
-      "periods": [
-        {
-          "role": "fy_t_minus_1",
-          "start": "2024-01-01",
-          "end": "2024-12-31"
-        }
-      ],
-      "text": "Synthetic fixture only. Revenue reflected lower shipment volume."
-    },
-    {
       "id": "mda:fy_t",
       "entity": "SYNTHETIC-ONLY",
       "cik": "0000000001",
@@ -57,19 +38,10 @@
       ],
       "citations": [
         {
-          "document_id": "mda:fy_t_minus_1",
-          "quote": "Synthetic fixture only. Revenue reflected lower shipment volume."
-        },
-        {
           "document_id": "mda:fy_t",
           "quote": "Synthetic fixture only. Revenue increased because shipment volume rose."
         }
-      ],
-      "review": {
-        "verified_by": "Synthetic reviewer",
-        "verified_at": "2026-02-02",
-        "method": "checked_against_source"
-      }
+      ]
     }
   ]
 }

@@ -189,7 +189,7 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
             'definition', tuple(p.role for p in report.periods), 'Dashboard authorized; display canonical formal facts and acceptance state')
         report = replace(report, evidence=evidence, decisions={**report.decisions, 'DEC-11': eid})
         # Commentary has its own auditable stage. Failure keeps numeric drafts;
-        # neither missing nor model-proposed causes can pass final acceptance.
+        # commentary availability is independent of financial acceptance.
         try:
             try:
                 from .formal_commentary import collect_sec_documents, validate_documents, apply_commentary, commentary_gaps
@@ -224,13 +224,15 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
             gaps = commentary_gaps(report)
             manifest['stages']['commentary'] = 'not_requested' if commentary_mode=='off' else 'incomplete' if gaps else 'passed'
             write_json(directory/'commentary_validation.json',dict(complete=not gaps,incomplete_topics=gaps,
-                mode=commentary_mode,model=generation_model,version='formal-commentary-v1',
-                semantic_review='Independent source review required for model proposals'))
+                mode=commentary_mode,model=generation_model,version='formal-commentary-display-v2',
+                semantic_review='Not required; display model summary and source excerpt'))
             manifest['outputs']['commentary_validation_path']=str(directory/'commentary_validation.json')
         except Exception as exc:
             manifest['stages']['commentary']='failed'
-            manifest.setdefault('errors',{})['commentary']=str(exc)
-            write_json(directory/'commentary_validation.json',dict(complete=False,error=str(exc)))
+            report=replace(report,tables=tuple(replace(t,narratives=tuple(
+                replace(n,reason='分析尚未取得：'+str(exc)) for n in t.narratives)) for t in report.tables))
+            manifest.setdefault('warnings',{})['commentary']=str(exc)
+            write_json(directory/'commentary_validation.json',dict(complete=False,error=str(exc),mode=commentary_mode,version='formal-commentary-display-v2'))
             manifest['outputs']['commentary_validation_path']=str(directory/'commentary_validation.json')
         outputs = write_report_artifacts(report, acceptance, directory, source_bundle=bundle)
         acceptance = load_json(directory / 'acceptance.json')

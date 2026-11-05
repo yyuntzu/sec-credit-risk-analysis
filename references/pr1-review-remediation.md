@@ -1,5 +1,9 @@
 # PR #1 review remediation — 2026-10-30
 
+Commentary policy update (2026-10-31): narrative completeness and manual review
+are no longer financial acceptance gates. See `formal-commentary.md` for the
+current PM-approved display-only policy; the historical test record below predates it.
+
 Branch: `codex/loan-review-integration`. Base: `origin/master`.
 No merge or deployment is part of this change.
 

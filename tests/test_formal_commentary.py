@@ -42,42 +42,44 @@ def inputs():
 
 
 class EvidenceCommentaryTests(unittest.TestCase):
-    def test_reviewed_cause_is_canonical_and_provenance_is_retained(self):
+    def test_model_summary_is_canonical_and_provenance_is_retained(self):
         request,_,report,_,bundle=inputs()
         result=commentary.apply_commentary(report,request,**bundle)
         n=result.tables[0].narratives[0]
         self.assertEqual(n.text,bundle['claims'][0]['explanation'])
-        self.assertTrue(commentary.is_reviewed(result,'income',n))
+        self.assertFalse(commentary.is_reviewed(result,'income',n))
         self.assertEqual(result.facts,report.facts)
         self.assertEqual(len([e for e in result.evidence.values() if e.kind=='passage']),2)
         self.assertFalse(any(g['table']=='income' and g['topic']=='revenue' for g in commentary.commentary_gaps(result)))
 
-    def test_numeric_comparisons_do_not_satisfy_cause_acceptance(self):
+    def test_commentary_gaps_are_diagnostics_not_financial_blockers(self):
         _,_,report,acceptance,_=inputs()
         self.assertEqual(report.tables[0].narratives[0].claim_type,'comparison')
         self.assertFalse(acceptance['commentary_complete'])
-        self.assertIn('Required source-based cause commentary is missing or awaits independent review',acceptance['acceptance_blockers'])
+        self.assertFalse(acceptance['commentary_required_for_acceptance'])
+        self.assertFalse(any('commentary' in b for b in acceptance['acceptance_blockers']))
 
-    def test_commentary_alone_blocks_an_otherwise_fully_accepted_report(self):
+    def test_missing_commentary_does_not_block_otherwise_accepted_financial_report(self):
         from test_pr_review_regressions import accepted_fixture
         report,acceptance=accepted_fixture()
-        self.assertTrue(acceptance['substantive_data_ready'])
-        table=report.tables[0]
-        observation=replace(table.narratives[0],claim_type='observation',text='Only a numeric observation.')
-        report=replace(report,tables=(replace(table,narratives=(observation,)+table.narratives[1:]),)+report.tables[1:])
+        tables=tuple(replace(t,narratives=tuple(replace(n,status='missing',text='',reason='分析尚未取得')
+            for n in t.narratives)) for t in report.tables)
+        report=replace(report,tables=tables)
         acceptance=pipeline.acceptance_result(report,acceptance['reconciliations'])
-        self.assertEqual(acceptance['acceptance_blockers'],
-                         ['Required source-based cause commentary is missing or awaits independent review'])
+        self.assertEqual(acceptance['acceptance_blockers'],[])
+        self.assertTrue(acceptance['substantive_data_ready'])
+        self.assertFalse(acceptance['commentary_complete'])
         cloud=ReviewCloud(project='fixture-project',dataset='raw',client=MagicMock())
-        with patch.object(cloud,'write') as write,self.assertRaisesRegex(ValueError,'independently verified'):
+        with patch.object(cloud,'write') as write,patch.object(cloud,'dbt'):
             cloud.publish('a'*32,report.entity,report_payload(report),{**acceptance,'final_report_accepted':True,'rendered_validation_passed':True})
-        write.assert_not_called()
+        write.assert_called_once()
 
-    def test_model_proposal_is_visible_but_cannot_approve_itself(self):
+    def test_model_summary_is_visible_without_manual_review(self):
         request,_,report,_,bundle=inputs();bundle['claims'][0].pop('review')
         result=commentary.apply_commentary(report,request,**bundle)
         display=commentary.narrative_display(result,'income',result.tables[0].narratives[0])
-        self.assertIn('待覆核',display['text']);self.assertFalse(display['reviewed'])
+        self.assertIn('模型分析',display['text']);self.assertNotIn('待覆核',display['text'])
+        self.assertFalse(display['reviewed'])
         self.assertFalse(pipeline.acceptance_result(result)['commentary_complete'])
 
     def test_invalid_borrower_dates_scope_and_periods_are_rejected(self):
@@ -96,22 +98,42 @@ class EvidenceCommentaryTests(unittest.TestCase):
         report=commentary.apply_commentary(report,request,**bundle)
         self.assertIn('25.00%',report.tables[0].narratives[0].text)
 
-    def test_invented_quote_wrong_facts_and_uncovered_period_are_rejected(self):
+    def test_summary_is_not_rejected_by_quote_numeric_or_model_id_matching(self):
         request,_,report,_,original=inputs()
-        for mutation in ('quote','facts','coverage','number','topic'):
+        for mutation in ('quote','facts','coverage','number'):
             bundle=deepcopy(original);claim=bundle['claims'][0]
-            if mutation=='quote':claim['citations'][0]['quote']='This sentence was invented.'
-            if mutation=='facts':claim['fact_ids']=['revenue:fy_t']
+            if mutation=='quote':claim['citations'][0]['quote']='A paraphrased reference that is not a verbatim quote.'
+            if mutation=='facts':claim['fact_ids']=['model-did-not-return-canonical-ids']
             if mutation=='coverage':claim['citations']=claim['citations'][1:]
-            if mutation=='number':claim['explanation']='營收增加了999999%。'
-            if mutation=='topic':claim['topic']='unknown'
-            with self.subTest(mutation=mutation),self.assertRaises((ValueError,KeyError)):
-                commentary.apply_commentary(report,request,**bundle)
+            if mutation=='number':claim['explanation']='Model summary mentions 999999; financial tables are not changed.'
+            with self.subTest(mutation=mutation):
+                result=commentary.apply_commentary(report,request,**bundle)
+                self.assertEqual(result.tables[0].narratives[0].text,claim['explanation'])
+                self.assertEqual(result.facts,report.facts)
+                for eid in result.tables[0].narratives[0].evidence_ids:
+                    self.assertTrue(any(result.evidence[eid].content in d['text'] for d in bundle['documents']))
 
-    def test_unattributed_management_claim_is_rejected(self):
+    def test_current_period_document_alone_is_sufficient(self):
+        request,_,report,_,bundle=inputs()
+        bundle['documents']=bundle['documents'][1:]
+        bundle['claims'][0]['citations']=bundle['claims'][0]['citations'][1:]
+        result=commentary.apply_commentary(report,request,**bundle)
+        n=result.tables[0].narratives[0]
+        self.assertEqual(n.text,bundle['claims'][0]['explanation'])
+        self.assertEqual(len(n.evidence_ids),1)
+        self.assertEqual(result.evidence[n.evidence_ids[0]].period_roles,('fy_t',))
+
+    def test_commentary_is_visible_even_when_ratio_inputs_are_missing(self):
+        request,_,report,_,bundle=inputs()
+        bundle['claims'][0].update(topic='gross_margin',explanation='毛利率分析摘要。',fact_ids=[])
+        result=commentary.apply_commentary(report,request,**bundle)
+        self.assertEqual(result.tables[0].narratives[1].text,'毛利率分析摘要。')
+        self.assertEqual(result.facts,report.facts)
+
+    def test_missing_attribution_does_not_discard_summary(self):
         request,_,report,_,bundle=inputs();bundle['claims'][0]['claim_type']='management'
-        with self.assertRaisesRegex(ValueError,'attribution'):
-            commentary.apply_commentary(report,request,**bundle)
+        result=commentary.apply_commentary(report,request,**bundle)
+        self.assertEqual(result.tables[0].narratives[0].text,bundle['claims'][0]['explanation'])
 
     def test_review_cannot_be_reused_after_text_is_changed(self):
         request,_,report,_,bundle=inputs();report=commentary.apply_commentary(report,request,**bundle)
@@ -211,15 +233,34 @@ class WorkflowAndFormatsTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'Stale artifact'):
                 pipeline.validate_saved_artifacts(tmp)
 
-    def test_model_failure_preserves_numeric_outputs_and_blocks_publication(self):
+    def test_model_failure_preserves_numeric_outputs_without_execution_failure(self):
         request,snapshot,_,_,bundle=inputs();bundle.pop('claims')
         cloud=MagicMock();cloud.stage_bundle.side_effect=lambda run_id,entity,b:b
         with tempfile.TemporaryDirectory() as tmp, patch('scripts.mda_commentary.generate_formal_commentary',side_effect=RuntimeError('model unavailable')):
             result=flow.run_review('SYNTHETIC-ONLY',request,source='snapshot',snapshot=snapshot,commentary=bundle,
                 commentary_mode='model',output_dir=tmp,excel=False,execution='cloud',cloud=cloud)
-            self.assertEqual(result['status'],'failed');self.assertEqual(result['stages']['commentary'],'failed')
+            self.assertEqual(result['status'],'draft');self.assertEqual(result['stages']['commentary'],'failed')
             self.assertTrue(Path(tmp,'report.md').exists());self.assertTrue(Path(tmp,'dashboard.html').exists())
-            self.assertIn('model unavailable',result['errors']['commentary']);cloud.publish.assert_not_called()
+            self.assertIn('model unavailable',result['warnings']['commentary']);cloud.publish.assert_not_called()
+
+    def test_model_failure_does_not_block_financially_accepted_delivery(self):
+        from test_pr_review_regressions import accepted_fixture
+        request,snapshot,_,_,bundle=inputs();bundle.pop('claims')
+        report,acceptance=accepted_fixture()
+        for document in bundle['documents']:document['scope']=report.scope
+        report=replace(report,tables=tuple(replace(t,narratives=tuple(replace(n,claim_type='observation',
+            text='Canonical numeric observation.') for n in t.narratives)) for t in report.tables))
+        cloud=MagicMock();cloud.stage_bundle.side_effect=lambda run_id,entity,b:b
+        with tempfile.TemporaryDirectory() as tmp,patch.object(flow,'report_from_source_bundle',return_value=(report,acceptance)),\
+                patch('scripts.mda_commentary.generate_formal_commentary',side_effect=RuntimeError('model unavailable')):
+            result=flow.run_review('SYNTHETIC-ONLY',request,source='snapshot',snapshot=snapshot,commentary=bundle,
+                commentary_mode='model',output_dir=tmp,excel=False,execution='cloud',cloud=cloud)
+            self.assertEqual(result['status'],'accepted',result)
+            self.assertTrue(result['final_report_accepted']);self.assertEqual(result['cloud_status'],'published')
+            self.assertNotIn('errors',result);self.assertIn('model unavailable',result['warnings']['commentary'])
+            self.assertIn('分析尚未取得',Path(tmp,'report.md').read_text())
+            self.assertEqual(json.loads(Path(tmp,'report.json').read_text())['facts'],report_payload(report)['facts'])
+            cloud.publish.assert_called_once()
 
     def test_auto_sec_workflow_calls_source_and_model_adapters(self):
         request,snapshot,_,_,bundle=inputs()
@@ -252,7 +293,7 @@ class WorkflowAndFormatsTests(unittest.TestCase):
                 # Both inline and shared strings are covered by the archive text scan.
                 xml=' '.join(z.read(name).decode() for name in z.namelist() if name.endswith('.xml'))
                 self.assertIn(bundle['claims'][0]['explanation'],xml)
-                self.assertIn('原因分析（已覆核）',xml)
+                self.assertIn('模型分析',xml)
                 for document in bundle['documents']:self.assertIn(document['text'],xml)
             audit=json.loads(Path(tmp,'excel_validation.json').read_text())
             self.assertGreater(audit['commentary_entries'],0)

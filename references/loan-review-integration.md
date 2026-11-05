@@ -231,5 +231,6 @@ to invoke the configured model on supplied documents. See
 
 Outputs now include `commentary.json` and `commentary_validation.json`; JSON,
 Markdown, Dashboard, Excel, and the formal BigQuery commentary view share the
-same narratives. A numeric comparison is insufficient for cause-analysis
-acceptance. Unreviewed model proposals remain visible and block final acceptance.
+same narratives. Commentary is display-only and does not gate financial acceptance. Current MD&A
+is sufficient; missing summaries or model failures remain explicit warnings while
+numeric report delivery continues. Page-number enhancements are deferred.

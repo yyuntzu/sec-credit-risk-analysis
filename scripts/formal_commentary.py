@@ -1,11 +1,10 @@
 """Evidence-bound commentary for the formal report; offline inputs never call APIs.
 
-Model output is a proposal. Exact quotes and canonical fact bindings are checked
-here; substantive acceptance additionally requires a recorded source review.
+Model summaries are displayed with source excerpts. Commentary content and review
+status do not determine financial acceptance; numeric facts remain unchanged.
 """
 from dataclasses import replace
 from datetime import date
-from decimal import Decimal
 import hashlib
 from html.parser import HTMLParser
 import json
@@ -48,10 +47,11 @@ def extract_mda(html, form):
         end = stop.search(text, match.end())
         # A TOC entry without a recognizable TOC terminator must not capture
         # the intervening business/risk sections up to the real MD&A body.
-        if end and index+1<len(starts) and starts[index+1].start()<end.start():
+        if index+1<len(starts) and (end is None or starts[index+1].start()<end.start()):
             continue
-        if end and end.start() - match.start() >= 500:
-            sections.append(text[match.start():end.start()])
+        section_end=end.start() if end else len(text)
+        if section_end-match.start()>=100:
+            sections.append(text[match.start():section_end])
     if not sections: raise ValueError('A bounded MD&A body was not found; provide a reviewed section snapshot')
     return max(sections, key=len)[:80000]
 
@@ -61,7 +61,7 @@ def collect_sec_documents(client, request):
     submissions = client.get_company_submissions(request['entity'])
     if str(submissions.get('cik', '')).zfill(10) != request['cik']:
         raise ValueError('MD&A submissions CIK differs from review request')
-    periods = request['periods']; as_of = date.fromisoformat(request['as_of'])
+    periods = request['periods'][-1:]; as_of = date.fromisoformat(request['as_of'])
     candidates = []
     def add(data):
         keys = ('accessionNumber','filingDate','reportDate','form','primaryDocument')
@@ -160,14 +160,14 @@ def is_reviewed(report, table, narrative):
 
 
 def commentary_gaps(report):
-    return [dict(table=t.spec.key,topic=n.topic,reason=n.reason or 'Source-based cause analysis has not been independently reviewed')
-            for t in report.tables for n in t.narratives if not is_reviewed(report,t.spec.key,n)]
+    return [dict(table=t.spec.key,topic=n.topic,reason=n.reason or '分析尚未取得')
+            for t in report.tables for n in t.narratives if n.status!='supported' or n.claim_type not in ('cause','management')]
 
 
 def narrative_display(report, table, narrative):
     """Shared visible text and sources for every delivery format."""
     reviewed=is_reviewed(report,table,narrative)
-    label=('原因分析（已覆核）' if reviewed else '原因分析（待覆核）') if narrative.claim_type in ('cause','management') else '數值比較／分析限制'
+    label='模型分析' if narrative.claim_type in ('cause','management') else '數值比較／分析限制'
     text=label+'：'+(narrative.text if narrative.status=='supported' else narrative.reason)
     if narrative.status=='supported' and narrative.reason:text+='；限制：'+narrative.reason
     if narrative.attribution:text+='（歸屬：'+narrative.attribution+'）'
@@ -187,85 +187,77 @@ def commentary_payload(report):
             for i,n in enumerate(items)]
 
 
-def apply_commentary(report, request, documents, claims):
-    """Adopt validated source-cited proposals; keep numeric comparisons on failure."""
-    docs = validate_documents(report, request, documents)
-    evidence = dict(report.evidence); tables = []; seen = set(); supplied = {}
-    if not isinstance(claims,list): raise ValueError('Commentary claims must be a list')
-    for claim in claims:
-        if not isinstance(claim,dict): raise ValueError('Commentary claim must be an object')
-        key = (claim.get('table'),claim.get('topic'))
-        if key in seen: raise ValueError('Duplicate commentary topic')
-        seen.add(key); supplied[key] = claim
-    allowed = {(t.spec.key,n.topic) for t in report.tables for n in t.narratives}
-    if set(supplied) - allowed: raise ValueError('Unknown commentary table/topic')
+def commentary_targets(report):
+    """Canonical context for the model; model-returned financial IDs are ignored."""
+    result=[]
     for table in report.tables:
-        narratives = []
+        for n in table.narratives:
+            roles=n.period_roles or ((report.periods[-2].role,report.periods[-1].role)
+                if report.mode.value=='annual' or table.spec.key=='income' else ('latest_fy_end','current_interim'))
+            if report.mode.value=='quarterly' and table.spec.key=='income':
+                roles=('prior_interim','current_interim')
+            result.append(dict(table=table.spec.key,topic=n.topic,
+                fact_ids=[fid for fid in n.fact_ids if report.facts[fid].status in AVAILABLE],
+                period_roles=list(roles),comparison=n.text))
+    return result
+
+
+def apply_commentary(report, request, documents, claims):
+    """Display model summaries without semantic, numerical, or reviewer gates.
+
+    Source excerpts always come from the supplied source text. An approximate or
+    absent model quote falls back to a real source excerpt, never a fabricated quote.
+    Canonical financial facts and calculation metadata are never modified.
+    """
+    docs=validate_documents(report,request,documents)
+    if not isinstance(claims,list):raise ValueError('Commentary claims must be a list')
+    supplied={(c.get('table'),c.get('topic')):c for c in claims if isinstance(c,dict)}
+    targets={(t['table'],t['topic']):t for t in commentary_targets(report)}
+    evidence=dict(report.evidence);tables=[]
+    for table in report.tables:
+        narratives=[]
         for original in table.narratives:
-            claim = supplied.get((table.spec.key,original.topic))
-            if claim is None or claim.get('status') == 'missing':
-                reason = claim.get('reason','MD&A does not explain this topic') if claim else 'No source-based cause commentary supplied'
-                if not isinstance(reason,str) or not reason.strip(): raise ValueError('Missing commentary requires an explicit reason')
-                narratives.append(replace(original, reason=reason)); continue
-            if original.status != 'supported':
-                raise ValueError('Commentary cannot substitute for missing canonical comparison facts')
-            if claim.get('status') != 'supported' or claim.get('claim_type') not in ('cause','management'):
-                raise ValueError('Explicit causal/management commentary status required')
-            if claim.get('fact_ids') != list(original.fact_ids) or claim.get('period_roles') != list(original.period_roles):
-                raise ValueError('Commentary facts/periods differ from canonical comparison')
-            text = claim.get('explanation')
-            if not isinstance(text,str) or not text.strip() or len(text)>1500:
-                raise ValueError('A concise commentary explanation is required (maximum 1500 characters)')
-            citations = claim.get('citations')
-            if not isinstance(citations,list) or not citations: raise ValueError('Commentary requires exact source quotes')
-            eids=[]; covered=set(); quotations=[]
-            for citation in citations:
-                if not isinstance(citation,dict) or set(citation)!={'document_id','quote'}:
-                    raise ValueError('Explicit document ID and source quote required')
-                document=docs[citation['document_id']]; quote=citation['quote']
-                if not isinstance(quote,str) or not 12<=len(quote.strip())<=2000 or quote not in document['text']:
-                    raise ValueError('Commentary quote is not an exact source passage')
-                roles=tuple(p['role'] for p in document['periods'])
-                if not set(roles) <= set(original.period_roles): raise ValueError('Commentary citation covers unrelated periods')
-                covered.update(roles);quotations.append(quote)
-                offset=document['text'].index(quote)
+            key=(table.spec.key,original.topic);target=targets[key];claim=supplied.get(key,{})
+            text=claim.get('explanation','')
+            roles=tuple(target['period_roles'])
+            if claim.get('status')=='missing' or not isinstance(text,str) or not text.strip():
+                reason=claim.get('reason') or '分析尚未取得：MD&A 未提供此項分析或模型未回傳摘要。'
+                narratives.append(replace(original,reason=str(reason)));continue
+            # Only document identity/context is checked. No both-period quote,
+            # exact phrase, numerical token, or manual review requirement.
+            relevant=[d for d in docs.values() if set(p['role'] for p in d['periods']) & set(roles)]
+            if not relevant:
+                narratives.append(replace(original,reason='分析尚未取得：缺少對應財報來源原文。'));continue
+            citations=claim.get('citations',[])
+            selected=[]
+            if isinstance(citations,list):
+                for citation in citations:
+                    if not isinstance(citation,dict):continue
+                    document=docs.get(citation.get('document_id'))
+                    if document in relevant:selected.append((document,citation.get('quote','')))
+            if not selected:
+                # Prefer the current period; prior source material is optional.
+                document=next((d for d in relevant if roles[-1] in [p['role'] for p in d['periods']]),relevant[-1])
+                selected=[(document,'')]
+            eids=[]; excerpt_fallback=False
+            for document,proposed_quote in selected:
+                source=document['text']
+                exact=isinstance(proposed_quote,str) and bool(proposed_quote) and proposed_quote in source
+                quote=proposed_quote[:1000] if exact else source[:1000]
+                excerpt_fallback |= not exact
+                offset=source.index(quote)
                 eid='passage:'+digest([document['id'],document['version'],offset,quote])
                 evidence[eid]=Evidence(eid,report.entity,report.scope,document['source_id'],document['version'],
                     date.fromisoformat(document['document_date']),document['source_url']+'#MD&A:char='+str(offset),
-                    'passage',roles,quote)
+                    'passage',tuple(p['role'] for p in document['periods']),quote)
                 eids.append(eid)
-            if set(original.period_roles) - covered: raise ValueError('Commentary source quotes do not cover both comparison periods')
-            # New numerical assertions must occur in canonical facts or cited text.
-            numbers=lambda value:{Decimal(v) for v in re.findall(r'[+-]?\d+(?:\.\d+)?',value.replace(',',''))}
-            allowed_numbers=numbers(' '.join(quotations))
-            for fid in original.fact_ids:
-                fact=report.facts[fid]
-                if fact.unit!='text':
-                    value=fact.value*100 if fact.unit in ('percent','percentage_points') else fact.value
-                    allowed_numbers.update((value,abs(value)))
-            for role in original.period_roles:
-                period=next(p for p in report.periods if p.role==role)
-                allowed_numbers.update(numbers(period.label))
-            if not numbers(text) <= allowed_numbers: raise ValueError('Commentary introduces unsupported numerical claims')
             attribution=claim.get('attribution','')
-            if not isinstance(attribution,str): raise ValueError('Commentary attribution must be text')
-            if claim['claim_type']=='management' and not attribution: raise ValueError('Management commentary requires attribution')
-            n=Narrative(original.topic,'supported',text=text,claim_type=claim['claim_type'],fact_ids=original.fact_ids,
-                period_roles=original.period_roles,evidence_ids=tuple(dict.fromkeys(eids)),
-                reason='Source-cited commentary proposal; independent review pending',attribution=attribution)
-            review=claim.get('review')
-            if review is not None:
-                if (not isinstance(review,dict) or set(review)!={'verified_by','verified_at','method'}
-                        or review['method']!='checked_against_source' or not isinstance(review['verified_by'],str)
-                        or not review['verified_by'].strip()): raise ValueError('Invalid commentary source-review record')
-                reviewed=date.fromisoformat(review['verified_at'])
-                if reviewed < max(evidence[e].document_date for e in eids): raise ValueError('Commentary review predates cited source')
-                eid='commentary-review:'+digest([review_binding(table.spec.key,n),review])
-                evidence[eid]=Evidence(eid,report.entity,report.scope,'commentary-review',digest(review),reviewed,
-                    'review://'+review['verified_by'],'review',original.period_roles,
-                    json.dumps(dict(binding=review_binding(table.spec.key,n),**review),ensure_ascii=False))
-                n=replace(n,evidence_ids=n.evidence_ids+(eid,),reason='')
-            narratives.append(n)
+            attribution=attribution if isinstance(attribution,str) else ''
+            claim_type='management' if claim.get('claim_type')=='management' and attribution else 'cause'
+            narratives.append(Narrative(original.topic,'supported',text=text,claim_type=claim_type,
+                fact_ids=tuple(target['fact_ids']),period_roles=roles,evidence_ids=tuple(dict.fromkeys(eids)),
+                attribution=attribution,
+                reason='參考原文為財報節錄；模型未提供可直接定位的逐字引述。' if excerpt_fallback else ''))
         tables.append(replace(table,narratives=tuple(narratives)))
     result=replace(report,tables=tuple(tables),evidence=evidence)
     validate_report(result,expected_mode=report.mode)

@@ -63,7 +63,7 @@ def accepted_fixture():
             eids = sorted({e for fid in ids for e in report.facts[fid].evidence_ids}) + [eid]
             checks.append({**binding, 'status': 'matched', 'calculated_value': D(100),
                            'reported_value': D(100), 'difference': D(0), 'evidence_ids': eids})
-    # Substantive acceptance now also requires independently reviewed causes.
+    # Optional reviewed commentary fixture; financial acceptance does not require it.
     from scripts.formal_commentary import review_binding
     tables=[]; evidence=dict(report.evidence)
     for table in report.tables:

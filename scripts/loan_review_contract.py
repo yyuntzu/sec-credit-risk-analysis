@@ -610,7 +610,10 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
         for fid in n.fact_ids:
             _require(fid in report.facts and report.facts[fid].status in AVAILABLE, "EVD-01", f"{context}: unsupported narrative fact")
         covered = {r for e in cited for r in e.period_roles} | {report.facts[f].period_role for f in n.fact_ids}
-        _require(set(n.period_roles) <= covered, "EVD-01", f"{context}: citations do not cover claim periods")
+        if n.claim_type in ("cause", "management"):
+            _require(bool(set(n.period_roles) & covered), "EVD-01", f"{context}: reference must relate to the analysis context")
+        else:
+            _require(set(n.period_roles) <= covered, "EVD-01", f"{context}: citations do not cover claim periods")
         if n.status != "supported":
             _require(not n.text and _text(n.reason), "MISS-04", f"{context}: absent analysis must carry reason, not invented prose")
             if n.status == "not_applicable":
@@ -623,7 +626,7 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
             _require(len(n.period_roles) >= 2 and set(n.period_roles) <= fact_roles, "EVD-01", f"{context}: comparison requires both periods' facts")
         if n.claim_type in ("cause", "management"):
             passage_roles = {r for e in cited if e.kind == "passage" for r in e.period_roles}
-            _require(set(n.period_roles) <= passage_roles, "MISS-04", f"{context}: causal passage for claim periods required")
+            _require(bool(set(n.period_roles) & passage_roles), "MISS-04", f"{context}: source passage required")
         if n.claim_type == "management":
             _require(_text(n.attribution), "EVD-01", f"{context}: management attribution required")
         if n.claim_type == "judgment":
