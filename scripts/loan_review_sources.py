@@ -419,3 +419,17 @@ def write_source_bundle(bundle: dict, path: str | Path) -> Path:
             pass  # Preserve the original write error; no completed path is returned.
         raise
     return destination
+
+
+def balance_sheet_observations(bundle):
+    """Expose eligible instant observations for commentary; preserve source versions.
+
+    Uses the same validated source bundle that drives calculations. No definition,
+    missing-value or amendment selection is performed at this extraction boundary.
+    """
+    cutoff = day(bundle['request']['as_of']) if 'request' in bundle else None
+    if cutoff is None: return []  # Workbook provenance is not a verified SEC calendar.
+    return [dict(c) for c in bundle['evidence'].values()
+            if c.get('origin') == 'sec' and c.get('period_kind') == 'instant'
+            and c.get('status') == 'sourced' and c.get('id') not in bundle.get('excluded', {})
+            and day(c['document_date']) <= cutoff]

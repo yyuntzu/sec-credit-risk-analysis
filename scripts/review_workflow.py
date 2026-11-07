@@ -197,6 +197,14 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
             except ImportError:
                 from formal_commentary import collect_sec_documents, validate_documents, apply_commentary, commentary_gaps
                 from mda_commentary import generate_formal_commentary, MODEL
+            try:
+                from .ratio_commentary_analysis import build_ratio_analysis
+                from .filing_commentary_sources import document_observations
+                from .loan_review_sources import balance_sheet_observations
+            except ImportError:
+                from ratio_commentary_analysis import build_ratio_analysis
+                from filing_commentary_sources import document_observations
+                from loan_review_sources import balance_sheet_observations
             generation_model = None
             commentary_input = commentary if commentary is not None else (snapshot or {}).get('commentary')
             if commentary_mode != 'off':
@@ -212,10 +220,16 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
                     documents = commentary_input.get('documents', [])
                     if not isinstance(documents,list): raise ValueError('Commentary documents must be a list')
                     validate_documents(report, request, documents)
+                    analysis = build_ratio_analysis(report,
+                        balance_sheet_observations(bundle) + document_observations(documents), documents)
+                    write_json(directory / 'ratio_commentary_analysis.json', analysis)
+                    manifest['outputs']['ratio_commentary_analysis_path'] = str(directory / 'ratio_commentary_analysis.json')
+                    write_json(directory / 'commentary_inputs.json', dict(documents=documents, claims=commentary_input.get('claims')))
+                    manifest['outputs']['commentary_inputs_path'] = str(directory / 'commentary_inputs.json')
                     claims = commentary_input.get('claims')
                     if claims is None and (commentary_mode=='model' or commentary_mode=='auto' and source=='sec'):
                         generation_model=os.environ.get('FORMAL_COMMENTARY_MODEL',os.environ.get('ANTHROPIC_MODEL',MODEL))
-                        claims = generate_formal_commentary(report, documents)
+                        claims = generate_formal_commentary(report, documents, ratio_analysis=analysis)
                     if claims is None: claims=[]
                     if not isinstance(claims,list): raise ValueError('Commentary claims must be a list')
                     report = apply_commentary(report, request, documents, claims)
@@ -224,7 +238,7 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
             gaps = commentary_gaps(report)
             manifest['stages']['commentary'] = 'not_requested' if commentary_mode=='off' else 'incomplete' if gaps else 'passed'
             write_json(directory/'commentary_validation.json',dict(complete=not gaps,incomplete_topics=gaps,
-                mode=commentary_mode,model=generation_model,version='formal-commentary-display-v2',
+                mode=commentary_mode,model=generation_model,version='formal-commentary-balance-sheet-v3',
                 semantic_review='Not required; display model summary and source excerpt'))
             manifest['outputs']['commentary_validation_path']=str(directory/'commentary_validation.json')
         except Exception as exc:
@@ -232,7 +246,7 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
             report=replace(report,tables=tuple(replace(t,narratives=tuple(
                 replace(n,reason='分析尚未取得：'+str(exc)) for n in t.narratives)) for t in report.tables))
             manifest.setdefault('warnings',{})['commentary']=str(exc)
-            write_json(directory/'commentary_validation.json',dict(complete=False,error=str(exc),mode=commentary_mode,version='formal-commentary-display-v2'))
+            write_json(directory/'commentary_validation.json',dict(complete=False,error=str(exc),mode=commentary_mode,version='formal-commentary-balance-sheet-v3'))
             manifest['outputs']['commentary_validation_path']=str(directory/'commentary_validation.json')
         outputs = write_report_artifacts(report, acceptance, directory, source_bundle=bundle)
         acceptance = load_json(directory / 'acceptance.json')
