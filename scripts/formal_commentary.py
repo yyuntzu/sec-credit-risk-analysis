@@ -12,8 +12,12 @@ import re
 
 try:
     from .loan_review_contract import Evidence, Narrative, AVAILABLE, validate_report
+    from .filing_commentary_sources import SECTIONS, extract_filing_sections, validate_observations
+    from .ratio_commentary_analysis import comparison_roles, ratio_fact_ids
 except ImportError:
     from loan_review_contract import Evidence, Narrative, AVAILABLE, validate_report
+    from filing_commentary_sources import SECTIONS, extract_filing_sections, validate_observations
+    from ratio_commentary_analysis import comparison_roles, ratio_fact_ids
 
 
 def digest(value):
@@ -61,20 +65,22 @@ def collect_sec_documents(client, request):
     submissions = client.get_company_submissions(request['entity'])
     if str(submissions.get('cik', '')).zfill(10) != request['cik']:
         raise ValueError('MD&A submissions CIK differs from review request')
-    periods = request['periods'][-1:]; as_of = date.fromisoformat(request['as_of'])
+    roles = ('fy_t_minus_1', 'fy_t') if request['mode'] == 'annual' else ('latest_fy_end', 'current_interim')
+    periods = [request['periods'][-1]] + [p for p in request['periods'] if p['role'] == roles[0]]
+    as_of = date.fromisoformat(request['as_of'])
     candidates = []
     def add(data):
         keys = ('accessionNumber','filingDate','reportDate','form','primaryDocument')
         for values in zip(*(data.get(k, []) for k in keys)):
             row = dict(zip(keys, values))
-            if row['form'] in ('10-K','10-Q') and date.fromisoformat(row['filingDate']) <= as_of:
+            if row['form'] in ('10-K','10-Q','10-K/A','10-Q/A') and date.fromisoformat(row['filingDate']) <= as_of:
                 candidates.append(row)
     add(submissions.get('filings', {}).get('recent', {}))
     def matching(p):
         expected = '10-Q' if p['quarter'] is not None else '10-K'
-        return [r for r in candidates if r['reportDate'] == p['end'] and r['form'] == expected]
+        return [r for r in candidates if r['reportDate'] == p['end'] and r['form'] in (expected, expected + '/A')]
     for archive in submissions.get('filings', {}).get('files', []):
-        if all(matching(p) for p in periods): break
+        if matching(periods[0]): break  # Older comparison filing is optional.
         name = archive.get('name', '')
         if not re.fullmatch(r'CIK\d{10}-submissions-\d+\.json', name): continue
         add(client._get('https://data.sec.gov/submissions/' + name))
@@ -89,12 +95,28 @@ def collect_sec_documents(client, request):
         url = f"https://www.sec.gov/Archives/edgar/data/{int(request['cik'])}/{accn.replace('-', '')}/{primary}"
         import time
         time.sleep(client.rate_limit)
-        response = client.session.get(url, headers={'Host':'www.sec.gov'}, timeout=60)
-        response.raise_for_status()
-        section = extract_mda(response.text, row['form'])
-        documents.append(dict(id='mda:' + accn, entity=request['entity'], cik=request['cik'], scope=request['scope'],
-            source_id=accn, version=hashlib.sha256(response.content).hexdigest(), document_date=row['filingDate'],
-            source_url=url, section='MD&A', periods=[{k:period[k] for k in ('role','start','end')}], text=section))
+        try:
+            response = client.session.get(url, headers={'Host':'www.sec.gov'}, timeout=60)
+            response.raise_for_status()
+        except Exception:
+            if period is periods[0]: raise
+            continue  # Prior filing failure must not discard current-period evidence.
+        sections = extract_filing_sections(response.text, request['cik'], {p['end'] for p in periods})
+        try:
+            sections.append(dict(section='MD&A', text=extract_mda(response.text, row['form'])))
+        except ValueError:
+            pass  # Balance-sheet/note analysis can proceed without MD&A.
+        for section in sections:
+            observed_dates = {o['end'] for o in section.get('observations', [])}
+            covered = [p for p in periods if p is period or p['end'] in observed_dates]
+            if sum(len(d['text']) for d in documents) + len(section['text']) > 320000:
+                continue
+            kind = section['section']
+            document = dict(id=('mda' if kind == 'MD&A' else kind.lower().replace(' ', '-')) + ':' + accn,
+                entity=request['entity'], cik=request['cik'], scope=request['scope'], source_id=accn,
+                version=hashlib.sha256(response.content).hexdigest(), document_date=row['filingDate'],
+                source_url=url, filing_type=row['form'], periods=[{k:p[k] for k in ('role','start','end')} for p in covered], **section)
+            documents.append(document)
     return documents
 
 
@@ -103,13 +125,13 @@ def validate_documents(report, request, documents):
     if not isinstance(documents,list): raise ValueError('MD&A documents must be a list')
     for document in documents:
         required = {'id','entity','cik','scope','source_id','version','document_date','source_url','section','periods','text'}
-        if not isinstance(document, dict) or set(document) != required:
+        if not isinstance(document, dict) or not required <= set(document) or set(document) - required - {'observations', 'filing_type'}:
             raise ValueError('MD&A document fields do not match schema')
         if (document['entity'],document['cik'],document['scope']) != (report.entity,request['cik'],report.scope):
             raise ValueError('MD&A borrower/CIK/scope mismatch')
         if date.fromisoformat(document['document_date']) > date.fromisoformat(request['as_of']):
             raise ValueError('MD&A document is later than as_of')
-        if document['section'] != 'MD&A' or any(not isinstance(document[k], str) or not document[k].strip()
+        if document['section'] not in SECTIONS or any(not isinstance(document[k], str) or not document[k].strip()
                 for k in ('id','source_id','version','source_url','text')):
             raise ValueError('Explicit MD&A text and source identity required')
         if not document['source_url'].startswith(('https://','fixture://')):
@@ -129,6 +151,9 @@ def validate_documents(report, request, documents):
                 raise ValueError('MD&A fiscal period coverage differs from canonical request')
             if period.end and period.end > date.fromisoformat(document['document_date']):
                 raise ValueError('MD&A document predates its covered financial period')
+        if document.get('filing_type', '10-K') not in ('10-K','10-Q','10-K/A','10-Q/A'):
+            raise ValueError('Invalid commentary filing type')
+        validate_observations(document)
         result[document['id']] = document
     if sum(len(d['text']) for d in result.values()) > 320000:
         raise ValueError('MD&A document set exceeds the report context budget')
@@ -196,8 +221,12 @@ def commentary_targets(report):
                 if report.mode.value=='annual' or table.spec.key=='income' else ('latest_fy_end','current_interim'))
             if report.mode.value=='quarterly' and table.spec.key=='income':
                 roles=('prior_interim','current_interim')
+            if table.spec.key == 'ratios' and n.topic in ('liquidity', 'debt_ratio'):
+                roles = comparison_roles(report)
+            ids = (ratio_fact_ids(report, n.topic) if table.spec.key == 'ratios' and n.topic in ('liquidity', 'debt_ratio')
+                   else [fid for fid in n.fact_ids if report.facts[fid].status in AVAILABLE])
             result.append(dict(table=table.spec.key,topic=n.topic,
-                fact_ids=[fid for fid in n.fact_ids if report.facts[fid].status in AVAILABLE],
+                fact_ids=ids,
                 period_roles=list(roles),comparison=n.text))
     return result
 
@@ -221,7 +250,7 @@ def apply_commentary(report, request, documents, claims):
             text=claim.get('explanation','')
             roles=tuple(target['period_roles'])
             if claim.get('status')=='missing' or not isinstance(text,str) or not text.strip():
-                reason=claim.get('reason') or '分析尚未取得：MD&A 未提供此項分析或模型未回傳摘要。'
+                reason=claim.get('reason') or '分析尚未取得：財報來源未提供此項分析或模型未回傳摘要。'
                 narratives.append(replace(original,reason=str(reason)));continue
             # Only document identity/context is checked. No both-period quote,
             # exact phrase, numerical token, or manual review requirement.
@@ -248,7 +277,7 @@ def apply_commentary(report, request, documents, claims):
                 offset=source.index(quote)
                 eid='passage:'+digest([document['id'],document['version'],offset,quote])
                 evidence[eid]=Evidence(eid,report.entity,report.scope,document['source_id'],document['version'],
-                    date.fromisoformat(document['document_date']),document['source_url']+'#MD&A:char='+str(offset),
+                    date.fromisoformat(document['document_date']),document['source_url']+'#'+document['section']+':char='+str(offset),
                     'passage',tuple(p['role'] for p in document['periods']),quote)
                 eids.append(eid)
             attribution=claim.get('attribution','')

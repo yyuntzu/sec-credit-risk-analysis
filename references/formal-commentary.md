@@ -1,4 +1,4 @@
-# Loan Review commentary — display policy (2026-10-31)
+# Loan Review commentary — display policy and ratio attribution (2026-11-05)
 
 ## PM-approved behavior
 
@@ -10,7 +10,7 @@
 - Commentary absence or provider failure must not prevent numeric report delivery
   or change otherwise valid financial acceptance/publication.
 - Page-number and paragraph-location enhancements are deferred. Existing source
-  URLs and MD&A character locators are retained without changing their format.
+  URLs and MD&A character locators are retained; new sections use their own section character locators.
 
 ## Financial validation remains strict
 
@@ -30,8 +30,8 @@ Basic document identity, CIK, scope, fiscal context and publication cutoff are k
 so references identify the intended borrower/filing. These are source-routing
 checks, not certification that the model's explanation is correct.
 
-Live SEC commentary retrieves the current requested fiscal endpoint. Missing older
-filings no longer prevent current MD&A analysis. A bounded MD&A section can end at
+Live SEC commentary retrieves the current requested fiscal endpoint, plus an optional
+prior comparison filing when it is listed. Missing older filings do not prevent current-period analysis. A bounded MD&A section can end at
 an explicit next item or at the document end; it need not have both markers.
 
 The model summary is shown as **模型分析**, without a pending-review label. Its
@@ -68,7 +68,10 @@ its existing configured default. Provider credentials/model availability must be
 configured for live generation. No live provider calls were made in local testing.
 
 A document carries `id`, `entity`, `cik`, `scope`, `source_id`, `version`,
-`document_date`, `source_url`, `section: MD&A`, `periods`, and `text`. A claim carries
+`document_date`, `source_url`, `section`, `periods`, and `text`. Sections are
+`MD&A`, `Balance Sheet`, `Debt Note`, or `Equity Note`. Optional `filing_type`
+retains amendment identity. A Balance Sheet may additionally contain bounded
+`observations` with `tag`, `value`, `unit`, `scale`, `end`, and `locator`. A claim carries
 `table`, `topic`, `explanation`, optional `citations` (`document_id`, `quote`), and
 optional status/reason/attribution. Available canonical facts and the report context
 are attached by the application, independently of the model's metadata.
@@ -77,7 +80,10 @@ are attached by the application, independently of the model's metadata.
 
 - `report.json`: canonical numeric report and its displayed narratives.
 - `commentary.json`: shared visible summaries, source excerpts, and availability.
-- `commentary_inputs.json`: supplied source documents and model/curated claims.
+- `commentary_inputs.json`: source documents and model/curated claims, saved before
+  model invocation as well so provider failures retain the inputs.
+- `ratio_commentary_analysis.json`: deterministic ratio, component-change,
+  selected-line reconciliation, source-total comparison and provenance context.
 - `commentary_validation.json`: generation diagnostics, missing topics, or warning.
 - `run_manifest.json`: commentary failure under `warnings`, not execution `errors`.
 
@@ -117,3 +123,53 @@ including actual bundled Excel export, offline dbt parsing, current-period-only
 commentary, and accepted financial delivery despite model failure. The synthetic
 CLI round trip displayed one current MD&A reference with no review record and
 confirmed that every canonical financial fact was unchanged.
+
+
+## Balance-sheet ratio attribution (2026-11-05)
+
+Quarterly compares `latest_fy_end` to `current_interim`; Annual compares
+`fy_t_minus_1` to `fy_t`. Both use the same `ratio_commentary_analysis` engine.
+The liquidity paragraph compares current and quick ratios independently and
+retains a missing quick ratio without discarding an available current comparison.
+
+The source collector retains the current filing's Balance Sheet and bounded,
+numbered Debt/Equity Notes alongside MD&A. It optionally retrieves the prior
+comparison filing; current-only documents remain valid. Inline XBRL observations
+must come from the selected Balance Sheet table, an exact requested instant,
+matching CIK, a non-dimensional context and a simple currency unit. Original
+value/scale/context locators are preserved. Unsupported transforms and unclassified
+company tags stay as source text rather than guessed numeric input. Plain tables
+remain readable even without inline observations. Unknown section layouts, missing
+older filings and oversized sections can leave source gaps; provide an explicit
+section snapshot when automatic extraction cannot identify a bounded body.
+
+`loan_review_sources.balance_sheet_observations` also exposes eligible instant
+observations already retained in the validated source bundle. Common payable,
+prepaid, tax, lease, investment and equity tags are ingested into the same raw
+ledger; no additional financial Fact definitions or BigQuery raw schema are needed.
+The report's approved quick-assets/net-worth definitions remain authoritative.
+Commentary does not infer quick assets or change the report's ratio formulas.
+
+The deterministic pack contains canonical numerator/denominator changes and
+growth, independent ratio movements, exact endpoint dates, individually ranked
+component changes, source versions/locators and explicit partial/conflict states.
+Source totals are compared with canonical totals. Only identified current-group
+lines enter selected-line reconciliations; potential overlapping prepaid/other
+subtotals are excluded from sums. A zero residual confirms the selected amounts,
+not the semantic completeness of the chart of accounts. Missing items are not zero.
+
+The model follows: ratio movement -> material balance-sheet composition ->
+source-supported transaction/event explanation. Numerical composition can explain
+an accounting driver without an explicit causal MD&A sentence. Procurement,
+collection timing, refinancing and other business causes require filing evidence.
+For debt ratio, analyze both Total Liabilities and Net Worth. Read new financing,
+repayment and issuance costs together; gross proceeds do not establish net debt
+growth. Keep principal separate from carrying amounts. Strong-liquidity or
+compliance judgments need additional supporting evidence.
+
+`ratio_commentary_analysis.json` is an audit input, not a second numeric report.
+Model text still follows the display policy above: no manual-review gate or new
+semantic validator. Missing commentary does not block financial acceptance. The
+same canonical narratives and section references flow to Markdown, HTML, Excel and
+`raw_review_results`/the existing BigQuery commentary view. No dbt schema change
+or cloud deployment is required for the expanded text and passage locators.

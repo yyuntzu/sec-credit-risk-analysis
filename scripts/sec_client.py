@@ -19,6 +19,11 @@ from datetime import datetime, date
 from typing import Optional
 import requests
 
+try:
+    from .ratio_commentary_analysis import BALANCE_CONCEPTS
+except ImportError:
+    from ratio_commentary_analysis import BALANCE_CONCEPTS
+
 logger = logging.getLogger(__name__)
 
 # ── SEC EDGAR 連線設定 ────────────────────────────────────────────────────────
@@ -47,7 +52,7 @@ QUARTERLY_MIN_DAYS = 70
 QUARTERLY_MAX_DAYS = 290
 
 # ── Balance Sheet：Point-in-time XBRL tags ───────────────────────────────────
-BALANCE_SHEET_TAGS = frozenset({
+BALANCE_SHEET_TAGS = frozenset(BALANCE_CONCEPTS) | frozenset({
     "Assets",
     "AssetsCurrent",
     "CashAndCashEquivalentsAtCarryingValue",
@@ -386,6 +391,9 @@ class SECEdgarClient:
                 "RepaymentsOfLongTermDebt":                    "debt_repayment_lt",
             },
         }
+
+        for tag, (field, _) in BALANCE_CONCEPTS.items():
+            metrics_map['balance_sheet'].setdefault(tag, field)
 
         result: dict[str, list[dict]] = {}
         ingested_at = datetime.utcnow().isoformat()

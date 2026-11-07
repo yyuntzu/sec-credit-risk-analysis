@@ -227,6 +227,26 @@ def build_narratives(report):
             if table.spec.key != 'income':
                 prev, curr = ('fy_t_minus_1', 'fy_t') if report.mode == Mode.ANNUAL else ('latest_fy_end', 'current_interim')
                 metric = 'current_ratio' if topic == 'liquidity' else {'interest_coverage': 'interest_coverage', 'cash_flow_ratio': 'cash_flow_ratio'}.get(topic, topic)
+            if table.spec.key == 'ratios' and topic == 'liquidity':
+                # Both ratios share the paragraph, but retain independent directions
+                # and missing states. No quick-assets proxy is introduced.
+                comparisons, ids, missing = [], [], []
+                periods = {p.role: p for p in report.periods}
+                for liquidity_metric in ('current_ratio', 'quick_ratio'):
+                    pair_ids = tuple(f'{liquidity_metric}:{role}' for role in (prev, curr))
+                    pair = [report.facts.get(fid) for fid in pair_ids]
+                    if any(f is None or f.status not in AVAILABLE for f in pair):
+                        missing.append(METRICS[liquidity_metric].label + ' 缺少可比較數值')
+                        continue
+                    before, after = pair
+                    direction = '持平' if after.value == before.value else '上升' if after.value > before.value else '下降'
+                    comparisons.append(f'{METRICS[liquidity_metric].label} 由 {periods[prev].end} 的 {before.value * 100:,.2f}% '
+                                       f'{direction}至 {periods[curr].end} 的 {after.value * 100:,.2f}%。')
+                    ids.extend(pair_ids)
+                narratives.append(Narrative(topic, 'supported' if comparisons else 'missing',
+                    text=' '.join(comparisons), claim_type='comparison', fact_ids=tuple(ids),
+                    period_roles=(prev, curr) if comparisons else (), reason='；'.join(missing + ['所選來源輸入未附原因分析，本段僅作數值比較。'])))
+                continue
             ids = (f'{metric}:{prev}', f'{metric}:{curr}')
             items = [report.facts.get(fid) for fid in ids]
             if any(f is None or f.status not in AVAILABLE for f in items):
