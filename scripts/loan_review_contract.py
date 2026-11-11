@@ -398,6 +398,8 @@ def calculate_identity(report: Report, fact_id: str, *, formula_id: str,
     metric, expected, sign = rules[formula_id]
     target = report.facts[fact_id]
     _require(target.metric == metric and target.status not in AVAILABLE, "DATA-01", "Identity target mismatch or available source")
+    _require(target.status not in (Status.CONFLICT, Status.NOT_APPLICABLE),
+             "DATA-01", "Identity cannot replace conflicting or inapplicable source conclusions")
     _require(_text(formula_version), "CALC-02", "Explicit formula version required")
     evidence = report.evidence.get(definition_evidence_id)
     _require(evidence is not None and evidence.kind == "definition" and target.period_role in evidence.period_roles,

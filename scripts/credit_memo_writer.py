@@ -730,6 +730,20 @@ def render_loan_review(report, acceptance) -> str:
         from loan_review_pipeline import validate_arithmetic
     validate_report(report, expected_mode=report.mode)
     validate_arithmetic(report)
+    return _render_validated_loan_review(report, acceptance)
+
+
+def _render_validated_loan_review(report, acceptance):
+    """Presentation only; callers must validate their own calculation boundary.
+
+    The Python path above independently recomputes arithmetic. The isolated dbt
+    candidate consumer verifies a pinned calculation receipt before calling here.
+    This function never grants acceptance or publication.
+    """
+    if __package__:
+        from .loan_review_contract import AVAILABLE, METRICS
+    else:
+        from loan_review_contract import AVAILABLE, METRICS
     chinese = {
         'revenue': '營業收入', 'cost_of_revenue': '營業成本', 'gross_profit': '毛利',
         'operating_expense': '營業費用', 'operating_income': '營業利益', 'interest_expense': '利息費用',

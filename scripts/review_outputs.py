@@ -23,14 +23,21 @@ def write_dashboard(report, acceptance, directory):
     except ImportError:
         from formal_commentary import narrative_display
     parts = [f'<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><title>{e(report.entity)} Loan Review</title>',
-        '<style>body{font:16px system-ui;margin:32px;color:#243746}table{border-collapse:collapse;width:100%;margin:20px 0}td,th{border:1px solid #cbd5e1;padding:10px;text-align:right}th:first-child,td:first-child{text-align:left}th{background:#e8eef4}details{margin:12px 0}.pending{color:#9a3412}small{color:#475569}</style>',
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<style>body{font:16px system-ui;line-height:1.6;margin:0 auto;padding:24px;max-width:1400px;color:#243746;overflow-wrap:anywhere}'
+        '.table-scroll{overflow-x:auto;margin:20px 0;border:1px solid #cbd5e1}table{border-collapse:collapse;width:100%;min-width:650px}'
+        'td,th{border:1px solid #cbd5e1;padding:10px;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left;white-space:normal;min-width:100px}'
+        'th{background:#e8eef4}details{margin:12px 0}.pending{color:#9a3412}small,.table-hint{color:#475569}.table-hint{font-size:14px}'
+        '@media(min-width:900px){.table-hint{display:none}}</style>',
         f'<h1>{e(report.entity)} · Loan Review</h1>',
-        f'<p>{e(report.mode.value)} · {e(report.currency)} · scale={e(report.scale)}</p>',
+        f'<p>{"年度" if report.mode.value=="annual" else "季度"} · {e(report.currency)} · '
+        + ('金額以百萬為單位' if report.scale==Decimal(1000000) else f'每單位 {e(report.scale)}') + '</p>',
         '<h2>' + ('正式驗收通過' if acceptance['final_report_accepted'] else '待驗收覆核稿') + '</h2>',
         '<ul>' + ''.join(f'<li class="pending">{e(x)}</li>' for x in acceptance['acceptance_blockers']) + '</ul>']
     periods = {p.role: p.label for p in report.periods}
     for table in report.tables:
-        parts += [f'<h2>{e(table.spec.heading)}</h2><table><thead><tr><th>科目</th>']
+        parts += [f'<h2>{e(table.spec.heading)}</h2><p class="table-hint">可左右捲動表格，查看全部期間。</p>'
+                  f'<div class="table-scroll" role="region" aria-label="{e(table.spec.heading)} · 可橫向捲動" tabindex="0"><table><thead><tr><th>科目</th>']
         parts += [f'<th>{e("營收占比 · " + periods[c[4:]] if c.startswith("pct:") else periods[c])}</th>' for c in table.spec.columns]
         parts.append('</tr></thead><tbody>')
         for metric, cells in zip(table.spec.rows, table.cells):
@@ -47,7 +54,7 @@ def write_dashboard(report, acceptance, directory):
                     label = f.value if f.status in AVAILABLE else f.status.value
                 parts.append(f'<td data-fact-id="{e(fid)}" data-status="{e(f.status.value)}" title="{e(f.reason or f.definition)}">{e(label)}</td>')
             parts.append('</tr>')
-        parts.append('</tbody></table>')
+        parts.append('</tbody></table></div>')
         for narrative in table.narratives + table.notes:
             display=narrative_display(report,table.spec.key,narrative)
             parts.append(f'<p data-commentary-topic="{e(narrative.topic)}" data-reviewed="{str(display["reviewed"]).lower()}">{e(display["text"])}</p>')

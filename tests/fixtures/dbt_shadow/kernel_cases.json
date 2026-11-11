@@ -1,0 +1,569 @@
+[
+  {
+    "case_id": "CF-01-large-exact",
+    "formula_id": "CF-01",
+    "values": [
+      "100000000000000000000000000000000000000",
+      "1"
+    ],
+    "expected": "100000000000000000000000000000000000000"
+  },
+  {
+    "case_id": "CF-01-small-exact",
+    "formula_id": "CF-01",
+    "values": [
+      "0.00000000000000000000000000000000000001",
+      "1"
+    ],
+    "expected": "0"
+  },
+  {
+    "case_id": "CF-04-negative-numerator",
+    "formula_id": "CF-04",
+    "values": [
+      "-100",
+      "10",
+      "2"
+    ],
+    "expected": "-7.5"
+  },
+  {
+    "case_id": "CF-09-negative-base",
+    "formula_id": "CF-09",
+    "values": [
+      "-20",
+      "-10"
+    ],
+    "expected": "1"
+  },
+  {
+    "case_id": "CF-16-cross-zero",
+    "formula_id": "CF-16",
+    "values": [
+      "-0.02",
+      "0.03"
+    ],
+    "expected": "-0.05"
+  },
+  {
+    "case_id": "CF-01-positive",
+    "formula_id": "CF-01",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-01-zero",
+    "formula_id": "CF-01",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-01-negative",
+    "formula_id": "CF-01",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "CF-02-positive",
+    "formula_id": "CF-02",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-02-zero",
+    "formula_id": "CF-02",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-02-negative",
+    "formula_id": "CF-02",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "CF-03-positive",
+    "formula_id": "CF-03",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-03-zero",
+    "formula_id": "CF-03",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-03-negative",
+    "formula_id": "CF-03",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "CF-06-positive",
+    "formula_id": "CF-06",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-06-zero",
+    "formula_id": "CF-06",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-06-negative",
+    "formula_id": "CF-06",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "CF-10-positive",
+    "formula_id": "CF-10",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-10-zero",
+    "formula_id": "CF-10",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-10-negative",
+    "formula_id": "CF-10",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "CF-11-positive",
+    "formula_id": "CF-11",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-11-zero",
+    "formula_id": "CF-11",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-11-negative",
+    "formula_id": "CF-11",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "CF-12-positive",
+    "formula_id": "CF-12",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-12-zero",
+    "formula_id": "CF-12",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-12-negative",
+    "formula_id": "CF-12",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "COMMON-SIZE-v1-positive",
+    "formula_id": "COMMON-SIZE-v1",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "COMMON-SIZE-v1-zero",
+    "formula_id": "COMMON-SIZE-v1",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "COMMON-SIZE-v1-negative",
+    "formula_id": "COMMON-SIZE-v1",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "LEVERAGE-v1-positive",
+    "formula_id": "LEVERAGE-v1",
+    "values": [
+      "12",
+      "3"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "LEVERAGE-v1-zero",
+    "formula_id": "LEVERAGE-v1",
+    "values": [
+      "12",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "LEVERAGE-v1-negative",
+    "formula_id": "LEVERAGE-v1",
+    "values": [
+      "-12",
+      "3"
+    ],
+    "expected": "-4"
+  },
+  {
+    "case_id": "CF-04-signed",
+    "formula_id": "CF-04",
+    "values": [
+      "90",
+      "10",
+      "15"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-05-signed",
+    "formula_id": "CF-05",
+    "values": [
+      "70",
+      "10",
+      "20",
+      "15"
+    ],
+    "expected": "4"
+  },
+  {
+    "case_id": "CF-09-signed",
+    "formula_id": "CF-09",
+    "values": [
+      "150",
+      "100"
+    ],
+    "expected": "0.5"
+  },
+  {
+    "case_id": "CF-16-signed",
+    "formula_id": "CF-16",
+    "values": [
+      "0.2",
+      "0.3"
+    ],
+    "expected": "-0.1"
+  },
+  {
+    "case_id": "CASH-CHANGE-v1-signed",
+    "formula_id": "CASH-CHANGE-v1",
+    "values": [
+      "1",
+      "3"
+    ],
+    "expected": "-2"
+  },
+  {
+    "case_id": "STANDARD-EBITDA-v1-signed",
+    "formula_id": "STANDARD-EBITDA-v1",
+    "values": [
+      "80",
+      "10",
+      "-20",
+      "30"
+    ],
+    "expected": "100"
+  },
+  {
+    "case_id": "DER-01-signed",
+    "formula_id": "DER-01",
+    "values": [
+      "80",
+      "20"
+    ],
+    "expected": "60"
+  },
+  {
+    "case_id": "DER-02-signed",
+    "formula_id": "DER-02",
+    "values": [
+      "80",
+      "20"
+    ],
+    "expected": "60"
+  },
+  {
+    "case_id": "DER-03-signed",
+    "formula_id": "DER-03",
+    "values": [
+      "80",
+      "20"
+    ],
+    "expected": "60"
+  },
+  {
+    "case_id": "DER-04-signed",
+    "formula_id": "DER-04",
+    "values": [
+      "80",
+      "20"
+    ],
+    "expected": "60"
+  },
+  {
+    "case_id": "DER-06-signed",
+    "formula_id": "DER-06",
+    "values": [
+      "80",
+      "20"
+    ],
+    "expected": "60"
+  },
+  {
+    "case_id": "DER-05-signed",
+    "formula_id": "DER-05",
+    "values": [
+      "80",
+      "-20"
+    ],
+    "expected": "60"
+  },
+  {
+    "case_id": "CF-04-zero-combined",
+    "formula_id": "CF-04",
+    "values": [
+      "90",
+      "10",
+      "-10"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-05-zero-combined",
+    "formula_id": "CF-05",
+    "values": [
+      "70",
+      "10",
+      "20",
+      "-10"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "CF-09-zero",
+    "formula_id": "CF-09",
+    "values": [
+      "100",
+      "0"
+    ],
+    "expected": null
+  },
+  {
+    "case_id": "repeating-third",
+    "formula_id": "CF-01",
+    "values": [
+      "1",
+      "3"
+    ],
+    "expected": "0.333333333333333333"
+  },
+  {
+    "case_id": "q18-tie-positive-5",
+    "formula_id": "CF-01",
+    "values": [
+      "0.0000000000000000005",
+      "1"
+    ],
+    "expected": "0"
+  },
+  {
+    "case_id": "q18-tie-positive-15",
+    "formula_id": "CF-01",
+    "values": [
+      "0.0000000000000000015",
+      "1"
+    ],
+    "expected": "0.000000000000000002"
+  },
+  {
+    "case_id": "q18-tie-positive-25",
+    "formula_id": "CF-01",
+    "values": [
+      "0.0000000000000000025",
+      "1"
+    ],
+    "expected": "0.000000000000000002"
+  },
+  {
+    "case_id": "q18-tie-positive-35",
+    "formula_id": "CF-01",
+    "values": [
+      "0.0000000000000000035",
+      "1"
+    ],
+    "expected": "0.000000000000000004"
+  },
+  {
+    "case_id": "q18-double-positive-above",
+    "formula_id": "CF-01",
+    "values": [
+      "50000000000000000000.00000000000000000001",
+      "1e38"
+    ],
+    "expected": "0.000000000000000001"
+  },
+  {
+    "case_id": "q18-double-positive-tie",
+    "formula_id": "CF-01",
+    "values": [
+      "50000000000000000000",
+      "1e38"
+    ],
+    "expected": "0"
+  },
+  {
+    "case_id": "q18-double-positive-below",
+    "formula_id": "CF-01",
+    "values": [
+      "49999999999999999999.99999999999999999999",
+      "1e38"
+    ],
+    "expected": "0"
+  },
+  {
+    "case_id": "q18-tie-negative-5",
+    "formula_id": "CF-01",
+    "values": [
+      "-0.0000000000000000005",
+      "1"
+    ],
+    "expected": "0"
+  },
+  {
+    "case_id": "q18-tie-negative-15",
+    "formula_id": "CF-01",
+    "values": [
+      "-0.0000000000000000015",
+      "1"
+    ],
+    "expected": "-0.000000000000000002"
+  },
+  {
+    "case_id": "q18-tie-negative-25",
+    "formula_id": "CF-01",
+    "values": [
+      "-0.0000000000000000025",
+      "1"
+    ],
+    "expected": "-0.000000000000000002"
+  },
+  {
+    "case_id": "q18-tie-negative-35",
+    "formula_id": "CF-01",
+    "values": [
+      "-0.0000000000000000035",
+      "1"
+    ],
+    "expected": "-0.000000000000000004"
+  },
+  {
+    "case_id": "q18-double-negative-above",
+    "formula_id": "CF-01",
+    "values": [
+      "-50000000000000000000.00000000000000000001",
+      "1e38"
+    ],
+    "expected": "-0.000000000000000001"
+  },
+  {
+    "case_id": "q18-double-negative-tie",
+    "formula_id": "CF-01",
+    "values": [
+      "-50000000000000000000",
+      "1e38"
+    ],
+    "expected": "0"
+  },
+  {
+    "case_id": "q18-double-negative-below",
+    "formula_id": "CF-01",
+    "values": [
+      "-49999999999999999999.99999999999999999999",
+      "1e38"
+    ],
+    "expected": "0"
+  }
+]

@@ -116,11 +116,18 @@ class ReviewCloud:
     def record_run(self, run_id, entity, manifest):
         self.write('raw_review_runs', run_id, entity, [('run', 'manifest', manifest)])
 
-    def dbt(self, stage):
+    def dbt(self, stage, *, variables=None, artifact_dir=None):
         project = Path(os.environ.get('DBT_PROJECT_DIR', Path(__file__).resolve().parents[1] / 'references/dbt')).resolve()
-        selection = {'source': 'stg_loan_review_run_sources', 'legacy_source': 'stg_loan_review_sources', 'publish': 'tag:formal_review_marts'}[stage]
+        selection = {'source': 'stg_loan_review_run_sources', 'legacy_source': 'stg_loan_review_sources', 'publish': 'tag:formal_review_marts',
+                     'shadow': '+tag:formal_review_shadow','archive': '+tag:formal_review_archive'}[stage]
         common = ['--project-dir', str(project), '--profiles-dir', os.environ.get('DBT_PROFILES_DIR', str(project)),
                   '--target', os.environ.get('DBT_TARGET', 'prod')]
+        if variables is not None:
+            common += ['--vars', json.dumps(variables)]
+        if artifact_dir is not None:
+            artifact_dir = Path(artifact_dir).resolve()
+            artifact_dir.mkdir(parents=True, exist_ok=True)
+            common += ['--target-path', str(artifact_dir / 'target'), '--log-path', str(artifact_dir / 'logs')]
         env = {**os.environ, 'GCP_PROJECT_ID': self.project, 'BQ_DATASET_ID': self.dataset}
         executable = os.environ.get('DBT_EXECUTABLE', 'dbt')
         sibling = Path(sys.executable).with_name('dbt')
@@ -132,8 +139,27 @@ class ReviewCloud:
             prefix = [sys.executable, str(sibling)] if header.startswith(b'#!') and b'python' in header else [str(sibling)]
         else:
             prefix = [executable]
+        receipts = {}
         for command in ('run', 'test'):
             completed = subprocess.run([*prefix, '--warn-error', command, '--select', selection, *common], capture_output=True,
                                        text=True, timeout=300, env=env)
             if completed.returncode:
                 raise RuntimeError(f'dbt {stage}/{command} failed: {completed.stderr[-1500:]} {completed.stdout[-1500:]}')
+            if artifact_dir is not None:
+                stage_receipt = artifact_dir / 'target' / 'run_results.json'
+                if not stage_receipt.is_file():
+                    raise RuntimeError('Missing dbt run_results receipt')
+                content = stage_receipt.read_bytes()
+                (artifact_dir / ('run_results_' + command + '.json')).write_bytes(content)
+                receipts[command] = hashlib.sha256(content).hexdigest()
+        if artifact_dir is not None:
+            result_path = artifact_dir / 'target' / 'run_results.json'
+            if not result_path.is_file():
+                raise RuntimeError('Missing dbt run_results receipt')
+            result = json.loads(result_path.read_text())
+            if any(r['status'] not in ('pass', 'success') for r in result['results']):
+                raise RuntimeError('dbt receipt contains failed or skipped resources')
+            return dict(invocation_id=result['metadata']['invocation_id'],
+                run_results_sha256=hashlib.sha256(result_path.read_bytes()).hexdigest(),
+                tested_resources=len(result['results']), receipts=receipts,
+                manifest_sha256=hashlib.sha256((artifact_dir / 'target' / 'manifest.json').read_bytes()).hexdigest())

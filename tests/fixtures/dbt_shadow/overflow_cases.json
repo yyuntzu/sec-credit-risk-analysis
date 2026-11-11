@@ -1,0 +1,8 @@
+[
+  {
+    "case_id": "CF-01-overflow-must-fail-build",
+    "formula_id": "CF-01",
+    "values": ["1e38", "1e-38"],
+    "expected": null
+  }
+]

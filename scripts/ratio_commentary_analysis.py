@@ -13,6 +13,12 @@ except ImportError:
     from loan_review_sources import number, normalize_value
 
 VERSION = 'balance-sheet-commentary-v1'
+LIMITATIONS = (
+    'Components are ranked individually. Only the explicitly listed current-group lines enter component_reconciliations; other aggregates/subtotals may overlap. A zero residual confirms arithmetic for selected lines, not an exhaustive chart of accounts.',
+    'Quick assets follow canonical facts and their approved definition; cash/receivables are not automatically assumed to equal quick assets or be unrestricted.',
+    'Balance-sheet arithmetic explains composition, not the business cause. Cite a note or management statement for transaction/event attribution.',
+    'Debt ratio is total liabilities / net worth, distinct from interest-bearing total debt. Explain both liabilities and equity; new debt proceeds are not net debt growth.',
+)
 # One identity per concept; overlapping aggregates are deliberately separate.
 BALANCE_CONCEPTS = {
     'CashAndCashEquivalentsAtCarryingValue': ('cash', 'current_assets'),
@@ -180,10 +186,5 @@ def build_ratio_analysis(report, observations=(), documents=()):
         if all(c == 'matched_selected_lines' for c in checks):
             result['component_coverage'][group] = 'matched_selected_lines'
 
-    result['limitations'].extend([
-        'Components are ranked individually. Only the explicitly listed current-group lines enter component_reconciliations; other aggregates/subtotals may overlap. A zero residual confirms arithmetic for selected lines, not an exhaustive chart of accounts.',
-        'Quick assets follow canonical facts and their approved definition; cash/receivables are not automatically assumed to equal quick assets or be unrestricted.',
-        'Balance-sheet arithmetic explains composition, not the business cause. Cite a note or management statement for transaction/event attribution.',
-        'Debt ratio is total liabilities / net worth, distinct from interest-bearing total debt. Explain both liabilities and equity; new debt proceeds are not net debt growth.',
-    ])
+    result['limitations'].extend(LIMITATIONS)
     return result

@@ -57,6 +57,11 @@ def export_excel(directory):
     except ImportError:
         from loan_review_pipeline import validate_saved_artifacts
     validate_saved_artifacts(directory)
+    return _run_excel_exporter(directory)
+
+
+def _run_excel_exporter(directory, *options):
+    """Run the shared builder after its caller verifies the proper boundary."""
     dependencies = Path(os.environ.get('REVIEW_RUNTIME_ROOT', Path.home() / '.cache/codex-runtimes/codex-primary-runtime/dependencies'))
     node = os.environ.get('REVIEW_NODE', str(dependencies / 'node/bin/node'))
     packages = Path(os.environ.get('REVIEW_NODE_MODULES', dependencies / 'node/node_modules'))
@@ -66,7 +71,7 @@ def export_excel(directory):
         builder = Path(tmp) / 'export.mjs'
         shutil.copyfile(Path(__file__).with_name('export_loan_review_excel.mjs'), builder)
         (Path(tmp) / 'node_modules').symlink_to(packages, target_is_directory=True)
-        result = subprocess.run([node, str(builder), str(Path(directory).resolve())], capture_output=True, text=True, timeout=300)
+        result = subprocess.run([node, str(builder), str(Path(directory).resolve()), *options], capture_output=True, text=True, timeout=300)
         if result.returncode: raise RuntimeError('Excel export failed: ' + result.stderr[-2000:])
     target = Path(directory) / 'loan_review.xlsx'
     if not target.is_file(): raise RuntimeError('Excel exporter did not produce loan_review.xlsx')
@@ -91,9 +96,16 @@ def write_json(path, value):
 def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements=(),
                workbook=None, review_date=None, mode=None, quarter=None, execution='local',
                output_dir=None, html=True, excel=True, cloud=None, source_run_id=None,
-               commentary=None, commentary_mode='auto'):
+               commentary=None, commentary_mode='auto', calculation_mode='python',
+               shadow_reconciliations=None):
     """Execute once; an unaccepted review is an explicit draft, not a delivery success."""
     if execution not in ('local', 'cloud'): raise ValueError('execution must be local or cloud')
+    if calculation_mode not in ('python', 'dbt-shadow'):
+        raise ValueError('calculation_mode must be python or dbt-shadow')
+    if calculation_mode == 'dbt-shadow' and (execution != 'cloud' or source == 'workbook'):
+        raise ValueError('dbt-shadow requires cloud and SEC/snapshot/BigQuery sources; workbook is not supported')
+    if shadow_reconciliations is not None and calculation_mode != 'dbt-shadow':
+        raise ValueError('shadow_reconciliations requires calculation_mode=dbt-shadow')
     if commentary_mode not in ('auto','model','reviewed','off'): raise ValueError('Invalid commentary mode')
     if commentary_mode=='off' and commentary is not None: raise ValueError('commentary input conflicts with off mode')
     if commentary is not None and (not isinstance(commentary,dict) or set(commentary)-{'documents','claims'}):
@@ -122,13 +134,14 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
     directory.mkdir(parents=True, exist_ok=True)
     manifest = dict(run_id=run_id, entity=entity, execution=execution, source=source, status='running',
         started_at=datetime.now(timezone.utc).isoformat(), final_report_accepted=False,
-        pipeline_version='formal-review-integration-v1', formula_version=FORMULA_VERSION,
+        calculation_mode=calculation_mode, pipeline_version='formal-review-integration-v1', formula_version=FORMULA_VERSION,
         policy_version=APPROVED_POLICY_VERSION, source_run_id=source_run_id,
         cloud_status='pending' if execution == 'cloud' else 'not_requested', outputs={}, stages={})
     def save():
         write_json(directory / 'run_manifest.json', manifest)
     save()
     try:
+        shadow_documents = []
         try:
             from . import agent_runner as runner
         except ImportError:
@@ -220,6 +233,7 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
                     documents = commentary_input.get('documents', [])
                     if not isinstance(documents,list): raise ValueError('Commentary documents must be a list')
                     validate_documents(report, request, documents)
+                    shadow_documents = documents
                     analysis = build_ratio_analysis(report,
                         balance_sheet_observations(bundle) + document_observations(documents), documents)
                     write_json(directory / 'ratio_commentary_analysis.json', analysis)
@@ -268,6 +282,30 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
             except Exception as exc:
                 manifest['stages'][name] = 'failed'
                 manifest.setdefault('errors', {})[name] = str(exc)
+        if calculation_mode == 'dbt-shadow':
+            try:
+                from importlib import import_module
+                import sys
+                package_root = str(Path(__file__).resolve().parents[1])
+                if package_root not in sys.path:
+                    sys.path.insert(0, package_root)
+                run_shadow = import_module("scripts.dbt_shadow").run_shadow
+                shadow = run_shadow(bundle, directory / 'dbt_shadow', project=cloud.project,
+                                    reconciliations=shadow_reconciliations,commentary_documents=shadow_documents)
+                manifest['stages']['dbt_shadow'] = shadow['status']
+                manifest['outputs']['dbt_shadow_manifest_path'] = str(directory / 'dbt_shadow' / 'shadow_manifest.json')
+                if shadow.get('calculation_receipt_sha256'):
+                    manifest['shadow_calculation_receipt_sha256'] = shadow['calculation_receipt_sha256']
+                manifest['shadow_comparison'] = {k: shadow[k] for k in ('equivalent', 'mismatches', 'numeric_differences')}
+                manifest['shadow_comparison']['reconciliation_mismatches'] = shadow.get('reconciliation_mismatches',0)
+                manifest['shadow_comparison']['acceptance_mismatches'] = shadow.get('acceptance_mismatches',0)
+                manifest['shadow_comparison']['commentary_mismatches'] = shadow.get('commentary_mismatches',0)
+                manifest['shadow_comparison']['commentary_numeric_differences'] = shadow.get('commentary_numeric_differences',0)
+                if any(value for key,value in manifest['shadow_comparison'].items() if key!='equivalent'):
+                    manifest.setdefault('warnings', {})['dbt_shadow'] = 'Shadow differences recorded; Python remains authoritative; no precision approval or cutover'
+            except Exception as exc:
+                manifest['stages']['dbt_shadow'] = 'failed'
+                manifest.setdefault('errors', {})['dbt_shadow'] = str(exc)
         if execution == 'cloud':
             if not manifest['final_report_accepted'] or manifest.get('errors'):
                 manifest['cloud_status'] = 'blocked_acceptance' if not manifest['final_report_accepted'] else 'blocked_delivery'
@@ -315,6 +353,10 @@ def cli(argv):
     parser.add_argument('--mode', choices=('annual', 'quarterly'))
     parser.add_argument('--quarter', type=int, choices=(1, 2, 3))
     parser.add_argument('--execution', choices=('local', 'cloud'), default='local')
+    parser.add_argument('--calculation-mode', choices=('python', 'dbt-shadow'), default='python',
+                        help='dbt-shadow compares in an isolated dataset; never replaces Python values')
+    parser.add_argument('--shadow-reconciliations',
+                        help='Structured reconciliation JSON for dbt-shadow only; does not alter report acceptance')
     parser.add_argument('--output-dir')
     parser.add_argument('--no-html', action='store_true')
     parser.add_argument('--no-excel', action='store_true')
@@ -327,9 +369,10 @@ def cli(argv):
             snapshot=load_json(args.source_snapshot) if args.source_snapshot else None,
             supplements=tuple(load_json(p) for p in args.supplement), workbook=args.workbook,
             review_date=args.review_date, mode=args.mode, quarter=args.quarter,
-            execution=args.execution, output_dir=args.output_dir, html=not args.no_html, excel=not args.no_excel,
+            execution=args.execution, calculation_mode=args.calculation_mode, output_dir=args.output_dir, html=not args.no_html, excel=not args.no_excel,
             source_run_id=args.source_run_id, commentary=load_json(args.commentary) if args.commentary else None,
-            commentary_mode=args.commentary_mode)
+            commentary_mode=args.commentary_mode,
+            shadow_reconciliations=load_json(args.shadow_reconciliations) if args.shadow_reconciliations else None)
     except (ValueError, OSError) as exc:
         parser.error(str(exc))
     print(json.dumps(result, ensure_ascii=False, indent=2))

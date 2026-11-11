@@ -87,6 +87,83 @@ class ApprovedArithmeticTests(unittest.TestCase):
             calculate_identity(r, 'pretax_profit:fy_t', formula_id='DER-05', input_ids=('net_income:fy_t', 'income_tax:fy_t'), formula_version='1.0', definition_evidence_id='bridge')
 
 
+class IdentityMigrationTests(unittest.TestCase):
+    def reviewed(self):
+        r = fixture()
+        ev = Evidence('bridge', r.entity, r.scope, 'synthetic-reviewed-bridge', 'v1', date(2026, 1, 1),
+                      'identity review', 'definition', ('fy_t',),
+                      'Synthetic complete same-scope identity review, including tax and NCI basis.')
+        return replace(r, evidence={**r.evidence, 'bridge': ev})
+
+    def derive(self, r, target='pretax_profit', formula='DER-05', inputs=('net_income','income_tax')):
+        return calculate_identity(r, target+':fy_t', formula_id=formula,
+            input_ids=tuple(metric+':fy_t' for metric in inputs),
+            formula_version='synthetic-identity-v1', definition_evidence_id='bridge')
+
+    def test_all_six_reviewed_identities_have_independent_expected_values(self):
+        cases = (
+            ('DER-01','gross_profit',('revenue','cost_of_revenue'), (100,30),70),
+            ('DER-02','cost_of_revenue',('revenue','gross_profit'), (100,70),30),
+            ('DER-03','operating_expense',('gross_profit','operating_income'), (70,40),30),
+            ('DER-04','operating_income',('gross_profit','operating_expense'), (70,30),40),
+            ('DER-05','pretax_profit',('net_income','income_tax'), (80,-20),60),
+            ('DER-06','net_income',('pretax_profit','income_tax'), (60,-20),80),
+        )
+        for formula,target,inputs,values,expected in cases:
+            with self.subTest(formula=formula):
+                r = self.reviewed()
+                for metric,value in zip(inputs,values):
+                    r = source_fact(r,metric+':fy_t',D(value))
+                result = self.derive(r,target,formula,inputs)
+                fact = result.facts[target+':fy_t']
+                self.assertEqual(fact.value,D(expected))
+                self.assertEqual(fact.input_ids,tuple(i+':fy_t' for i in inputs))
+                self.assertEqual(fact.evidence_ids,('bridge',))
+                self.assertEqual(fact.formula_version,'synthetic-identity-v1')
+                self.assertIsNone(fact.original_value)
+                self.assertIsNone(r.facts[target+':fy_t'].value)
+
+    def test_conflict_and_inapplicability_are_not_replaced(self):
+        for status in (Status.CONFLICT,Status.NOT_APPLICABLE):
+            with self.subTest(status=status):
+                r = self.reviewed()
+                r = source_fact(r,'net_income:fy_t',D(80))
+                r = source_fact(r,'income_tax:fy_t',D(-20))
+                evidence = dict(r.evidence)
+                refs = ('bridge',)
+                if status == Status.CONFLICT:
+                    for eid in ('conflicting-a','conflicting-b'):
+                        evidence[eid] = Evidence(eid,r.entity,r.scope,eid,'v1',date(2026,1,1),
+                            'pretax','fact',('fy_t',),'Conflicting original source')
+                    refs = ('conflicting-a','conflicting-b')
+                original = replace(r.facts['pretax_profit:fy_t'],status=status,
+                    evidence_ids=refs,reason='Original source conclusion')
+                r = replace(r,evidence=evidence,facts={**r.facts,original.id:original})
+                with self.assertRaisesRegex(ContractError,'conflicting or inapplicable'):
+                    self.derive(r)
+                self.assertEqual(r.facts[original.id],original)
+
+    def test_missing_input_preserves_unavailable_result(self):
+        r = source_fact(self.reviewed(),'net_income:fy_t',D(80))
+        result = self.derive(r).facts['pretax_profit:fy_t']
+        self.assertEqual(result.status,Status.NOT_CALCULABLE)
+        self.assertIsNone(result.value)
+        self.assertIsNone(result.formula_id)
+
+    def test_reverse_identity_is_rejected(self):
+        r = source_fact(self.reviewed(),'revenue:fy_t',D(100))
+        r = source_fact(r,'cost_of_revenue:fy_t',D(30))
+        original = r.facts['cost_of_revenue:fy_t']
+        alternate = replace(original,id='input:cost_of_revenue:fy_t')
+        r = replace(r,facts={**r.facts,alternate.id:alternate,original.id:replace(original,status=Status.MISSING,
+            value=None,original_value=None,original_scale=None,reason='Unavailable target')})
+        r = calculate_identity(r,'gross_profit:fy_t',formula_id='DER-01',
+            input_ids=('revenue:fy_t',alternate.id),formula_version='synthetic-identity-v1',
+            definition_evidence_id='bridge')
+        with self.assertRaisesRegex(ContractError,'Circular/reverse identity'):
+            self.derive(r,'cost_of_revenue','DER-02',('revenue','gross_profit'))
+
+
 class LegacySafetyTests(unittest.TestCase):
     def test_no_zero_or_proxy_for_unknown_inputs(self):
         r = runner._enrich_rows([{'net_income_m': 80, 'income_tax_m': -20, 'operating_income_m': 100,

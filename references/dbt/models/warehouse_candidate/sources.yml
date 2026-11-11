@@ -1,0 +1,8 @@
+version: 2
+sources:
+  - name: review_candidate_archive
+    database: "{{ env_var('GCP_PROJECT_ID', 'focus-heuristic-438521-v4') }}"
+    schema: "{{ env_var('BQ_DATASET_ID', 'sec_raw') }}"
+    tables:
+      - name: snapshots
+        identifier: review_candidate_*
