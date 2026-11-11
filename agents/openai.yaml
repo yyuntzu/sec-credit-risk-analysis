@@ -1,0 +1,6 @@
+interface:
+  display_name: "Loan Review · dbt / BigQuery"
+  short_description: "Generate receipt-bound SEC Loan Review reports"
+  default_prompt: "Use $sec-credit-analysis to generate a Loan Review for the requested borrower and fiscal periods."
+policy:
+  allow_implicit_invocation: true

@@ -85,11 +85,13 @@ class RuntimePackageTests(unittest.TestCase):
              patch.object(runtime.subprocess,'run',return_value=SimpleNamespace(returncode=1,stderr='SQL failure')) as runner:
             output=Path(tmp)/'attempt'
             with self.assertRaisesRegex(ValueError,'no current-code fallback'):
-                runtime.run_package(self.archive,self.receipt['package_sha256'],'source.json',output,project='test-project')
+                runtime.run_package(self.archive,self.receipt['package_sha256'],'source.json',output,project='test-project',
+                    commentary_documents='documents.json')
             state=json.loads((output/'package_execution_manifest.json').read_text())
             self.assertEqual(state['status'],'failed');self.assertFalse(state['publication_eligible'])
             self.assertFalse((output/'package_execution_receipt.json').exists());runner.assert_called_once()
             self.assertIn('-I',runner.call_args.args[0])
+            self.assertIn('--commentary-documents',runner.call_args.args[0])
 
     def test_dependency_lock_follows_extras_and_hashes_content(self):
         with tempfile.TemporaryDirectory() as tmp:

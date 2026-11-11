@@ -94,3 +94,13 @@ class SelectedRuntimeTests(unittest.TestCase):
             with self.assertRaises(KeyError):selected.execute_selected(control,'source.json',output,project='test-project')
             run.assert_not_called();self.assertFalse((output/'selected_execution_receipt.json').exists())
             self.assertEqual(json.loads((output/'selected_execution_manifest.json').read_text())['status'],'failed')
+
+    def test_skill_policy_mismatch_stops_before_package_fetch(self):
+        store=MemoryStore();control=CandidateReleaseControl(store)
+        body=release('a'*32);body['precision_version']='old-policy'
+        control.register(body);control.select('a'*32,event_id='1'*32,actor='test',reason='test',expected_generation='0')
+        with tempfile.TemporaryDirectory() as tmp,patch.object(selected,'RuntimeStorage') as storage:
+            with self.assertRaisesRegex(ValueError,'precision policy differs'):
+                selected.execute_selected(control,'source.json',Path(tmp)/'run',project='test-project',
+                    expected_precision_version='bignumeric-q18-half-even-v1')
+            storage.assert_not_called()

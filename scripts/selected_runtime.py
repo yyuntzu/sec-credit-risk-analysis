@@ -39,13 +39,16 @@ def register_runtime_release(control,release,reference):
     return control.register(dict(release,runtime=reference))
 
 
-def execute_selected(control,source,output,*,project,reconciliations=None):
+def execute_selected(control,source,output,*,project,reconciliations=None,commentary_documents=None,
+                     expected_precision_version=None):
     output=Path(output);_require(not output.exists(),'Selected execution output already exists')
     output.mkdir(parents=True)
     state=dict(status='preparing',precision_approved=False,publication_eligible=False)
     try:
         snapshot=control.current();_require(snapshot[1] is not None,'No candidate release selected')
         release=control.validate_snapshot(snapshot)
+        if expected_precision_version is not None:
+            _require(release['precision_version']==expected_precision_version,'Selected precision policy differs from requested skill policy')
         _require('runtime' in release,'Selected release has no executable runtime')
         reference=release['runtime']
         with tempfile.TemporaryDirectory() as temporary:
@@ -56,7 +59,7 @@ def execute_selected(control,source,output,*,project,reconciliations=None):
                 binding_output=str((output/'run_binding.json').resolve()))
             state.update(release_id=release['release_id'],selection=snapshot,package_sha256=reference['package_sha256'])
             result=run_package(package,reference['package_sha256'],source,output/'execution',
-                project=project,reconciliations=reconciliations,selection=config)
+                project=project,reconciliations=reconciliations,selection=config,commentary_documents=commentary_documents)
         bound=json.loads((output/'run_binding.json').read_text())
         binding=control.store.load(bound['record'])
         _require(binding==bound['body'] and binding['run_id']==result['run_id']

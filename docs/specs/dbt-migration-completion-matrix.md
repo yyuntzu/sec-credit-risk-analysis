@@ -26,7 +26,7 @@
 | §6 serialization／歷史 | pins、字串數字、UTF-8 canonical hashes；舊 v1／v2 快照讀取 | 正式已發布歷史的保留／release pin 與回退實測 |
 | §7 結構／公式／對帳 gate | dbt error tests；來源綁定覆核；八項／四項缺口如實保存 | 全部規格案例的 coverage、規則漏洞稽核未齊 |
 | §7 financial acceptance | SQL required cells／decisions／reconciliation readiness 與 Python 比較 | positive readiness 路徑仍需更強 E2E 證據；Annual DEC-03 有缺口時維持 draft 才正確，不為遷移另造業務定義 |
-| §7 交付 | receipt-bound MD／JSON／HTML／Excel，current-consumer 重現與 ZIP audit | SQL-only 新收據的 Excel／GCS 完整 E2E、正式 delivery requirement registry |
+| §7 交付 | receipt-bound MD／JSON／HTML／Excel，current-consumer 重現與 ZIP audit；SQL-only 新收據經 skill 完成 Excel／BigQuery archive／GCS 全流程合成驗證 | 正式 delivery requirement registry 與正式交付放行 |
 | §7 發布 | preflight 明確列 blockers，所有 candidate flags=false | 最終 publication receipt、完整 JOIN view、失敗注入、獨立 reader 身份驗證 |
 | §8 同源比對 | 固定 bundle／code／Decimal context；不重抓 API；未知 mismatch 阻擋 | 所有矩陣均需一致的可重現 fixtures 與版本 coverage 清單 |
 | §8.3 財期 | annual／quarterly 原生案例，YTD／LTM 不混算 | 非曆年、52／53 週、閏日、缺去年同期等完整 native 矩陣 |
@@ -35,7 +35,7 @@
 | §8.3 管線故障 | archive／delivery retry、部分寫入、tamper、job confirmation、錯誤 pin 拒絕 | 同 run 多 attempt／並行、發布中失敗、manifest 寫失敗、發布後改公式與 rollback 的完整 E2E |
 | §9 release／rollback | 候選 selector 已串接固定 generation 的 GCS ZIP、隔離 runtime 與 SQL 前 run binding；原生 A → B → rollback A 各 186 Facts，歷史收據不變且 A／回退 A 全 Fact 相同，見 selected-runtime 驗證 | 跨主機環境重建、正式 release gate／IAM／部署與正式發布結果的完整回退 E2E 仍未完成；目前只核實候選執行 |
 | §9 M4 | 尚未啟用正式 dbt authority；q18 計算規則已獲使用者核准實作驗證 | 完整 M4 驗收與具體切換仍須明確放行；此次精度規則核准不代表正式上線 |
-| §9 M5 | 舊 local Python 保留；新候選入口已建立 | cloud 預設、BI 指向、移除雙重計算、更新可瀏覽 HTML 架構圖與最終文件尚未完成 |
+| §9 M5 | 舊 local Python 保留；Loan Review skill 已安裝並預設走固定候選 q18 全流程，合成資料完整交付驗證通過 | 正式 cloud CLI／HTTP 預設、BI 指向、移除雙重計算、更新可瀏覽 HTML 架構圖與最終文件尚未完成 |
 | §10 IAM／保留／成本 | 隔離 dataset／bucket、PAP、七日測試 lifecycle | authoritative project ownership、實際 service accounts／read-only consumer、永久保存及查詢成本／耗時 dossier |
 
 主要證據索引位於同目錄各 `dbt-*-validation-*.md`，原始執行物在忽略的 `outputs/`。七日到期的測試資料不等同永久正式保存。M0–M3 仍有上述工程可繼續；目前並非只剩使用者核准，也不應先要求切換核准。

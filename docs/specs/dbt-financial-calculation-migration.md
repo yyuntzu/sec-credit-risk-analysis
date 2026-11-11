@@ -84,6 +84,10 @@ SQL identity 接入仍需傳入並保存結構化覆核、完整有序依賴與 
 
 使用者核准除法結果 18 位小數、HALF_EVEN、canonical parents 與 exact equality；正式上線另行放行。已新增 dbt 精確除法 UDF、獨立 Fraction oracle、逐 Fact audit 與 canonical comparison gate。年度／季度與舊 Python 的差異保留，新政策參考值要求完全一致；詳見 [精度驗證紀錄](dbt-q18-precision-validation-20261111.md)。候選的 `precision_approved=false` 保留既有正式 release gate，並以 `precision_policy_implementation_approved=true` 表示已獲本次規則實作核准，兩者不可混用。
 
+### 2026-11-11 Loan Review skill 串接
+
+自然語句 skill 已接到固定 q18 套件、dbt／BigQuery、同收據報告／Excel、BigQuery archive 與 GCS delivery。已安裝自動辨識入口；缺公司／mode／期間時先補齊意圖，資料完整就執行。合成 Annual 全流程與 367 項回歸通過，仍產出候選 draft，未變更正式 CLI／HTTP 的權威來源；見 [skill 串接驗證](loan-review-skill-integration-validation-20261111.md)。
+
 ## 1. 現況與要解決的問題
 
 目前 `review_workflow.run_review()` 透過 `agent_runner.prepare_loan_review_source_stage()` 取得 SEC／snapshot／BigQuery／受限 workbook 來源。`loan_review_sources.prepare_source_inputs()` 已先做期間與版本選取，再由 `ReviewCloud.stage_bundle()` 將 metadata、inputs、evidence 寫入 `raw_review_sources`，經 dbt source view 讀回核對。

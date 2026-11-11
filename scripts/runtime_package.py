@@ -191,7 +191,7 @@ def extract_package(path,pin,directory,*,check_environment=True):
     return manifest
 
 
-def run_package(path,pin,source,output,*,project,reconciliations=None,selection=None):
+def run_package(path,pin,source,output,*,project,reconciliations=None,selection=None,commentary_documents=None):
     output=Path(output);_require(not output.exists(),'Packaged execution output already exists')
     output.mkdir(parents=True);calculation=output/'calculation'
     state=dict(status='preparing',package_sha256=pin,precision_approved=False,publication_eligible=False)
@@ -217,6 +217,7 @@ def run_package(path,pin,source,output,*,project,reconciliations=None,selection=
                 '--output-dir',str(calculation.resolve()),'--project',project,'--candidate-preview',
                 '--kernel-cases',str(root/'tests/fixtures/dbt_shadow/kernel_cases.json')]
             if reconciliations:command+=['--reconciliations',str(Path(reconciliations).resolve())]
+            if commentary_documents:command+=['--commentary-documents',str(Path(commentary_documents).resolve())]
             if selection is not None:
                 index=command.index('scripts.warehouse_execution')
                 command[index:index+1]=['scripts.selected_runtime_worker',str(config),file_hash(config)]

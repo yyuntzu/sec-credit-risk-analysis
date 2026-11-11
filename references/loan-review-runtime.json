@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "execution": "candidate",
+  "project": "focus-heuristic-438521-v4",
+  "candidate_bucket": "sec-review-shadow-runtime-20261111-c54e291a",
+  "archive_dataset": "sec_review_shadow_skill_archive",
+  "delivery_bucket": "sec-review-shadow-runtime-20261111-c54e291a",
+  "precision_version": "bignumeric-q18-half-even-v1"
+}
