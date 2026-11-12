@@ -15,11 +15,13 @@ try:
     from .loan_review_sources import load_json, parse_request
     from .loan_review_pipeline import complete_report, report_from_source_bundle, write_report_artifacts, FORMULA_VERSION, APPROVED_POLICY_VERSION
     from .review_outputs import report_payload, write_dashboard
+    from .review_delivery import validate_looker_config, delivery_receipt
 except ImportError:
     import loan_review_contract as contract
     from loan_review_sources import load_json, parse_request
     from loan_review_pipeline import complete_report, report_from_source_bundle, write_report_artifacts, FORMULA_VERSION, APPROVED_POLICY_VERSION
     from review_outputs import report_payload, write_dashboard
+    from review_delivery import validate_looker_config, delivery_receipt
 
 
 def restore_report(data):
@@ -91,9 +93,12 @@ def write_json(path, value):
 def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements=(),
                workbook=None, review_date=None, mode=None, quarter=None, execution='local',
                output_dir=None, html=True, excel=True, cloud=None, source_run_id=None,
-               commentary=None, commentary_mode='auto'):
+               commentary=None, commentary_mode='auto', looker_config=None):
     """Execute once; an unaccepted review is an explicit draft, not a delivery success."""
     if execution not in ('local', 'cloud'): raise ValueError('execution must be local or cloud')
+    if looker_config is None and os.environ.get('LOOKER_STUDIO_CONFIG'):
+        looker_config = load_json(os.environ['LOOKER_STUDIO_CONFIG'])
+    looker_config = validate_looker_config(looker_config)
     if commentary_mode not in ('auto','model','reviewed','off'): raise ValueError('Invalid commentary mode')
     if commentary_mode=='off' and commentary is not None: raise ValueError('commentary input conflicts with off mode')
     if commentary is not None and (not isinstance(commentary,dict) or set(commentary)-{'documents','claims'}):
@@ -255,6 +260,10 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
         for filename in ('source_inputs.json', 'missing_data.csv', 'reconciliations.csv'):
             manifest['outputs'][Path(filename).stem + '_path'] = str(directory / filename)
         manifest.update(mode=report.mode.value, currency=report.currency, scale=str(report.scale))
+        manifest['scope'] = report.scope
+        manifest['periods'] = [dict(role=p.role, label=p.label, fiscal_year=p.fiscal_year,
+            start=p.start.isoformat() if p.start else None, end=p.end.isoformat() if p.end else None,
+            quarter=p.quarter) for p in report.periods]
         manifest['stages']['report'] = 'passed'
         # Each requested output is independent; one failed export must not hide the others.
         for name, enabled, writer in [('dashboard', html, lambda: write_dashboard(report, acceptance, directory)),
@@ -288,12 +297,17 @@ def run_review(ticker, request=None, *, source='sec', snapshot=None, supplements
         if execution == 'cloud': manifest['cloud_status'] = 'failed'
     manifest['finished_at'] = datetime.now(timezone.utc).isoformat()
     manifest['manifest_path'] = str(directory / 'run_manifest.json')
+    manifest['outputs']['delivery_path'] = str(directory / 'delivery.json')
+    manifest['delivery'] = delivery_receipt(manifest, looker_config)
     if execution == 'cloud' and cloud is not None:
         try: cloud.record_run(run_id, entity, manifest)
         except Exception as exc:
             manifest['status'] = 'failed'
             manifest['cloud_status'] = 'failed'
             manifest.setdefault('errors', {})['cloud_manifest'] = str(exc)
+    # A failed final cloud manifest must retract a previously constructed link.
+    manifest['delivery'] = delivery_receipt(manifest, looker_config)
+    write_json(directory / 'delivery.json', manifest['delivery'])
     save()
     return manifest
 
@@ -320,6 +334,7 @@ def cli(argv):
     parser.add_argument('--no-excel', action='store_true')
     parser.add_argument('--commentary', help='JSON documents/claims bundle; offline unless model mode is selected')
     parser.add_argument('--commentary-mode', choices=('auto','model','reviewed','off'), default='auto')
+    parser.add_argument('--looker-config', help='Looker Studio URL/parameter configuration JSON (or LOOKER_STUDIO_CONFIG)')
     args = parser.parse_args(argv)
     try:
         result = run_review(args.ticker, load_json(args.request) if args.request else None,
@@ -329,7 +344,8 @@ def cli(argv):
             review_date=args.review_date, mode=args.mode, quarter=args.quarter,
             execution=args.execution, output_dir=args.output_dir, html=not args.no_html, excel=not args.no_excel,
             source_run_id=args.source_run_id, commentary=load_json(args.commentary) if args.commentary else None,
-            commentary_mode=args.commentary_mode)
+            commentary_mode=args.commentary_mode,
+            looker_config=load_json(args.looker_config) if args.looker_config else None)
     except (ValueError, OSError) as exc:
         parser.error(str(exc))
     print(json.dumps(result, ensure_ascii=False, indent=2))

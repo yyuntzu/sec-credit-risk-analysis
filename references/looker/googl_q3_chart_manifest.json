@@ -1,0 +1,319 @@
+{
+  "entity": "GOOGL",
+  "source_run_id": "353f7c1b63c542ef8592be3f27322562",
+  "status": "UNACCEPTED DRAFT",
+  "report_url": "https://lookerstudio.google.com/reporting/46ca7044-aa5b-4217-b6f2-ea16411a7cdb",
+  "connected_source": "vw_googl_q3_draft_financials",
+  "ui_verified_component_count": 0,
+  "components": [
+    {
+      "id": "P1",
+      "page": "Profit and Loss",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_revenue"
+      ],
+      "ui_status": "not_placed",
+      "title": "Revenue | 2026Q3 YTD | USD m",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "P2",
+      "page": "Profit and Loss",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_gross_profit"
+      ],
+      "ui_status": "not_placed",
+      "title": "Gross Profit | 2026Q3 YTD | USD m",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "P3",
+      "page": "Profit and Loss",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_operating_income"
+      ],
+      "ui_status": "not_placed",
+      "title": "Operating Income | 2026Q3 YTD | USD m",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "P4",
+      "page": "Profit and Loss",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_net_income"
+      ],
+      "ui_status": "not_placed",
+      "title": "Net Income | 2026Q3 YTD | USD m",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "P7",
+      "page": "Profit and Loss",
+      "type": "combo",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_ytd",
+      "metrics": [
+        "revenue",
+        "total_expenses",
+        "operating_margin"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "period_end",
+      "right_axis": "operating_margin",
+      "right_format": "percent"
+    },
+    {
+      "id": "P8",
+      "page": "Profit and Loss",
+      "type": "dual_axis_line",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_ytd",
+      "metrics": [
+        "gross_profit",
+        "gross_margin"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "period_end",
+      "right_axis": "gross_margin",
+      "right_format": "percent"
+    },
+    {
+      "id": "P9",
+      "page": "Profit and Loss",
+      "type": "dual_axis_line",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_ytd",
+      "metrics": [
+        "operating_income",
+        "operating_margin"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "period_end",
+      "right_axis": "operating_margin",
+      "right_format": "percent"
+    },
+    {
+      "id": "P10",
+      "page": "Profit and Loss",
+      "type": "dual_axis_line",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_ytd",
+      "metrics": [
+        "net_income",
+        "net_margin"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "period_end",
+      "right_axis": "net_margin",
+      "right_format": "percent"
+    },
+    {
+      "id": "P11",
+      "page": "Profit and Loss",
+      "type": "pivot",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_income",
+      "metrics": [
+        "amount_m"
+      ],
+      "ui_status": "not_placed",
+      "rows": "line_item",
+      "columns": "period_label",
+      "sort": "row_order",
+      "totals": false
+    },
+    {
+      "id": "C1",
+      "page": "Cash Flow",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_cash_flow_ratio"
+      ],
+      "ui_status": "not_placed",
+      "title": "Cash Flow Ratio | 2026Q3 YTD",
+      "format": "multiple",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "C2",
+      "page": "Cash Flow",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_debt_ratio"
+      ],
+      "ui_status": "not_placed",
+      "title": "Debt Ratio | definition pending",
+      "format": "percent",
+      "missing_reason": "Net Worth definition unresolved; no Equity substitution",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "C3",
+      "page": "Cash Flow",
+      "type": "combo",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "cash",
+        "cash_flow_ratio"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "period_end",
+      "right_axis": "cash_flow_ratio",
+      "right_format": "multiple",
+      "connect_missing_points": false
+    },
+    {
+      "id": "C4",
+      "page": "Cash Flow",
+      "type": "pivot",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_cash_flow",
+      "metrics": [
+        "amount_m"
+      ],
+      "ui_status": "not_placed",
+      "rows": "line_item",
+      "columns": "period_label",
+      "sort": "row_order",
+      "totals": false,
+      "missing_status": "value_status"
+    },
+    {
+      "id": "B1",
+      "page": "Balance Sheet",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_total_assets"
+      ],
+      "ui_status": "not_placed",
+      "title": "Total Assets | 2026-09-30",
+      "format": "money",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "B2",
+      "page": "Balance Sheet",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_total_liabilities"
+      ],
+      "ui_status": "not_placed",
+      "title": "Total Liabilities | 2026-09-30",
+      "format": "money",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "B3",
+      "page": "Balance Sheet",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_equity"
+      ],
+      "ui_status": "not_placed",
+      "title": "Source Equity | 2026-09-30",
+      "format": "money",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "B4",
+      "page": "Balance Sheet",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_assets_to_equity"
+      ],
+      "ui_status": "not_placed",
+      "title": "Assets / Source Equity | 2026-09-30",
+      "format": "multiple",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "B5",
+      "page": "Balance Sheet",
+      "type": "scorecard",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "card_liabilities_to_assets"
+      ],
+      "ui_status": "not_placed",
+      "title": "Liabilities / Assets | 2026-09-30",
+      "format": "percent",
+      "aggregation": "SUM"
+    },
+    {
+      "id": "B7",
+      "page": "Balance Sheet",
+      "type": "stacked_column",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "current_assets",
+        "noncurrent_assets"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "period_end",
+      "stacking": "absolute"
+    },
+    {
+      "id": "B8",
+      "page": "Balance Sheet",
+      "type": "stacked_column",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_financials",
+      "metrics": [
+        "current_liabilities",
+        "noncurrent_liabilities",
+        "stockholders_equity"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "period_end",
+      "stacking": "absolute"
+    },
+    {
+      "id": "B9",
+      "page": "Balance Sheet",
+      "type": "stacked_column",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_components_prior",
+      "metrics": [
+        "amount_m"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "balance_side",
+      "breakdown": "component",
+      "stacking": "absolute"
+    },
+    {
+      "id": "B10",
+      "page": "Balance Sheet",
+      "type": "stacked_column",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_components_current",
+      "metrics": [
+        "amount_m"
+      ],
+      "ui_status": "not_placed",
+      "dimension": "balance_side",
+      "breakdown": "component",
+      "stacking": "absolute"
+    },
+    {
+      "id": "B11",
+      "page": "Balance Sheet",
+      "type": "pivot",
+      "view": "focus-heuristic-438521-v4.sec_raw.vw_googl_q3_draft_balance_sheet",
+      "metrics": [
+        "amount_m"
+      ],
+      "ui_status": "not_placed",
+      "rows": "line_item",
+      "columns": "period_label",
+      "sort": "row_order",
+      "totals": false,
+      "missing_status": "value_status"
+    }
+  ]
+}

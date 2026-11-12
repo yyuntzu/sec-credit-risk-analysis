@@ -28,7 +28,7 @@ function expression(f, refs) {
     case 'CF-05': return `(${a}+${b}+${c})/(${b}+${d})`;
     case 'CF-09': return `(${a}-${b})/${b}`;
     case 'CF-16': case 'CASH-CHANGE-v1': case 'DER-01': case 'DER-02': case 'DER-03': case 'DER-04': case 'DER-06': return `${a}-${b}`;
-    case 'DER-05': return `${a}+${b}`;
+    case 'TOTAL-DEBT-v1': case 'CURRENT-DEBT-v1': case 'DER-05': return `${a}+${b}`;
     case 'STANDARD-EBITDA-v1': return `${a}+${b}+${c}+${d}`;
     case 'CF-01': case 'CF-02': case 'CF-03': case 'CF-06': case 'CF-10': case 'CF-11': case 'CF-12': case 'COMMON-SIZE-v1': case 'LEVERAGE-v1': return `${a}/${b}`;
     default: throw Error(`Unimplemented Excel formula ${f.formula_id}`);
@@ -46,7 +46,7 @@ facts.forEach((f,i)=>refs[f.id]=`B${i+4}`);
 for(const [i,f] of facts.entries()) {
  const row=i+4;
  const loc=f.evidence_ids.map(id=>report.evidence[id]?.locator||id).join('; ');
- const explanation=f.reason||f.definition;
+ const explanation=[f.reason||f.definition,f.basis?'口徑：'+f.basis:''].filter(Boolean).join('; ');
  source.getRangeByIndexes(row-1,0,1,7).values=[[text(f.id),null,
   f.original_value!==null && f.unit!=='text'?Number(f.original_value):text(f.original_value),
   f.original_scale!==null?Number(f.original_scale):null,states[f.status]||f.status,text(explanation),text(loc)]];

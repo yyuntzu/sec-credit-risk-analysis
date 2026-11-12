@@ -22,6 +22,11 @@ except ImportError:
     from loan_review_contract import (ANNUAL_ROLES, QUARTERLY_ROLES, METRICS, Evidence, Period, empty_report)
     from loan_review_pipeline import complete_report, write_report_artifacts
 
+try:
+    from .debt_policy import DEBT_FIELDS, WORKBOOK_DEBT_LABELS
+except ImportError:
+    from debt_policy import DEBT_FIELDS, WORKBOOK_DEBT_LABELS
+
 # Explicit reviewed search candidates for these working papers only. Every label is
 # checked in its own statement block, and every source locator is retained.
 LABELS = {
@@ -123,7 +128,7 @@ def build_inputs(book, mode, quarter=None):
     slots = dict(report.facts)
     # Auxiliary inputs reuse existing METRICS; no ad-hoc codes for working-paper details.
     for p in periods:
-        for metric in ('current_assets', 'current_liabilities', 'total_liabilities', 'quick_assets', 'net_worth', 'capitalized_interest', 'da'):
+        for metric in ('current_assets', 'current_liabilities', 'total_liabilities', 'quick_assets', 'net_worth', 'capitalized_interest', 'da', *[m for m in DEBT_FIELDS if m != 'total_debt']):
             slots[f'input:{metric}:{p.role}'] = None
     for fid, f in slots.items():
         metric, role = (f.metric, f.period_role) if f else (fid.split(':')[1], fid.split(':')[2])
@@ -136,10 +141,18 @@ def build_inputs(book, mode, quarter=None):
                 'period_kind': 'instant' if spec.period_kind in ('instant', 'opening') else 'duration',
                 'status': 'missing', 'value': None, 'candidate_ids': [], 'evidence_ids': [], 'basis': '',
                 'reason': '既有底稿未提供可核實的來源科目／組成；不等於SEC未揭露'}
-        if ':pct:' in fid or spec.formula:
+        if ':pct:' in fid or (spec.formula and metric not in WORKBOOK_DEBT_LABELS):
             item.update(status='not_calculable', reason='Required formula inputs/definitions not yet verified')
-        elif metric in LABELS:
-            block, label = LABELS[metric]; row = locate(block, label); cell = f'{col}{row}'
+        elif metric in LABELS or metric in WORKBOOK_DEBT_LABELS:
+            block, label = LABELS.get(metric, ('BS', WORKBOOK_DEBT_LABELS.get(metric)))
+            try:
+                row = locate(block, label)
+            except ValueError as exc:
+                if metric not in WORKBOOK_DEBT_LABELS: raise
+                item['reason'] = str(exc)
+                inputs[fid] = item
+                continue
+            cell = f'{col}{row}'
             raw = get(cell); value = decimal_cell(raw)
             eid = f"workbook:{book['hash']}:{cell}"
             candidates[eid] = {'id': eid, 'entity': entity, 'scope': scope, 'source_id': source_id, 'version': book['hash'],

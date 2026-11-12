@@ -21,6 +21,12 @@ except ImportError:
     from loan_review_contract import Evidence, Period, METRICS, empty_report, validate_report
 
 
+try:
+    from .debt_policy import DEBT_FIELDS, supported_debt_source, reported_debt_basis, debt_amount_basis
+except ImportError:
+    from debt_policy import DEBT_FIELDS, supported_debt_source, reported_debt_basis, debt_amount_basis
+
+
 class SourceError(ValueError):
     pass
 
@@ -105,6 +111,8 @@ SEC_FIELDS = {
     "capitalized_interest": ("capitalized_interest",), "da": ("da",),
 }
 
+
+SEC_FIELDS.update(DEBT_FIELDS)
 
 def parse_request(payload):
     """Parse an explicit fiscal calendar; the contract validates its structure."""
@@ -258,6 +266,10 @@ def prepare_source_inputs(request_payload, sec_rows, supplements=()):
                    and c["end"] == (end.isoformat() if end else None)
                    and (c["metric"] == metric or c["origin"] == "sec" and c["field_name"] in fields)]
         expected_unit = report.currency if unit == "money" else unit
+        # Only mapped borrowing concepts or explicitly verified debt supplements
+        # are eligible. A liabilities label is never a borrowing proxy.
+        if metric in DEBT_FIELDS:
+            matches = [c for c in matches if supported_debt_source(c, metric)]
         matching_units = [c for c in matches if c["unit"] == expected_unit]
         item = {"metric": metric, "period_role": role, "start": start, "end": end,
                 "unit": unit, "currency": report.currency if unit == "money" else None,
@@ -295,7 +307,7 @@ def prepare_source_inputs(request_payload, sec_rows, supplements=()):
                 if value is not None and unit != "text":
                     value = normalize_value(value, c["scale"], report.scale if unit == "money" else Decimal(1))
                 # Multiple bases must not become an apparent operating movement.
-                signatures.add((c["status"], value, c["basis"], c["definition"]))
+                signatures.add((c["status"], value, debt_amount_basis(c) if metric in DEBT_FIELDS else c["basis"], metric if metric in DEBT_FIELDS else c["definition"]))
             if len(signatures) != 1:
                 item.update(status="conflict", reason="Sources/versions/definitions disagree; no approved selection policy applied")
             else:
@@ -303,10 +315,14 @@ def prepare_source_inputs(request_payload, sec_rows, supplements=()):
                 item.update(status=status, value=str(value) if value is not None and unit != "text" else value,
                             basis=basis, evidence_ids=sorted(c["id"] for c in selected),
                             reason=item['selection_policy'] if status == "sourced" else selected[0]["reason"])
+        if metric in DEBT_FIELDS and item['status'] == 'sourced' and number(item['value']) < 0:
+            item.update(status='not_calculable', value=None, reason='Negative borrowing amount; retained source requires clarification')
+        if metric in DEBT_FIELDS and item['status'] == 'sourced':
+            item['basis'] = reported_debt_basis([eligible[eid] for eid in item['evidence_ids']])
         inputs[key] = item
 
     for key, f in report.facts.items():
-        if ":pct:" in key or METRICS[f.metric].formula:
+        if ":pct:" in key or (METRICS[f.metric].formula and f.metric != "total_debt"):
             inputs[key] = {"metric": f.metric, "period_role": f.period_role, "start": f.start, "end": f.end,
                            "unit": f.unit, "currency": f.currency, "scale": str(report.scale if f.unit == "money" else 1),
                            "definition": f.definition, "pending_decisions": METRICS[f.metric].pending,
@@ -317,7 +333,7 @@ def prepare_source_inputs(request_payload, sec_rows, supplements=()):
             select(key, f.metric, f.period_role, f.start, f.end, f.unit)
     # Required ratio/EBITDA inputs also exist when absent. Never manufacture zero.
     for p in report.periods:
-        for metric in ("capitalized_interest", "da", "current_assets", "current_liabilities", "quick_assets", "net_worth", "total_liabilities", "total_assets", "cash_fx", "cash_other"):
+        for metric in ("capitalized_interest", "da", "current_assets", "current_liabilities", "quick_assets", "net_worth", "total_liabilities", "total_assets", "cash_fx", "cash_other", *[m for m in DEBT_FIELDS if m != "total_debt"]):
             spec = METRICS[metric]
             select(f"input:{metric}:{p.role}", metric, p.role, None if spec.period_kind == "instant" else p.start, p.end, spec.unit)
     return {

@@ -24,6 +24,11 @@ except ImportError:
         Mode, _dates, calculate_fact, calculate_identity, approved_formula_value, validate_report)
     from loan_review_sources import parse_request, normalize_value, number, day, load_json
 
+try:
+    from .debt_policy import DEBT_FIELDS, DEBT_SUM_INPUTS, VERSION as DEBT_POLICY_VERSION, supported_debt_source, reported_debt_basis
+except ImportError:
+    from debt_policy import DEBT_FIELDS, DEBT_SUM_INPUTS, VERSION as DEBT_POLICY_VERSION, supported_debt_source, reported_debt_basis
+
 FORMULA_VERSION = 'acceptance-v1.0-addendum-2026-10-23'
 
 
@@ -32,7 +37,7 @@ APPROVED_POLICY_VERSION = 'user-approved-2026-10-24'
 STANDARD_EBITDA_BASIS = 'Standard EBITDA: Net Income + Interest + Taxes + D&A'
 APPROVED_DEFINITIONS = {
     'DEC-01': 'Unrestricted cash and equivalents + liquid short-term investments + net receivables; no inventory, prepayments, restricted cash or duplicate investments',
-    'DEC-02': 'Consolidated total equity including NCI; debt includes interest-bearing borrowings, bonds and finance leases, excludes operating leases; no duplicate current portions',
+    'DEC-02': 'Consolidated total equity including NCI; Total Debt uses as-reported borrowing carrying amounts, disclosed lease scope and disjoint current/noncurrent or short-term/long-term-aggregate lines; no duplicate current portions, trade payables or operating liabilities',
     'DEC-04': 'Opening/closing average; verified complete Months; allowance deducted once; no LTM annualization',
     'DEC-05': 'Gross expensed interest, without netting interest income; separately disclosed capitalized interest, no duplication',
     'DEC-06': STANDARD_EBITDA_BASIS,
@@ -54,10 +59,12 @@ def apply_approved_policy(report, inputs, candidates):
     roles = tuple(p.role for p in report.periods)
     decisions.pop('DEC-03', None)  # CFADS/debt service components still unresolved.
     for decision, content in APPROVED_DEFINITIONS.items():
-        eid = 'approval:' + APPROVED_POLICY_VERSION + ':' + decision
+        policy_version = DEBT_POLICY_VERSION if decision == 'DEC-02' else APPROVED_POLICY_VERSION
+        policy_date = date(2026, 11, 7) if decision == 'DEC-02' else date(2026, 10, 24)
+        locator = 'references/total-debt-policy.md' if decision == 'DEC-02' else 'references/loan-review-acceptance-spec-v1.0.md#9.1-9.2'
+        eid = 'approval:' + policy_version + ':' + decision
         evidence[eid] = Evidence(eid, report.entity, report.scope,
-            'user-approved-policy', APPROVED_POLICY_VERSION, date(2026, 10, 24),
-            'references/loan-review-acceptance-spec-v1.0.md#9.1-9.2', 'definition', roles, content)
+            'user-approved-policy', policy_version, policy_date, locator, 'definition', roles, content)
         decisions[decision] = eid
     updated = replace(report, scale=Decimal(1000000), evidence=evidence, decisions=decisions)
     converted = {}
@@ -69,12 +76,17 @@ def apply_approved_policy(report, inputs, candidates):
         # A business policy is not evidence that a raw label meets that policy.
         if spec.pending and item['status'] == 'sourced':
             selected = [candidates[eid] for eid in item.get('evidence_ids', ())]
-            compatible = bool(selected) and all(c.get('definition') == spec.definition for c in selected)
+            compatible = (bool(selected) and all(supported_debt_source(c, 'total_debt') for c in selected)
+                          if item['metric'] == 'total_debt' else bool(selected) and all(c.get('definition') == spec.definition for c in selected))
+            if compatible and item['metric'] == 'total_debt':
+                item['basis'] = item.get('basis') or reported_debt_basis(selected)
             if item['metric'] in ('ltm_ebitda', 'ebitda_basis'):
                 compatible = compatible and item.get('basis') == STANDARD_EBITDA_BASIS
             if not compatible:
                 item.update(status='not_calculable', value=None,
                     reason='Approved policy; company-specific source definition not yet verified; candidate retained')
+        if item['metric'] in DEBT_FIELDS and item['status'] == 'sourced' and number(item['value']) < 0:
+            item.update(status='not_calculable', value=None, reason='Negative borrowing amount; retained source requires clarification')
         converted[fid] = item
     return updated, converted
 
@@ -179,8 +191,9 @@ def calculate_report(report, identity_reviews=()):
                         original_value=STANDARD_EBITDA_BASIS, original_scale=None,
                         evidence_ids=(eid,), reason='', basis=STANDARD_EBITDA_BASIS)
         report = replace(report, facts={**report.facts, basis.id: basis}, evidence={**report.evidence, eid: evidence})
-    # Supporting margins precede the change-in-margin fact.
-    keys = sorted(report.facts, key=lambda fid: report.facts[fid].metric == 'operating_margin_change')
+    # Current borrowing totals precede Total Debt, which precedes leverage.
+    order = {'short_term_debt': 0, 'total_debt': 1, 'total_leverage': 3, 'operating_margin_change': 4}
+    keys = sorted(report.facts, key=lambda fid: order.get(report.facts[fid].metric, 2))
     roles = [p.role for p in report.periods]
     for fid in keys:
         f = report.facts[fid]; spec = METRICS[f.metric]
@@ -191,6 +204,28 @@ def calculate_report(report, identity_reviews=()):
         if f.status in (Status.CONFLICT, Status.NOT_APPLICABLE):
             continue
         metrics = (f.metric, 'revenue') if common else spec.inputs
+        if f.metric == 'total_debt':
+            if f.status == Status.NOT_CALCULABLE and f.evidence_ids:
+                continue  # Keep a rejected reported total and its diagnostic; do not bypass it.
+            supplied = [i for i in report.facts.values() if i.period_role == f.period_role and i.metric in DEBT_FIELDS and i.metric != 'total_debt'
+                        and (i.status in AVAILABLE or i.status == Status.CONFLICT)]
+            if f.status == Status.MISSING and not supplied:
+                continue
+            complete = []
+            for route in DEBT_SUM_INPUTS:
+                pair = [report.facts.get('input:' + m + ':' + f.period_role) for m in route]
+                if all(i and i.status in AVAILABLE for i in pair):
+                    complete.append(approved_formula_value('TOTAL-DEBT-v1', tuple(i.value for i in pair)))
+            if len(set(complete)) > 1:
+                updated = replace(f, status=Status.NOT_CALCULABLE, value=None,
+                    reason='Alternative complete debt routes disagree; source components retained, no automatic selection')
+                report = replace(report, facts={**report.facts, fid: updated})
+                continue
+            for route in DEBT_SUM_INPUTS:
+                pair = [report.facts.get('input:' + m + ':' + f.period_role) for m in route]
+                if all(i and i.status in AVAILABLE for i in pair):
+                    metrics = route
+                    break
         ids = []
         for n, metric in enumerate(metrics):
             role = f.period_role
@@ -206,7 +241,7 @@ def calculate_report(report, identity_reviews=()):
             canonical = f'{metric}:{role}'
             ids.append(canonical if canonical in report.facts else f'input:{metric}:{role}')
         report = calculate_fact(report, fid, input_ids=tuple(ids),
-            formula_version=APPROVED_POLICY_VERSION if f.metric == "ltm_ebitda" else FORMULA_VERSION)
+            formula_version=DEBT_POLICY_VERSION if f.metric in DEBT_FIELDS else APPROVED_POLICY_VERSION if f.metric == "ltm_ebitda" else FORMULA_VERSION)
     return report
 
 

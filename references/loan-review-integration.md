@@ -41,6 +41,12 @@ explicitly disable optional outputs. The manifest lists requested output
 success/failure independently. An Excel error does not discard a valid Markdown
 report or prevent cloud publication from being attempted.
 
+Formal runs also write `delivery.json` and return it as `delivery` in the manifest.
+This receipt groups the local report/dashboard/Excel paths and the optional
+Looker Studio URL state. For run-specific cloud dashboard links, configure
+`--looker-config CONFIG.json` or `LOOKER_STUDIO_CONFIG`; see
+[Looker Studio automatic delivery](looker-visualization.md#automatic-delivery-configuration).
+
 Exit codes: **0 accepted**, **2 valid draft awaiting acceptance**, **1 execution or
 requested output failure**. Invalid CLI arguments also use argparse's exit 2;
 read its stderr for an input error versus JSON stdout for a completed draft.

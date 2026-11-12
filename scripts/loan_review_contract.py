@@ -11,9 +11,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
 from datetime import date, timedelta
-from decimal import Decimal
+from decimal import Decimal, localcontext
 from enum import Enum
 from typing import Mapping
+
+
+try:
+    from .debt_policy import DEBT_SUM_INPUTS, DEBT_FIELDS, compatible_debt_bases
+except ImportError:
+    from debt_policy import DEBT_SUM_INPUTS, DEBT_FIELDS, compatible_debt_bases
 
 
 class ContractError(ValueError):
@@ -73,7 +79,7 @@ METRICS = {
     "cash_flow_ratio": MetricSpec("Cash flow ratio", "percent", "duration", "CFO / Current Liabilities", "CF-03", "CF-03", ("cfo", "current_liabilities")),
     "debt_ratio": MetricSpec("Debt ratio", "percent", "instant", "Total Liabilities / Net Worth", "CF-06", "CF-06", ("total_liabilities", "net_worth"), ("DEC-02",)),
     "interest_coverage": MetricSpec("Interest coverage ratio", "multiple", "duration", "(Pre-tax Profit + Interest Expense) / (Interest Expense + Capitalized Interest)", "CF-04", "CF-04", ("pretax_profit", "interest_expense", "capitalized_interest"), ("DEC-05",)),
-    "total_debt": MetricSpec("Total debt", "money", "instant", "Consolidated interest-bearing borrowings, bonds and finance lease liabilities, including current portions once; exclude operating lease liabilities and trade payables", "CALC-09", pending=("DEC-02",)),
+    "total_debt": MetricSpec("Total debt", "money", "instant", "As-reported Total Debt; disjoint short-term and long-term borrowing amounts including current portions once; carrying value and lease scope follow disclosed debt lines; exclude operating lease liabilities and trade payables", "CALC-09", "TOTAL-DEBT-v1", ("short_term_debt", "long_term_debt"), ("DEC-02",)),
     "debt_service": MetricSpec("Debt service", "money", "duration", "Pending approved debt-service definition; no CapEx proxy", "CALC-10", pending=("DEC-03",)),
     "ltm_ebitda": MetricSpec("LTM EBITDA", "money", "ltm", "Standard EBITDA: Net Income + Interest + Taxes + D&A", "CALC-11/CALC-12", None, ("net_income", "interest_expense", "income_tax", "da"), ("DEC-06",)),
     "ebitda_basis": MetricSpec("EBITDA basis", "text", "ltm", "Source and actual EBITDA definition, including adjustments", "FMT-A4/FMT-Q3", pending=("DEC-06",)),
@@ -100,6 +106,21 @@ for _key, _label, _kind, _pending in (
     ("cash_other", "Other cash bridge adjustments", "duration", ()),
 ):
     METRICS[_key] = MetricSpec(_label, "money", _kind, f"Verified source {_label}", "DATA-01", pending=_pending)
+
+# Supporting borrowing slots do not add rows to the report layout.
+METRICS.update({
+    'short_term_borrowings': MetricSpec('Short-term borrowings', 'money', 'instant',
+        'Short-term borrowings excluding current maturities of long-term debt', 'CALC-09'),
+    'current_maturities_debt': MetricSpec('Current maturities of long-term debt', 'money', 'instant',
+        'Current portion of long-term borrowings, counted once', 'CALC-09'),
+    'short_term_debt': MetricSpec('Short-term debt', 'money', 'instant',
+        'All current borrowing amounts including current maturities once', 'CALC-09',
+        'CURRENT-DEBT-v1', ('short_term_borrowings', 'current_maturities_debt')),
+    'long_term_debt': MetricSpec('Long-term debt, noncurrent', 'money', 'instant',
+        'Noncurrent long-term borrowing amounts as reported', 'CALC-09'),
+    'long_term_debt_including_current': MetricSpec('Long-term debt including current maturities', 'money', 'instant',
+        'Long-term borrowing aggregate including its current portion', 'CALC-09'),
+})
 
 INCOME_ROWS = ("revenue", "cost_of_revenue", "gross_profit", "operating_expense", "operating_income", "interest_expense", "pretax_profit", "income_tax", "net_income")
 CASH_ROWS = ("beginning_cash", "cfo", "cfi", "cff", "ending_cash", "cash_change")
@@ -306,11 +327,15 @@ def approved_formula_value(formula_id: str, values: tuple[Decimal, ...]) -> Deci
     """
     arity = {"CF-01": 2, "CF-02": 2, "CF-03": 2, "CF-04": 3, "CF-05": 4,
              "CF-06": 2, "CF-09": 2, "CF-10": 2, "CF-11": 2, "CF-12": 2,
-             "CF-16": 2, "COMMON-SIZE-v1": 2, "CASH-CHANGE-v1": 2, "LEVERAGE-v1": 2, "STANDARD-EBITDA-v1": 4}
+             "CF-16": 2, "COMMON-SIZE-v1": 2, "CASH-CHANGE-v1": 2, "LEVERAGE-v1": 2, "STANDARD-EBITDA-v1": 4, "TOTAL-DEBT-v1": 2, "CURRENT-DEBT-v1": 2}
     _require(formula_id in arity, "AUTH-03", "Formula is not an implemented approved calculation")
     _require(len(values) == arity[formula_id], "CALC-02", "Formula input count mismatch")
     if not all(_number(v) for v in values):
         return None
+    if formula_id in ("TOTAL-DEBT-v1", "CURRENT-DEBT-v1"):
+        with localcontext() as context:
+            context.prec = max(50, sum(len(v.as_tuple().digits) + abs(v.as_tuple().exponent) for v in values) + 2)
+            return sum(values, Decimal(0))
     if formula_id == "STANDARD-EBITDA-v1":
         return sum(values, Decimal(0))
     if formula_id in ("CF-16", "CASH-CHANGE-v1"):
@@ -349,6 +374,14 @@ def calculate_fact(report: Report, fact_id: str, *, input_ids: tuple[str, ...],
     inputs = [report.facts.get(i) for i in input_ids]
     reason = ("Unresolved definitions: " + ", ".join(sorted(missing_decisions)) if missing_decisions else
               "Required inputs unavailable" if any(i is None or i.status not in AVAILABLE for i in inputs) else "")
+    if formula == 'TOTAL-DEBT-v1' and all(i is not None for i in inputs):
+        _require(tuple(i.metric for i in inputs) in DEBT_SUM_INPUTS, 'CALC-02', 'Debt components must be a disjoint approved pair')
+    if formula in ('TOTAL-DEBT-v1', 'CURRENT-DEBT-v1') and not reason:
+        if not compatible_debt_bases(inputs):
+            reason = 'Debt inputs mix principal and carrying amounts; select a consistent reported basis'
+        elif any(i.value < 0 for i in inputs):
+            reason = 'Negative borrowing amount requires clarification'
+        target = replace(target, basis=' + '.join(i.metric + ': ' + (i.basis or i.definition) for i in inputs))
     if formula == "STANDARD-EBITDA-v1":
         if "DEC-05" not in report.decisions:
             reason = "Gross interest definition approval required"
@@ -537,6 +570,8 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
             continue
         _require(f.end is not None and (spec.period_kind in ("instant", "opening") or f.start is not None), "DATA-01", f"{fid}: available value requires known dates")
         _require(_text(f.value) if f.unit == "text" else _number(f.value), "MISS-01", f"{fid}: finite Decimal or basis text required; no null/bool coercion")
+        if f.metric in DEBT_FIELDS:
+            _require(f.value >= 0, 'CALC-03', f'{fid}: negative borrowing requires clarification')
         if not common_size:
             _require(set(spec.pending) <= set(report.decisions), "AUTH-05", f"{fid}: unresolved definitions {spec.pending}")
             for decision in spec.pending:
@@ -565,6 +600,10 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
                 _require(any(e.kind == "definition" for e in evidence), "CALC-14", f"{fid}: verified identity/basis evidence required")
             inputs = []
             expected_inputs = (f.metric, "revenue") if common_size else spec.inputs
+            if f.metric == 'total_debt':
+                actual = tuple(report.facts[i].metric for i in f.input_ids if i in report.facts)
+                _require(actual in DEBT_SUM_INPUTS, 'CALC-02', f'{fid}: debt components overlap or do not form an approved pair')
+                expected_inputs = actual
             for index, iid in enumerate(f.input_ids):
                 _require(iid in report.facts and iid != fid, "CALC-02", f"{fid}: invalid input {iid}")
                 item = report.facts[iid]
@@ -584,6 +623,8 @@ def validate_report(report: Report, *, expected_mode: Mode | str) -> None:
             if f.formula_id == "STANDARD-EBITDA-v1":
                 _require(f.basis == spec.definition and all((i.start, i.end) == (f.start, f.end) for i in inputs),
                          "CALC-03", "Standard EBITDA needs complete exact LTM components and standard basis")
+            if f.formula_id in ('TOTAL-DEBT-v1', 'CURRENT-DEBT-v1'):
+                _require(compatible_debt_bases(inputs) and all(i.value >= 0 for i in inputs), 'CALC-03', f'{fid}: incompatible debt amount basis/sign')
             if expected_inputs:
                 _require(tuple(i.metric for i in inputs) == expected_inputs, "CALC-02", f"{fid}: formula components/order mismatch")
                 for item in inputs:

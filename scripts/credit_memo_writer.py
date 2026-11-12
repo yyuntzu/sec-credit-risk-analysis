@@ -797,6 +797,11 @@ def render_loan_review(report, acceptance) -> str:
         reasons = list(dict.fromkeys(f.reason for f in unavailable))
         if reasons:
             lines += ['> 本表限制：' + esc(human_reason('；'.join(reasons))), '']
+        if matching.spec.key == 'leverage':
+            for role in matching.spec.columns:
+                debt = report.facts.get('total_debt:' + role)
+                if debt and debt.status in AVAILABLE and debt.basis:
+                    lines += ['> Total Debt 口徑（' + esc(periods[role].end) + '）：' + esc(debt.basis), '']
         for n in matching.narratives:
             try:
                 from .formal_commentary import narrative_display

@@ -48,6 +48,11 @@ def write_dashboard(report, acceptance, directory):
                 parts.append(f'<td data-fact-id="{e(fid)}" data-status="{e(f.status.value)}" title="{e(f.reason or f.definition)}">{e(label)}</td>')
             parts.append('</tr>')
         parts.append('</tbody></table>')
+        if table.spec.key == 'leverage':
+            for role in table.spec.columns:
+                debt = report.facts.get('total_debt:' + role)
+                if debt and debt.status in AVAILABLE and debt.basis:
+                    parts.append(f'<p><small>Total Debt 口徑 · {e(role)}：{e(debt.basis)}</small></p>')
         for narrative in table.narratives + table.notes:
             display=narrative_display(report,table.spec.key,narrative)
             parts.append(f'<p data-commentary-topic="{e(narrative.topic)}" data-reviewed="{str(display["reviewed"]).lower()}">{e(display["text"])}</p>')

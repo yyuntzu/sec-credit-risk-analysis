@@ -26,6 +26,28 @@ only to the retained legacy workflow, which requires explicit `--legacy` and a
 verified `--period-request`. They must not override this current routing contract.
 Source-only staging remains explicitly selected with `--source-request`.
 
+## Visualization branch: reusable Looker Studio report
+
+Generate the local HTML dashboard alongside formal Review and Excel by default;
+retain explicit user output exclusions. Deliver the files listed in `delivery.json`
+and its acceptance state rather than merely reporting execution success.
+
+For Review + Looker Studio requests, read
+[the visualization workflow](references/looker-visualization.md). Resolve the
+company and verified fiscal request from the user's stated periods before running
+`agent_runner.py`. Quarterly uses comparable YTD, not an arbitrary list of isolated
+quarters; clarify a material period ambiguity before generating mode-dependent data.
+Use cloud execution and the configured `--looker-config` or `LOOKER_STUDIO_CONFIG`
+to generate a run-specific URL after accepted publication. Return the receipt's
+Review, Excel, local Dashboard and Looker URL together, with actual fiscal dates.
+
+The user selected a fixed Looker Studio template with 23 components and Cash Flow
+Ratio = operating cash flow / current liabilities at the period end; exclude ROA,
+ROE, B6 Debt to Equity card and Cash Ratio from that dashboard. The template, additional financial
+facts and live rendering remain unfinished. If configuration is absent, deliver
+the local outputs and name the missing setup. A `link_ready` URL is constructed
+from configuration and does not certify that the remote dashboard renders correctly.
+
 ## Why This Skill Exists
 
 從 SEC EDGAR 到一份可交付主管的 credit memo，需要走兩條平行的數據路徑：
@@ -266,7 +288,10 @@ PHASE 3 — 生成 Credit Memo
 
 ---
 
-## Looker / Looker Studio 串接（管理層財務 Dashboard）
+## Legacy Looker / Looker Studio 串接（歷史 KPI Dashboard）
+
+The following five-mart instructions apply only to the legacy dashboard. For the
+formal Loan Review visualization branch, use `references/looker-visualization.md`.
 
 **目的**：讓 manager 一眼看出公司財務狀況的 dashboard，資料來源就是上面 5 張
 BigQuery mart 表 —— 不需要另外寫 ETL，dbt 已經把資料整理成可以直接拖拉的維度表
