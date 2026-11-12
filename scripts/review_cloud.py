@@ -119,7 +119,8 @@ class ReviewCloud:
     def dbt(self, stage, *, variables=None, artifact_dir=None):
         project = Path(os.environ.get('DBT_PROJECT_DIR', Path(__file__).resolve().parents[1] / 'references/dbt')).resolve()
         selection = {'source': 'stg_loan_review_run_sources', 'legacy_source': 'stg_loan_review_sources', 'publish': 'tag:formal_review_marts',
-                     'shadow': '+tag:formal_review_shadow','archive': '+tag:formal_review_archive'}[stage]
+                     'shadow': '+tag:formal_review_shadow','archive': '+tag:formal_review_archive',
+                     'published_validation': '+tag:loan_review_published'}[stage]
         common = ['--project-dir', str(project), '--profiles-dir', os.environ.get('DBT_PROFILES_DIR', str(project)),
                   '--target', os.environ.get('DBT_TARGET', 'prod')]
         if variables is not None:

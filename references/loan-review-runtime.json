@@ -3,7 +3,15 @@
   "execution": "candidate",
   "project": "focus-heuristic-438521-v4",
   "candidate_bucket": "sec-review-shadow-runtime-20261111-c54e291a",
-  "archive_dataset": "sec_review_shadow_skill_archive",
+  "archive_dataset": "sec_review_shadow_archive_aj_20261111",
   "delivery_bucket": "sec-review-shadow-runtime-20261111-c54e291a",
-  "precision_version": "bignumeric-q18-half-even-v1"
+  "precision_version": "bignumeric-q18-half-even-v1",
+  "source_dataset": "sec_review_shadow_source_aj_20261111",
+  "publication_dataset": "sec_review_shadow_published_aj_20261111",
+  "publication_policy_record": {
+    "name": "candidate-control/publication-policies/888f77d715ec17be7a497cdc87301bcba44eff9650333d66d6e6f760576c9ea8.json",
+    "generation": "1794426802998292",
+    "sha256": "2b498c113ed790891e20f2b5aba4856540b32a0091663c32f5781472aa31d28f",
+    "size": 751
+  }
 }

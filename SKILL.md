@@ -48,12 +48,17 @@ bash scripts/run_loan_review_skill.sh TICKER --request /absolute/path/request.js
 
 Pass user snapshots/supplements, source-bound reconciliation reviews and reviewed
 filing commentary documents when available. Use a new output directory for each
-attempt. The wrapper collects source candidates, captures the selected release,
+attempt. The wrapper freezes SEC/snapshot or supported workbook observations in a content-addressed
+BigQuery source envelope, reads it back, captures the selected release,
 loads its pinned GCS package and binds the calculation run before BigQuery writes.
 dbt selects sources, applies formulas and tests them; the consumer reads that
 fixed calculation receipt. Excel references the same warehouse values, with a
 separate local trial sheet. Candidate facts/evidence/receipts are archived to
-BigQuery and the report package to generation-pinned GCS objects.
+BigQuery and the report package to generation-pinned GCS objects. When financial
+acceptance and delivery pass, a separately registered validation policy can commit
+a publication receipt and expose the fixed result through tested published views.
+Current publication policy permits SYNTHETIC-ONLY test cases; real borrower
+reports remain candidates until a production deployment is explicitly authorized.
 
 The runtime settings live in [runtime configuration](references/loan-review-runtime.json).
 They currently select isolated candidate resources. Read those values rather than
@@ -63,12 +68,21 @@ attempt with its manifest; do not silently switch to Python, Legacy marts, a
 different release or invented financial numbers. Inspect failures before retrying,
 and resume only through a new attempt after resolving the cause.
 
-Read `run_manifest.json`. Exit **2** with `status=draft` is successful candidate
+For the supported Nexstar `.xls` workbook adapter use `--workbook` with an explicit
+NXST consolidated request and matching actual dates; see the workflow reference.
+Unverified workbook provenance/CF definitions remain blockers, not SEC-verified facts.
+
+Read `run_manifest.json`. Exit **0** / `published_validation` means publication in
+the isolated test environment, with `publication_receipt.json` and a published-view
+address; it is not a production report. Exit **2** with `status=draft` is successful candidate
 generation; exit **1** or `status=failed` is an execution/delivery failure. Link
 the generated `report.md`, `dashboard.html`, `loan_review.xlsx` and manifest using
 their actual absolute paths; include the calculation/release identity and material
 missing-data limitations. Verify requested artifacts and storage receipt exist.
-Drafts remain drafts even when dbt tests pass. Do not call a failed or partial
+Drafts remain drafts even when dbt tests pass. Pre-commit report files retain their
+candidate labels and immutable hashes; use the publication receipt for subsequent
+validated publication status. For interruption after commit, use the documented
+`--resume-publication` path instead of recalculating or changing source inputs. Do not call a failed or partial
 delivery completed. This skill does not send reports to other people.
 
 ## Financial and narrative contract
@@ -89,7 +103,7 @@ and reconciliation reviews require their own source evidence.
 
 ## Explicit alternative modes
 
-For a user-requested offline/local Python report or the validated workbook adapter,
+For a user-requested offline/local Python report,
 read [the existing local integration](references/loan-review-integration.md).
 For explicit historical Legacy analysis only, read
 [the legacy guide](references/legacy-credit-skill.md). These are separate choices,

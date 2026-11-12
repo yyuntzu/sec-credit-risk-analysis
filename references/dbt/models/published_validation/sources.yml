@@ -1,0 +1,18 @@
+version: 2
+sources:
+  - name: validated_publications
+    database: "{{ target.project }}"
+    schema: "{{ target.schema }}"
+    tables:
+      - name: batches
+        identifier: "published_batch_*"
+      - name: selection
+        identifier: publication_selection
+      - name: selection_events
+        identifier: publication_selection_events
+  - name: immutable_publication_sources
+    database: "{{ target.project }}"
+    schema: "{{ var('publication_source_dataset', 'sec_review_shadow_source_aj_20261111') }}"
+    tables:
+      - name: envelopes
+        identifier: "source_bundle_*"

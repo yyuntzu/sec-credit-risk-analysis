@@ -11,6 +11,17 @@ from test_dbt_shadow import rich_bundle
 
 
 class LoanReviewSkillTests(unittest.TestCase):
+    def setUp(self):
+        from scripts.warehouse_source import source_envelope
+        class SourceStore:
+            def __init__(self,*args,**kwargs):pass
+            def ensure(self):pass
+            def store(self,envelope):
+                self.envelope=deepcopy(envelope)
+                return dict(source_id='1'*64)
+            def load(self,receipt):return deepcopy(self.envelope)
+        self.source_patch=patch.object(skill,'BigQuerySourceStore',SourceStore)
+        self.source_patch.start();self.addCleanup(self.source_patch.stop)
     def test_missing_request_and_mismatched_borrower_stop_before_cloud(self):
         with tempfile.TemporaryDirectory() as tmp,patch.object(skill,'GCSCandidateControlStore') as cloud:
             missing=skill.run_skill_review('AMZN',output_dir=Path(tmp)/'missing')
@@ -57,7 +68,7 @@ class LoanReviewSkillTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             directory=Path(tmp)/'run';order=[];bundle=rich_bundle()
             def selected(control,source,output,**kwargs):
-                order.append('sql');self.assertEqual(json.loads(Path(source).read_text()),json.loads(json.dumps(bundle,default=str)))
+                order.append('sql');self.assertEqual(json.loads(Path(source).read_text()),json.loads(json.dumps(skill.reconciliation_slots(bundle),default=str)))
                 Path(output).mkdir();(Path(output)/'selected_execution_receipt.json').write_text('{}')
                 return dict(execution=dict(calculation_receipt_sha256='a'*64,run_id='1'*32),release_id='9'*32,package_sha256='b'*64)
             def preview(calculation,output,**kwargs):
@@ -101,3 +112,12 @@ class LoanReviewSkillTests(unittest.TestCase):
         with patch.object(skill,'run_skill_review',return_value=dict(status='draft')) as run,patch('builtins.print'):
             self.assertEqual(skill.main(['SYNTHETIC-ONLY','--no-excel']),2)
             self.assertFalse(run.call_args.kwargs['excel'])
+
+    def test_resume_cannot_silently_ignore_new_source_inputs(self):
+        with self.assertRaisesRegex(ValueError,'Resume cannot change'):
+            skill.main(['--resume-publication','/not-read','--source-bundle','/other-source'])
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);(root/'publication_receipt.json').write_text('{}')
+            with patch.object(skill,'BigQueryPublicationStore') as store,self.assertRaisesRegex(ValueError,'pin mismatch'):
+                skill.finalize_publication(root,dict(publication_receipt_sha256='0'*64))
+            store.assert_not_called()

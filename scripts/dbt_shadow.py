@@ -180,7 +180,14 @@ def prepare_run(bundle, *, run_id=None, kernels=(), reconciliations=None, commen
     if not with_baseline:
         metadata.pop('baseline_context')
         metadata.update(calculation_mode='dbt-only-candidate',request_hash=digest(bundle['request']),baseline_comparison='not_run')
-    metadata['source_limitations'] = list((acceptance or {}).get('source_limitations', ()))
+    source_limits=bundle.get('source_limitations',[])
+    if not isinstance(source_limits,list) or not all(isinstance(item,str) and item.strip() for item in source_limits):
+        raise ValueError('Source limitations must be explicit nonempty strings')
+    metadata['source_limitations'] = sorted(set(source_limits+list((acceptance or {}).get('source_limitations', ()))))
+    if acceptance is not None and source_limits:
+        acceptance['source_limitations']=metadata['source_limitations']
+        acceptance['acceptance_blockers']=sorted(set(acceptance['acceptance_blockers']+source_limits))
+        acceptance['substantive_data_ready']=False
     metadata['decisions'] = sorted(report.decisions)
     metadata['excluded_observation_ids'] = sorted(bundle.get('excluded', {}))
     commentary_documents = [] if commentary_documents is None else commentary_documents

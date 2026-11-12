@@ -4,13 +4,15 @@
 
 「已有證據」只指本列範圍；未涵蓋、只在 mock 驗證或只有設計者一律不算完成。M4／M5 尚未放行。
 
+2026-11-12：已依使用者選擇接通隔離 A→J 路徑，包含實體來源包、完整財務 ready 的 Quarterly、交付收據、驗證發布與 current／history／lineage views。詳見 [A→J 驗證紀錄](full-workflow-validation-20261111.md)。本表的「正式」均指 production，不能與只允許 `SYNTHETIC-ONLY` 的測試政策混用。
+
 | 規格範圍 | 現有實作／證據 | 未完成或需更強證據 |
 | --- | --- | --- |
 | §2 責任分離 | SQL-only runtime 禁用 24 個 Python 財務函式成功；舊 shadow 獨立比較 | 正式 workflow 尚未改讀此引擎；M4 後移除 cloud 雙重計算 |
 | §3 原始、request、policy 分層 | raw observations／metadata／review records 在隔離 raw table；typed staging／SQL policy dims | 正式 physical schema、完整欄位契約、retention／IAM 尚未部署；不以建議表名已存在冒充完成 |
 | §3 run／attempt 固定 | candidate archive 內容 hash、run binding、固定 attempt、同內容重試與異內容拒絕實測 | 發布 registry 的完整身份 JOIN 與正式 writer／reader 權限 |
 | §3 request hash | 新 SQL-only receipt 獨立 request_hash | 舊 shadow 收據不回填；正式 schema／release 需綁定新契約 |
-| §3 最後 publication receipt | GCS candidate delivery 最後寫 commit、完整 object generations | 候選 commit 不是 publication receipt；BigQuery 正式發布登錄未完成 |
+| §3 最後 publication receipt | 隔離 atomic publication batch 綁定實體來源／計算／release／archive／GCS delivery 與 commit；J 獨立驗證 | production 發布登錄、writer／reader IAM 與永久保存仍未完成 |
 | §4 21 公式 | dbt macros、48 手算 kernels、SQL formula registry；多個原生案例 | 每公式零／負／缺值與各狀態的完整映射及 native 採用矩陣未齊 |
 | §4 目標／順序／角色／單位 | SQL independent formula contract；五種錯誤計畫 native 拒絕 | source tag／概念映射尚未全面 SQL 固定；其餘失敗組合未齊 |
 | §4 identity | source-bound review、六個 DER、本機反向循環、原生連續推算 | 所有 DER 的原生採用與循環／既存來源／conflict／scope 失敗矩陣未齊 |
@@ -25,14 +27,14 @@
 | §6 lineage bridges | 有序 input bridge、direct／inherited evidence、archive typed readers | 正式 published lineage views 與 reader IAM |
 | §6 serialization／歷史 | pins、字串數字、UTF-8 canonical hashes；舊 v1／v2 快照讀取 | 正式已發布歷史的保留／release pin 與回退實測 |
 | §7 結構／公式／對帳 gate | dbt error tests；來源綁定覆核；八項／四項缺口如實保存 | 全部規格案例的 coverage、規則漏洞稽核未齊 |
-| §7 financial acceptance | SQL required cells／decisions／reconciliation readiness 與 Python 比較 | positive readiness 路徑仍需更強 E2E 證據；Annual DEC-03 有缺口時維持 draft 才正確，不為遷移另造業務定義 |
+| §7 financial acceptance | SQL required cells／decisions／reconciliation readiness 與 Python 比較；兩份 Quarterly 合成原生 A→J 各 144 Facts／八項對帳 ready | 真實借款人／完整業務矩陣；Annual DEC-03 有缺口時維持 draft，不為遷移另造業務定義 |
 | §7 交付 | receipt-bound MD／JSON／HTML／Excel，current-consumer 重現與 ZIP audit；SQL-only 新收據經 skill 完成 Excel／BigQuery archive／GCS 全流程合成驗證 | 正式 delivery requirement registry 與正式交付放行 |
-| §7 發布 | preflight 明確列 blockers，所有 candidate flags=false | 最終 publication receipt、完整 JOIN view、失敗注入、獨立 reader 身份驗證 |
+| §7 發布 | 隔離 publication receipt、實體 C 身份與 hash JOIN、全部來源／依賴 bridges、current／history views；candidate production flags 仍 false | 正式部署與獨立 reader 身份／IAM 驗證 |
 | §8 同源比對 | 固定 bundle／code／Decimal context；不重抓 API；未知 mismatch 阻擋 | 所有矩陣均需一致的可重現 fixtures 與版本 coverage 清單 |
 | §8.3 財期 | annual／quarterly 原生案例，YTD／LTM 不混算 | 非曆年、52／53 週、閏日、缺去年同期等完整 native 矩陣 |
 | §8.3 來源邊界 | amendment／衝突／currency 等已有部分 native 案例 | 同值異版本、tag／定義／CIK／scope／as_of 全組合、ignored rows 的原因追蹤 |
 | §8.3 數值邊界 | kernels、source precision bounds、binary64 delivery 差異 | signed ties／double rounding／極端 scale／溢位完整矩陣 |
-| §8.3 管線故障 | archive／delivery retry、部分寫入、tamper、job confirmation、錯誤 pin 拒絕 | 同 run 多 attempt／並行、發布中失敗、manifest 寫失敗、發布後改公式與 rollback 的完整 E2E |
+| §8.3 管線故障 | archive／delivery retry、tamper、job confirmation、錯誤 pin；隔離發布缺 commit／foreign Fact／foreign physical source／stale version 原生拒絕，C／I 重試收據不變 | 同 run 多 attempt／並行、manifest 寫失敗、發布後改公式與跨主機 E2E 尚需擴大 |
 | §9 release／rollback | 候選 selector 已串接固定 generation 的 GCS ZIP、隔離 runtime 與 SQL 前 run binding；原生 A → B → rollback A 各 186 Facts，歷史收據不變且 A／回退 A 全 Fact 相同，見 selected-runtime 驗證 | 跨主機環境重建、正式 release gate／IAM／部署與正式發布結果的完整回退 E2E 仍未完成；目前只核實候選執行 |
 | §9 M4 | 尚未啟用正式 dbt authority；q18 計算規則已獲使用者核准實作驗證 | 完整 M4 驗收與具體切換仍須明確放行；此次精度規則核准不代表正式上線 |
 | §9 M5 | 舊 local Python 保留；Loan Review skill 已安裝並預設走固定候選 q18 全流程，合成資料完整交付驗證通過 | 正式 cloud CLI／HTTP 預設、BI 指向、移除雙重計算、更新可瀏覽 HTML 架構圖與最終文件尚未完成 |

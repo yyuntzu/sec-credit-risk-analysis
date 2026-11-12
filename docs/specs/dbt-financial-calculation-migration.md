@@ -4,6 +4,8 @@
 
 ## 執行進度（2026-11-07）
 
+最新進度見 [隔離 A→J 串接與驗證](full-workflow-validation-20261111.md)：2026-11-12 已接上來源包實體保存、dbt 財務驗收、完整交付、驗證發布收據與 published views。使用者選擇隔離驗證部署；政策只允許合成資料，不能解讀為正式 authority／BI 已切換。以下日期段落保留各階段當時的狀態；q18 精度規則後續已核准實作，正式 M4／M5 仍未放行。
+
 使用者選擇「先保留精度待定，只做影子比對」。已新增可獨立執行的 dbt shadow path 與隔離 BigQuery 驗證；**未切換正式 authority，也未完成 M3–M5**。目前的 source selection／算式 shadow 與診斷對帳不等於完整財務驗收 SQL。參見 [操作手冊](dbt-shadow-runbook.md) 與 [驗證紀錄](dbt-shadow-validation-20261107.md)。
 
 ### 2026-11-09 後續進度
