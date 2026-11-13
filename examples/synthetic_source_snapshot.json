@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "entity": "SYNTHETIC-ONLY",
+  "cik": "0000000001",
+  "financial_facts": {
+    "income_statement": [
+      {
+        "ticker": "SYNTHETIC-ONLY",
+        "cik": "0000000001",
+        "scope": "entity-wide",
+        "field_name": "revenue",
+        "namespace": "us-gaap",
+        "xbrl_tag": "Revenues",
+        "value": 1000000.0,
+        "original_value": "1000000",
+        "unit": "USD",
+        "period_kind": "duration",
+        "period_start": "2025-01-01",
+        "period_end": "2025-12-31",
+        "period_days": 364,
+        "filing_type": "10-K",
+        "accession_number": "0000000001-26-000001",
+        "filed_date": "2026-02-01",
+        "source_version": "0000000001-26-000001:2026-02-01",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000000001.json",
+        "document_url": "https://www.sec.gov/Archives/edgar/data/1/000000000126000001/0000000001-26-000001-index.html",
+        "source_locator": "{\"entry\": {\"accn\": \"0000000001-26-000001\", \"end\": \"2025-12-31\", \"filed\": \"2026-02-01\", \"form\": \"10-K\", \"fp\": \"FY\", \"fy\": 2025, \"start\": \"2025-01-01\", \"val\": 1000000}, \"namespace\": \"us-gaap\", \"tag\": \"Revenues\", \"unit\": \"USD\"}",
+        "filing_fiscal_year": 2025,
+        "filing_fiscal_period": "FY",
+        "ingested_at": "2026-10-27T17:30:26.373843",
+        "fact_id": "sec:f9ab3a06e97e2bb0fe02af6df27d6354962841c7a953af8bc2ae705c68fd85ff"
+      }
+    ],
+    "balance_sheet": [],
+    "cash_flow": []
+  }
+}

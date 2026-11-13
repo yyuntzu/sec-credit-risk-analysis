@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "report_url": "https://lookerstudio.google.com/reporting/REPLACE_WITH_REPORT_ID",
+  "url_parameter_names": {
+    "entity": "company",
+    "run_id": "review_run",
+    "mode": "review_mode"
+  }
+}

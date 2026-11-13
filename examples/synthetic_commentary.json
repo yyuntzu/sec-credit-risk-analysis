@@ -1,0 +1,47 @@
+{
+  "documents": [
+    {
+      "id": "mda:fy_t",
+      "entity": "SYNTHETIC-ONLY",
+      "cik": "0000000001",
+      "scope": "entity-wide",
+      "source_id": "SYNTHETIC-fy_t",
+      "version": "v1",
+      "document_date": "2026-02-01",
+      "source_url": "fixture://fy_t",
+      "section": "MD&A",
+      "periods": [
+        {
+          "role": "fy_t",
+          "start": "2025-01-01",
+          "end": "2025-12-31"
+        }
+      ],
+      "text": "Synthetic fixture only. Revenue increased because shipment volume rose."
+    }
+  ],
+  "claims": [
+    {
+      "table": "income",
+      "topic": "revenue",
+      "status": "supported",
+      "claim_type": "cause",
+      "explanation": "營收增加主要來自出貨量提升；此為合成測試示例。",
+      "fact_ids": [
+        "revenue:fy_t_minus_1",
+        "revenue:fy_t",
+        "revenue_growth:fy_t"
+      ],
+      "period_roles": [
+        "fy_t_minus_1",
+        "fy_t"
+      ],
+      "citations": [
+        {
+          "document_id": "mda:fy_t",
+          "quote": "Synthetic fixture only. Revenue increased because shipment volume rose."
+        }
+      ]
+    }
+  ]
+}

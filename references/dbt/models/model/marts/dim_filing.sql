@@ -1,3 +1,5 @@
+-- Legacy compatibility model: existing KPI definitions are preserved.
+-- These estimates are not the canonical formal Loan Review calculation contract.
 {{ config(materialized='table') }}
 
 select

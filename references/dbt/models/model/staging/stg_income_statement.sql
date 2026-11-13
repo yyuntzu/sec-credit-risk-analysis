@@ -1,3 +1,5 @@
+-- Legacy compatibility model: existing KPI definitions are preserved.
+-- These estimates are not the canonical formal Loan Review calculation contract.
 {{ config(materialized='view') }}
 
 with source as (
@@ -26,6 +28,8 @@ pivoted as (
                                                                         as operating_income_m,
         max(case when field_name = 'net_income'       then value end) / 1e6
                                                                         as net_income_m,
+        max(case when field_name = 'income_before_tax' then value end) / 1e6 as income_before_tax_m,
+        max(case when field_name = 'income_tax_expense' then value end) / 1e6 as income_tax_m,
         max(case when field_name = 'eps_basic'        then value end)  as eps_basic,
         max(case when field_name = 'eps_diluted'      then value end)  as eps_diluted,
 
